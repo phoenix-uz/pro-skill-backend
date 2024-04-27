@@ -8,4 +8,3 @@ import { PrismaService } from 'src/prisma.service';
   providers: [CoursesService, PrismaService],
 })
 export class CoursesModule {}
-//test

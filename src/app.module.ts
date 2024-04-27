@@ -8,10 +8,12 @@ import { PrismaClient } from '@prisma/client'
 import { SmsModule } from './sms/sms.module';
 import { CoursesModule } from './courses/courses.module';
 import { ItemModule } from './item/item.module';
+import { NewsModule } from './news/news.module';
+
 
 
 @Module({
-  imports: [AuthModule, LibraryModule, LibraryModule, SmsModule, CoursesModule, ItemModule, ],
+  imports: [AuthModule, LibraryModule, LibraryModule, SmsModule, CoursesModule, ItemModule, NewsModule,],
   controllers: [AppController],
   providers: [AppService, PrismaService, PrismaClient],
 })

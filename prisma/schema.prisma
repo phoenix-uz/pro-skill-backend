@@ -54,3 +54,11 @@ model item{
   type                 String
   fileurl              String
 }
+
+model news{
+  id                   Int     @default(autoincrement()) @id
+  title                String
+  description          String
+  photoUrl             String
+  mainUrl              String ?
+}
