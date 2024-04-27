@@ -1,5 +1,5 @@
 export class CreateCourseDto {
-    title: string;
-    description: string ;
-    author: string;
+  title: string;
+  description: string;
+  author: string;
 }

@@ -1,30 +1,25 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Post, Body } from '@nestjs/common';
 import { LibraryService } from './library.service';
 import { CreateLibraryDto } from './dto/create-library.dto';
-import {ApiBody,ApiTags} from '@nestjs/swagger'
+import { ApiBody, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Library')
 @Controller('library')
 export class LibraryController {
   constructor(private readonly libraryService: LibraryService) {}
-@ApiBody(
-  {
-    schema:{
-      type:'object',
-      properties:{
-        name: {type:'string'}
-      }
-    }
-  }
-)
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        name: { type: 'string' },
+      },
+    },
+  })
   @Post('/')
   async registerUser(
-    @Body() 
+    @Body()
     body: CreateLibraryDto,
-  )
-  {
+  ) {
     return this.libraryService.createItem(body);
   }
-
-  
 }
