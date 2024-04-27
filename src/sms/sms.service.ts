@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { CreateSmsDto } from './dto/create-sms.dto';
 import { PrismaService } from 'src/prisma.service';
 
-
 @Injectable()
 export class SmsService {
   constructor(private readonly prisma: PrismaService) {}
@@ -15,7 +14,7 @@ export class SmsService {
     });
     return sms;
   }
-  
+
   async findAll() {
     const sms = await this.prisma.sms.findMany();
     return sms;

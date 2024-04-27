@@ -8,11 +8,11 @@ async function bootstrap() {
   const config = new DocumentBuilder()
     .setTitle('Pro-Skill')
     .setDescription('The Pro-Skill API description')
-    .setVersion('0.1')
+    .setVersion('0.2')
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
-app.enableCors()
+  app.enableCors();
   await app.listen(3000);
 }
 bootstrap();

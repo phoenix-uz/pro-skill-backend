@@ -5,6 +5,6 @@ import { PrismaService } from 'src/prisma.service';
 
 @Module({
   controllers: [SmsController],
-  providers: [SmsService, PrismaService ],
+  providers: [SmsService, PrismaService],
 })
 export class SmsModule {}
