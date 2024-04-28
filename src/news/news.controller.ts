@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete,  } from '@nestjs/common';
 import { NewsService } from './news.service';
 import { CreateNewsDto } from './dto/create-news.dto';
 import { UpdateNewsDto } from './dto/update-news.dto';
@@ -19,11 +19,16 @@ export class NewsController {
       }
     }
   })
-  @Post()
-  create(@Body() createNewsDto: CreateNewsDto) {
-    return this.newsService.create(createNewsDto);
-  }
 
+  @Post('add-news')
+  async addNews(
+    @Body()
+    body: CreateNewsDto,
+  ) 
+  {
+    return this.newsService.create(body);
+  }
+  
   @Get()
   findAll() {
     return this.newsService.findAll();
@@ -34,9 +39,21 @@ export class NewsController {
     return this.newsService.findOne(+id);
   }
 
+@ApiBody({
+    schema:{
+      type:'object',
+      properties:{
+        title:{type:'string'},
+        description: {type:'string'},
+        photoUrl: {type:'string'},
+        mainUrl:{type:'string'}
+      }
+    }
+  })
+
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateNewsDto: UpdateNewsDto) {
-    return this.newsService.update(+id, updateNewsDto);
+  update(@Param('id') id: string, @Body() body: Body) {
+    return this.newsService.update(+id, body);
   }
 
   @Delete(':id')

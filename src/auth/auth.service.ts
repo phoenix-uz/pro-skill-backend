@@ -57,10 +57,19 @@ export class AuthService {
     return user;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} auth`;
-  }
-  remove(id: number) {
-    return `This action removes a #${id} auth`;
+  async update(id: number, updateAuthDto: Body) {
+    try {
+      const updateAuth = await this.prisma.user.update({
+        where: { id: id },
+        data: updateAuthDto,
+      });
+      return updateAuth;
+    } catch (error) {
+      console.log(error);
+      throw new HttpException(
+        'Failed to update news',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 }

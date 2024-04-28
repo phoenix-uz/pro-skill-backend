@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateAuthDto } from './dto/create-auth.dto';
 import { ApiBody, ApiTags } from '@nestjs/swagger';
@@ -15,6 +15,10 @@ export class AuthController {
         fullname: { type: 'string' },
         email: { type: 'string' },
         phone_number: { type: 'string' },
+        phone_number_add: { type: 'string'},
+        gender: { type: 'string'},
+        city: { type: 'string'},
+        dateOfBirth:{ type: 'string'},
         password: { type: 'string' },
       },
     },
@@ -50,5 +54,25 @@ export class AuthController {
   @Get('show-all')
   findAll() {
     return this.authService.findAll();
+  }
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties:{
+        fullname: { type: 'string' },
+        email: { type: 'string' },
+        phone_number: { type: 'string' },
+        phone_number_add: { type: 'string'},
+        gender: { type: 'string'},
+        city: { type: 'string'},
+        dateOfBirth:{ type: 'string'},
+        password: { type: 'string' },
+      }
+    }
+  })
+
+  @Patch(':id')
+  update(@Param('id') id: string, @Body() body: Body) {
+    return this.authService.update(+id, body);
   }
 }

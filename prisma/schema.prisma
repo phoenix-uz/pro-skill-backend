@@ -11,7 +11,12 @@ model User {
   fullname             String
   email                String @unique
   phone_number         String @unique
+  phone_number_add     String?
+  gender               String
+  city                 String
+  dateOfBirth          String 
   password             String
+  role                 String
   created_at           DateTime @default(now())
 }
 
@@ -53,6 +58,7 @@ model item{
   length               Int
   type                 String
   fileurl              String
+  createdAt            DateTime @default(now())
 }
 
 model news{
@@ -60,5 +66,14 @@ model news{
   title                String
   description          String
   photoUrl             String
-  mainUrl              String ?
+  mainUrl              String?
+  createdAt            DateTime @default(now())
+}
+
+model notes{
+  id                   Int     @default(autoincrement()) @id
+  title                String
+  description          String
+  userId               String
+  createdAt            DateTime @default(now())
 }
