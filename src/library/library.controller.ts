@@ -1,4 +1,4 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import { Controller, Post, Body, Get } from '@nestjs/common';
 import { LibraryService } from './library.service';
 import { CreateLibraryDto } from './dto/create-library.dto';
 import { ApiBody, ApiTags } from '@nestjs/swagger';
@@ -21,5 +21,10 @@ export class LibraryController {
     body: CreateLibraryDto,
   ) {
     return this.libraryService.createItem(body);
+  }
+
+  @Get('/')
+  async findAll() {
+    return this.libraryService.findAll();
   }
 }

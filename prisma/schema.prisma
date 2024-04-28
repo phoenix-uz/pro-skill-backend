@@ -6,47 +6,43 @@ datasource db {
 generator client {
   provider = "prisma-client-js"
 }
+
 model User {
   id                   Int     @default(autoincrement()) @id
   fullname             String
   email                String @unique
   phone_number         String @unique
-  phone_number_add     String?
-  gender               String
-  city                 String
-  dateOfBirth          String 
   password             String
-  role                 String
   created_at           DateTime @default(now())
 }
 
-model library{
-  id                   Int     @default(autoincrement()) @id
-  name                 String @unique
+model library {
+  id   Int    @id @default(autoincrement())
+  name String @unique
 }
 
 model file {
-  id                   Int     @default(autoincrement()) @id
-  filename             String 
-  fileurl              String
-  createdAt            DateTime @default(now())
+  id        Int      @id @default(autoincrement())
+  filename  String
+  fileurl   String
+  createdAt DateTime @default(now())
 }
 
 model sms {
-  id                   Int     @default(autoincrement()) @id
-  name                 String
-  surname              String
-  phone_number         String 
-  sms                  String
-  createdAt            DateTime @default(now())
+  id           Int      @id @default(autoincrement())
+  name         String
+  surname      String
+  phone_number String
+  sms          String
+  createdAt    DateTime @default(now())
 }
 
-model courses{
-  id                   Int     @default(autoincrement()) @id
-  title                String @unique
-  description          String
-  author               String
-  createdAt            DateTime @default(now())
+model courses {
+  id          Int      @id @default(autoincrement())
+  title       String   @unique
+  description String
+  author      String
+  createdAt   DateTime @default(now())
 }
 
 model item{
@@ -58,7 +54,6 @@ model item{
   length               Int
   type                 String
   fileurl              String
-  createdAt            DateTime @default(now())
 }
 
 model news{
@@ -66,14 +61,5 @@ model news{
   title                String
   description          String
   photoUrl             String
-  mainUrl              String?
-  createdAt            DateTime @default(now())
-}
-
-model notes{
-  id                   Int     @default(autoincrement()) @id
-  title                String
-  description          String
-  userId               String
-  createdAt            DateTime @default(now())
+  mainUrl              String ?
 }
