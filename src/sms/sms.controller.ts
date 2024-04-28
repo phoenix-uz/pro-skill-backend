@@ -19,7 +19,7 @@ export class SmsController {
       },
     },
   })
-  @Post('add-news')
+  @Post()
   async registerUser(
     @Body()
     body: CreateSmsDto,
@@ -27,7 +27,7 @@ export class SmsController {
     return this.smsService.create(body);
   }
 
-  @Get('show-all')
+  @Get()
   findAll() {
     return this.smsService.findAll();
   }

@@ -45,15 +45,15 @@ export class AuthController {
     return this.authService.login(body.phone_number, body.password);
   }
 
-  @Post('send-phone-code')
-  async sendPhoneCode(@Body() body: { phone_number: string }) {
-    return this.authService.sendPhoneCode(body.phone_number);
-  }
+  // @Post('send-phone-code')
+  // async sendPhoneCode(@Body() body: { phone_number: string }) {
+  //   return this.authService.sendPhoneCode(body.phone_number);
+  // }
 
-  @Post('verify-phone-code')
-  async verifyPhoneCode(@Body() body: { phone_number: string; code: number }) {
-    return this.authService.verifyPhoneCode(body.phone_number, body.code);
-  }
+  // @Post('verify-phone-code')
+  // async verifyPhoneCode(@Body() body: { phone_number: string; code: number }) {
+  //   return this.authService.verifyPhoneCode(body.phone_number, body.code);
+  // }
 
   @Get('cout')
   async getUser() {

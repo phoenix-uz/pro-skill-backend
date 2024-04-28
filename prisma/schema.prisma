@@ -17,8 +17,10 @@ model User {
 }
 
 model library {
-  id   Int    @id @default(autoincrement())
-  name String @unique
+  id                   Int    @id @default(autoincrement())
+  name                 String @unique
+  count                Int
+  photoUrl             String 
 }
 
 model file {
@@ -54,6 +56,7 @@ model item{
   length               Int
   type                 String
   fileurl              String
+  createdAt            DateTime @default(now())
 }
 
 model news{
@@ -62,4 +65,12 @@ model news{
   description          String
   photoUrl             String
   mainUrl              String ?
+  createdAt            DateTime @default(now())
+}
+model notes{
+  id                   Int     @default(autoincrement()) @id
+  title                String
+  description          String
+  userId               Int
+  createdAt            DateTime @default(now())
 }

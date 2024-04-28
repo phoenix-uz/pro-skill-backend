@@ -7,12 +7,4 @@ import { PrismaService } from 'src/prisma.service';
   controllers: [CoursesController],
   providers: [CoursesService, PrismaService],
 })
-<<<<<<< HEAD
-
 export class CoursesModule {}
-
-
-
-=======
-export class CoursesModule {}
->>>>>>> ccf96026eb6770b7bf5097b72eb86754bc6dc396

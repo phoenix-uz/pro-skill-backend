@@ -20,7 +20,7 @@ export class NewsController {
     }
   })
 
-  @Post('add-news')
+  @Post()
   async addNews(
     @Body()
     body: CreateNewsDto,

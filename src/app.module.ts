@@ -9,13 +9,13 @@ import { SmsModule } from './sms/sms.module';
 import { CoursesModule } from './courses/courses.module';
 import { ItemModule } from './item/item.module';
 import { NewsModule } from './news/news.module';
-<<<<<<< HEAD
+
 import { NotesModule } from './notes/notes.module';
 
-=======
+
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
->>>>>>> ccf96026eb6770b7bf5097b72eb86754bc6dc396
+
 
 @Module({
   imports: [
@@ -26,15 +26,15 @@ import { join } from 'path';
     CoursesModule,
     ItemModule,
     NewsModule,
-<<<<<<< HEAD
-    NotesModule
-=======
+
+    NotesModule,
+
     //for serving static files
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'uploads'), // Path to the uploads directory
       serveRoot: '/uploads', // URL path to serve the files from
     }),
->>>>>>> ccf96026eb6770b7bf5097b72eb86754bc6dc396
+
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService, PrismaClient],

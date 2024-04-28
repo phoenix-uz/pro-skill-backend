@@ -25,7 +25,7 @@ export class CoursesController {
       },
     },
   })
-  @Post('add')
+  @Post()
   async CreateCourse(
     @Body()
     body: CreateCourseDto,

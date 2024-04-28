@@ -56,8 +56,6 @@ export class AuthService {
     const user = await this.prisma.user.findMany();
     return user;
   }
-
-<<<<<<< HEAD
   async update(id: number, updateAuthDto: Body) {
     try {
       const updateAuth = await this.prisma.user.update({
@@ -68,22 +66,23 @@ export class AuthService {
     } catch (error) {
       console.log(error);
       throw new HttpException(
-        'Failed to update news',
+        'Failed to update user',
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
-=======
-  async sendPhoneCode(phone: string) {
-    const code = await this.getRandomSixDigitNumber();
-    const message = `Your code is ${code}`;
-    await this.prisma.phoneCode.upsert({
-      where: { phone: phone },
-      update: { code: code },
-      create: { phone: phone, code: code },
-    });
-    // await this.sendSms(phone, message);
-    return 'code';
   }
+
+  // async sendPhoneCode(phone: string) {
+  //   const code = await this.getRandomSixDigitNumber();
+  //   const message = `Your code is ${code}`;
+  //   await this.prisma.phoneCode.upsert({
+  //     where: { phone: phone },
+  //     update: { code: code },
+  //     create: { phone: phone, code: code },
+  //   });
+  //   // await this.sendSms(phone, message);
+  //   return 'code';
+  // }
 
   // async sendSMS(number: string, message: string) {
   //   let TOKEN: any = await this.prisma.smsToken.findUnique({
@@ -155,6 +154,5 @@ export class AuthService {
   // get random 6 digit number
   async getRandomSixDigitNumber() {
     return Math.floor(100000 + Math.random() * 900000);
->>>>>>> ccf96026eb6770b7bf5097b72eb86754bc6dc396
   }
 }

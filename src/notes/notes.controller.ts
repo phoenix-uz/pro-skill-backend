@@ -1,15 +1,29 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { NotesService } from './notes.service';
 import { CreateNoteDto } from './dto/create-note.dto';
-import { UpdateNoteDto } from './dto/update-note.dto';
+import { ApiTags, ApiBody } from '@nestjs/swagger'; 
+import { PrismaService } from 'src/prisma.service'
+
 @ApiTags('Notes')
 @Controller('notes')
 export class NotesController {
   constructor(private readonly notesService: NotesService) {}
-
+  @ApiBody({
+    schema:{
+      type:'object',
+      properties:{
+        title:{type:'string'},
+        description: {type:'string'},
+        userId: {type:'number'}
+      }
+    }
+  })
   @Post()
-  create(@Body() createNoteDto: CreateNoteDto) {
-    return this.notesService.create(createNoteDto);
+  async addNotes(
+    @Body() 
+  body:CreateNoteDto) 
+  {
+    return this.notesService.create(body);
   }
 
   @Get()
@@ -17,14 +31,24 @@ export class NotesController {
     return this.notesService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.notesService.findOne(+id);
+  @Get(':userId')
+  findByUserId(@Param('userId') userId: number) {
+    return this.notesService.findByUserId(+userId);
   }
 
+@ApiBody({
+    schema:{
+      type:'object',
+      properties:{
+        title:{type:'string'},
+        description: {type:'string'},
+        userId: {type:'number'}
+      }
+    }
+  })
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateNoteDto: UpdateNoteDto) {
-    return this.notesService.update(+id, updateNoteDto);
+  update(@Param('id') id: string, @Body() body: Body) {
+    return this.notesService.update(+id, body);
   }
 
   @Delete(':id')

@@ -12,6 +12,8 @@ export class LibraryController {
       type: 'object',
       properties: {
         name: { type: 'string' },
+        count: {type: 'number'},
+        photoUrl: {type:'string'}
       },
     },
   })

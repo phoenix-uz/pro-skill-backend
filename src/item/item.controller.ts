@@ -28,7 +28,7 @@ export class ItemController {
       },
     },
   })
-  @Post('add')
+  @Post()
   async CreateItem(
     @Body()
     body: CreateItemDto,
