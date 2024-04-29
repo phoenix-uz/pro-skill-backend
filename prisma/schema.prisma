@@ -8,17 +8,16 @@ generator client {
 }
 
 model User {
-  id               Int      @id @default(autoincrement())
-  fullname         String
-  email            String   @unique
-  phone_number     String   @unique
-  phone_number_add String?
-  gender           String?
-  city             String?
-  birthday         String?
-  password         String
-  role             String   @default("user")
-  created_at       DateTime @default(now())
+  id           Int      @id @default(autoincrement())
+  fullname     String
+  email        String   @unique
+  phone_number String   @unique
+  gender       String?
+  city         String?
+  birthday     String?
+  password     String
+  role         String   @default("user")
+  created_at   DateTime @default(now())
 }
 
 model PhoneCode {

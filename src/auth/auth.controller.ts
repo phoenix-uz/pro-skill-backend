@@ -1,7 +1,18 @@
-import { Controller, Get, Post, Body, Patch, Param } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  UseGuards,
+  Request,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateAuthDto } from './dto/create-auth.dto';
-import { ApiBody, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiTags, ApiBearerAuth } from '@nestjs/swagger';
+import { AuthGuard } from './auth.guad';
+import { UpdateAuthDto } from './dto/update-auth.dto';
 
 @ApiTags('Authentications')
 @Controller('auth')
@@ -72,33 +83,60 @@ export class AuthController {
     return this.authService.verifyPhoneCode(body.phone_number, body.code);
   }
 
-  @Get('cout')
-  async getUser() {
-    const user = await this.authService.getStudentCount();
-    return { conunt: user };
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        phone_number: { type: 'string' },
+        new_password: { type: 'string' },
+        code: { type: 'string' },
+      },
+    },
+  })
+  @Post('change-password')
+  async changePassword(
+    @Body() body: { phone_number: string; new_password: string; code: string },
+  ) {
+    return this.authService.changePassword(
+      body.phone_number,
+      body.new_password,
+      body.code,
+    );
   }
 
-  @Get('show-all')
-  findAll() {
-    return this.authService.findAll();
+  // @Get('count')
+  // async getUser() {
+  //   const user = await this.authService.getStudentCount();
+  //   return { conunt: user };
+  // }
+  // @Get('show-all')
+  // findAll() {
+  //   return this.authService.findAll();
+  // }
+
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth()
+  @Get('profile')
+  profile(@Request() req: any) {
+    return this.authService.getProfile(req.user_id);
   }
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth()
   @ApiBody({
     schema: {
       type: 'object',
       properties: {
         fullname: { type: 'string' },
         email: { type: 'string' },
-        phone_number: { type: 'string' },
-        phone_number_add: { type: 'string' },
         gender: { type: 'string' },
         city: { type: 'string' },
-        dateOfBirth: { type: 'string' },
+        birthday: { type: 'string' },
         password: { type: 'string' },
       },
     },
   })
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() body: Body) {
-    return this.authService.update(+id, body);
+  @Patch('update')
+  update(@Body() body: UpdateAuthDto, @Request() req: any) {
+    return this.authService.update(body, req.user_id);
   }
 }

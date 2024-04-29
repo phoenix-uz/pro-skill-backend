@@ -5,6 +5,7 @@ import { CreateAuthDto } from './dto/create-auth.dto';
 import { PrismaService } from 'src/prisma.service';
 import { Cache } from 'cache-manager';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { UpdateAuthDto } from './dto/update-auth.dto';
 
 @Injectable()
 export class AuthService {
@@ -63,17 +64,44 @@ export class AuthService {
     const user = await this.prisma.user.count();
     return user;
   }
+
   async findAll() {
     const user = await this.prisma.user.findMany();
     return user;
   }
-  async update(id: number, updateAuthDto: Body) {
+
+  async getProfile(user_id: number) {
+    const user = await this.prisma.user.findUnique({
+      where: { id: user_id },
+      select: {
+        id: true,
+        fullname: true,
+        phone_number: true,
+        email: true,
+        birthday: true,
+        gender: true,
+      },
+    });
+    if (!user) {
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    }
+    return user;
+  }
+  async update(body: UpdateAuthDto, user_id: number) {
     try {
-      const updateAuth = await this.prisma.user.update({
-        where: { id: id },
-        data: updateAuthDto,
+      // update except password
+      await this.prisma.user.update({
+        where: { id: user_id },
+        data: {
+          fullname: body.fullname,
+          phone_number: body.phone_number,
+          email: body.email,
+          gender: body.gender,
+          city: body.city,
+          birthday: body.birthday,
+        },
       });
-      return updateAuth;
+      return 'updated';
     } catch (error) {
       console.log(error);
       throw new HttpException(
@@ -107,6 +135,32 @@ export class AuthService {
     }
     return 'verified';
   }
+
+  async changePassword(
+    phone_number: string,
+    new_password: string,
+    code: string,
+  ) {
+    const phoneCode = await this.prisma.phoneCode.findUnique({
+      where: { phone_number: phone_number },
+    });
+    if (!phoneCode) {
+      throw new HttpException('Phone number not found', HttpStatus.NOT_FOUND);
+    }
+    if (phoneCode.code !== code) {
+      throw new HttpException('Wrong code', HttpStatus.UNAUTHORIZED);
+    }
+    const password = await bcrypt.hash(
+      new_password,
+      +process.env.BCRYPT_PASSWORD,
+    );
+    await this.prisma.user.update({
+      where: { phone_number: phone_number },
+      data: { password: password },
+    });
+    return 'changed';
+  }
+
   async sendSms(number: string, message: string) {
     let TOKEN = await this.cacheManager.get('smsToken');
     if (!TOKEN) {
@@ -167,6 +221,7 @@ export class AuthService {
       throw new HttpException('Token not found', HttpStatus.BAD_REQUEST);
     }
   }
+
   async getRandomSixDigitNumber() {
     return Math.floor(100000 + Math.random() * 900000).toString();
   }
