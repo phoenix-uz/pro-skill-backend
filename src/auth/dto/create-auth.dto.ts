@@ -5,7 +5,7 @@ export class CreateAuthDto {
   phone_number_add: string;
   gender: string;
   city: string;
-  dateOfBirth: string;
+  birthday: string;
   password: string;
-  //sms_code: number;
+  role: string;
 }

@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { CreateLibraryDto } from './dto/create-library.dto';
 import { PrismaService } from 'src/prisma.service';
-import { count } from 'console';
 
 @Injectable()
 export class LibraryService {

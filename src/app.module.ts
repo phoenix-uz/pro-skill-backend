@@ -4,7 +4,6 @@ import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { PrismaService } from 'src/prisma.service';
 import { LibraryModule } from './library/library.module';
-import { PrismaClient } from '@prisma/client';
 import { SmsModule } from './sms/sms.module';
 import { CoursesModule } from './courses/courses.module';
 import { ItemModule } from './item/item.module';
@@ -12,10 +11,8 @@ import { NewsModule } from './news/news.module';
 
 import { NotesModule } from './notes/notes.module';
 
-
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
-
 
 @Module({
   imports: [
@@ -26,7 +23,6 @@ import { join } from 'path';
     CoursesModule,
     ItemModule,
     NewsModule,
-
     NotesModule,
 
     //for serving static files
@@ -34,9 +30,8 @@ import { join } from 'path';
       rootPath: join(__dirname, '..', 'uploads'), // Path to the uploads directory
       serveRoot: '/uploads', // URL path to serve the files from
     }),
-
   ],
   controllers: [AppController],
-  providers: [AppService, PrismaService, PrismaClient],
+  providers: [AppService, PrismaService],
 })
 export class AppModule {}

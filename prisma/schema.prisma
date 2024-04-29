@@ -8,29 +8,41 @@ generator client {
 }
 
 model User {
+  id               Int      @id @default(autoincrement())
+  fullname         String
+  email            String   @unique
+  phone_number     String   @unique
+  phone_number_add String?
+  gender           String?
+  city             String?
+  birthday         String?
+  password         String
+  role             String   @default("user")
+  created_at       DateTime @default(now())
+}
+
+model PhoneCode {
   id           Int      @id @default(autoincrement())
-  fullname     String
-  email        String   @unique
   phone_number String   @unique
-  password     String
+  code         String
   created_at   DateTime @default(now())
 }
 
-model library {
+model Library {
   id       Int    @id @default(autoincrement())
   name     String @unique
   count    Int
   photoUrl String
 }
 
-model file {
+model File {
   id        Int      @id @default(autoincrement())
   filename  String
   fileurl   String
   createdAt DateTime @default(now())
 }
 
-model sms {
+model Sms {
   id           Int      @id @default(autoincrement())
   name         String
   surname      String
@@ -39,7 +51,7 @@ model sms {
   createdAt    DateTime @default(now())
 }
 
-model courses {
+model Courses {
   id          Int      @id @default(autoincrement())
   title       String   @unique
   description String
@@ -47,7 +59,7 @@ model courses {
   createdAt   DateTime @default(now())
 }
 
-model item {
+model Item {
   id        Int      @id @default(autoincrement())
   title     String
   subtitle  String
@@ -59,7 +71,7 @@ model item {
   createdAt DateTime @default(now())
 }
 
-model news {
+model News {
   id          Int      @id @default(autoincrement())
   title       String
   description String
@@ -68,7 +80,7 @@ model news {
   createdAt   DateTime @default(now())
 }
 
-model notes {
+model Notes {
   id          Int      @id @default(autoincrement())
   title       String
   description String

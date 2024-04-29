@@ -1,4 +1,5 @@
 export class CreateLibraryDto {
-    name: 'string'
-    //count
+  name: 'string';
+  count: number;
+  photoUrl: 'string';
 }

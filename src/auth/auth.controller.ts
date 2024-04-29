@@ -3,7 +3,7 @@ import { AuthService } from './auth.service';
 import { CreateAuthDto } from './dto/create-auth.dto';
 import { ApiBody, ApiTags } from '@nestjs/swagger';
 
-@ApiTags('Auth')
+@ApiTags('Authentications')
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
@@ -18,7 +18,7 @@ export class AuthController {
         phone_number_add: { type: 'string' },
         gender: { type: 'string' },
         city: { type: 'string' },
-        dateOfBirth: { type: 'string' },
+        birthday: { type: 'string' },
         password: { type: 'string' },
       },
     },
@@ -45,15 +45,32 @@ export class AuthController {
     return this.authService.login(body.phone_number, body.password);
   }
 
-  // @Post('send-phone-code')
-  // async sendPhoneCode(@Body() body: { phone_number: string }) {
-  //   return this.authService.sendPhoneCode(body.phone_number);
-  // }
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        phone_number: { type: 'string' },
+      },
+    },
+  })
+  @Post('send-phone-code')
+  async sendPhoneCode(@Body() body: { phone_number: string }) {
+    return this.authService.sendPhoneCode(body.phone_number);
+  }
 
-  // @Post('verify-phone-code')
-  // async verifyPhoneCode(@Body() body: { phone_number: string; code: number }) {
-  //   return this.authService.verifyPhoneCode(body.phone_number, body.code);
-  // }
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        phone_number: { type: 'string' },
+        code: { type: 'string' },
+      },
+    },
+  })
+  @Post('verify-phone-code')
+  async verifyPhoneCode(@Body() body: { phone_number: string; code: string }) {
+    return this.authService.verifyPhoneCode(body.phone_number, body.code);
+  }
 
   @Get('cout')
   async getUser() {
