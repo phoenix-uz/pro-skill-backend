@@ -1,5 +1,5 @@
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -8,19 +8,19 @@ generator client {
 }
 
 model User {
-  id                   Int     @default(autoincrement()) @id
-  fullname             String
-  email                String @unique
-  phone_number         String @unique
-  password             String
-  created_at           DateTime @default(now())
+  id           Int      @id @default(autoincrement())
+  fullname     String
+  email        String   @unique
+  phone_number String   @unique
+  password     String
+  created_at   DateTime @default(now())
 }
 
 model library {
-  id                   Int    @id @default(autoincrement())
-  name                 String @unique
-  count                Int
-  photoUrl             String 
+  id       Int    @id @default(autoincrement())
+  name     String @unique
+  count    Int
+  photoUrl String
 }
 
 model file {
@@ -47,30 +47,31 @@ model courses {
   createdAt   DateTime @default(now())
 }
 
-model item{
-  id                   Int     @default(autoincrement()) @id
-  title                String
-  subtitle             String
-  author               String
-  price                Int
-  length               Int
-  type                 String
-  fileurl              String
-  createdAt            DateTime @default(now())
+model item {
+  id        Int      @id @default(autoincrement())
+  title     String
+  subtitle  String
+  author    String
+  price     Int
+  length    Int
+  type      String
+  fileurl   String
+  createdAt DateTime @default(now())
 }
 
-model news{
-  id                   Int     @default(autoincrement()) @id
-  title                String
-  description          String
-  photoUrl             String
-  mainUrl              String ?
-  createdAt            DateTime @default(now())
+model news {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String
+  photoUrl    String
+  mainUrl     String?
+  createdAt   DateTime @default(now())
 }
-model notes{
-  id                   Int     @default(autoincrement()) @id
-  title                String
-  description          String
-  userId               Int
-  createdAt            DateTime @default(now())
+
+model notes {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String
+  userId      Int
+  createdAt   DateTime @default(now())
 }
