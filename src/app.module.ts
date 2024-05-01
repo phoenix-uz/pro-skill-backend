@@ -13,6 +13,7 @@ import { NotesModule } from './notes/notes.module';
 
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+import { AdminModule } from './admin/admin.module';
 
 @Module({
   imports: [
@@ -30,6 +31,8 @@ import { join } from 'path';
       rootPath: join(__dirname, '..', 'uploads'), // Path to the uploads directory
       serveRoot: '/uploads', // URL path to serve the files from
     }),
+
+    AdminModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],

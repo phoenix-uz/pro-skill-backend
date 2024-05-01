@@ -5,7 +5,7 @@ import { PrismaService } from 'src/prisma.service';
 
 @Injectable()
 export class NewsService {
-  constructor(private readonly prisma: PrismaService) {} 
+  constructor(private readonly prisma: PrismaService) {}
 
   async create(body: CreateNewsDto) {
     const news = await this.prisma.news.create({
@@ -20,23 +20,22 @@ export class NewsService {
     const news = await this.prisma.news.findMany();
     return news;
   }
-  
 
   async findOne(id: number) {
-    try{
-       const getNews = await this.prisma.news.findUnique({
-        where:{id: id }
-       })
-       return getNews
-    }catch (error) {
+    try {
+      const getNews = await this.prisma.news.findUnique({
+        where: { id: id },
+      });
+      return getNews;
+    } catch (error) {
       throw new HttpException(
         'Failed to delete news',
         HttpStatus.INTERNAL_SERVER_ERROR,
-      )
+      );
+    }
   }
-}
 
-  async update(id: number, updateNewsDto: Body) {
+  async update(id: number, updateNewsDto: UpdateNewsDto) {
     try {
       const updateNews = await this.prisma.news.update({
         where: { id: id },
