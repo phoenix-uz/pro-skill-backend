@@ -87,3 +87,9 @@ model Notes {
   userId      Int
   createdAt   DateTime @default(now())
 }
+
+model message{
+  id          Int      @id @default(autoincrement())
+  text        String
+  createdAt   DateTime @default(now())
+}

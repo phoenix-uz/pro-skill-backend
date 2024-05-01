@@ -13,8 +13,8 @@ import { NotesModule } from './notes/notes.module';
 
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+import { MessageModule } from './message/message.module';
 import { AdminModule } from './admin/admin.module';
-
 @Module({
   imports: [
     AuthModule,
@@ -33,6 +33,7 @@ import { AdminModule } from './admin/admin.module';
     }),
 
     AdminModule,
+    MessageModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],
