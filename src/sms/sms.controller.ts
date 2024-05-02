@@ -1,7 +1,8 @@
-import { Controller, Get, Post, Body } from '@nestjs/common';
+import { Controller, Get, Post, Body, UseGuards } from '@nestjs/common';
 import { SmsService } from './sms.service';
 import { CreateSmsDto } from './dto/create-sms.dto';
-import { ApiBody, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
+import { AdminGuard } from 'src/admin/admin.guad';
 
 @ApiTags('Sms')
 @Controller('sms')
@@ -14,7 +15,7 @@ export class SmsController {
       properties: {
         name: { type: 'string' },
         surname: { type: 'string' },
-        phone_number: { type: 'string' },
+        phoneNumber: { type: 'string' },
         sms: { type: 'string' },
       },
     },
@@ -27,8 +28,17 @@ export class SmsController {
     return this.smsService.create(body);
   }
 
+  @ApiTags('Admin')
+  @UseGuards(AdminGuard)
+  @ApiBearerAuth()
   @Get()
   findAll() {
     return this.smsService.findAll();
+  }
+
+  @ApiTags('Admin', 'Finances')
+  @Get('count')
+  count() {
+    return this.smsService.count();
   }
 }

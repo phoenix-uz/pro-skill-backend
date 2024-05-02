@@ -1,48 +1,47 @@
-import { Injectable,HttpException,HttpStatus } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { CreateNoteDto } from './dto/create-note.dto';
 import { UpdateNoteDto } from './dto/update-note.dto';
-import { PrismaService } from 'src/prisma.service'
+import { PrismaService } from 'src/prisma.service';
 
 @Injectable()
 export class NotesService {
-  constructor(private readonly prisma: PrismaService) {} 
+  constructor(private readonly prisma: PrismaService) {}
 
-  async create(body: CreateNoteDto) {
+  async create(userId: number, body: CreateNoteDto) {
     const notes = await this.prisma.notes.create({
       data: {
+        userId: userId,
         ...body,
       },
     });
     return notes;
   }
 
-  async findAll() {
-    const notes = await this.prisma.notes.findMany();
-    return notes
-  }
+  // async findAll() {
+  //   const notes = await this.prisma.notes.findMany();
+  //   return notes;
+  // }
 
-  async findByUserId(userId: number){
-    try{
+  async findByUserId(userId: number) {
+    try {
       const findNotes = await this.prisma.notes.findMany({
-        where: {userId: userId}
-      })
-      return findNotes
-    }
-    catch (error) {
-      console.log(error);
+        where: { userId: userId },
+        orderBy: { id: 'asc' },
+      });
+      return findNotes;
+    } catch (error) {
       throw new HttpException(
         'Failed to update notes',
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
-
   }
 
-  async update(id: number, updateNoteDto: Body) {
+  async update(userId: number, id: number, body: UpdateNoteDto) {
     try {
       const updateNotes = await this.prisma.notes.update({
-        where: { id: id },
-        data: updateNoteDto,
+        where: { userId: userId, id: id },
+        data: body,
       });
       return updateNotes;
     } catch (error) {
@@ -54,10 +53,10 @@ export class NotesService {
     }
   }
 
-  async remove(id: number) {
+  async remove(userId: number, id: number) {
     try {
       const deletednotes = await this.prisma.notes.delete({
-        where: { id: id },
+        where: { userId: userId, id: id },
       });
       return deletednotes;
     } catch (error) {

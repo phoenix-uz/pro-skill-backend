@@ -13,8 +13,8 @@ export class AppService {
   async saveFile(filename: string, fileurl: string) {
     return await this.prisma.file.create({
       data: {
-        filename: filename,
-        fileurl: fileurl,
+        fileName: filename,
+        fileUrl: fileurl,
       },
     });
   }

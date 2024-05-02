@@ -1,8 +1,7 @@
 export class CreateAuthDto {
-  fullname: string;
+  fullName: string;
   email: string;
-  phone_number: string;
-  phone_number_add: string;
+  phoneNumber: string;
   gender: string;
   city: string;
   birthday: string;

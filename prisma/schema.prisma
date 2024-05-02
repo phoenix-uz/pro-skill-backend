@@ -8,29 +8,28 @@ generator client {
 }
 
 model User {
-  id           Int      @id @default(autoincrement())
-  fullName     String
-  email        String   @unique
+  id          Int      @id @default(autoincrement())
+  fullName    String
+  email       String   @unique
   phoneNumber String   @unique
-  gender       String?
-  city         String?
-  birthday     String?
-  password     String
-  role         String   @default("user")
+  gender      String?
+  city        String?
+  birthday    String?
+  password    String
+  role        String   @default("user")
   createdAt   DateTime @default(now())
 }
 
 model PhoneCode {
-  id           Int      @id @default(autoincrement())
+  id          Int      @id @default(autoincrement())
   phoneNumber String   @unique
-  code         String
+  code        String
   createdAt   DateTime @default(now())
 }
 
 model Library {
   id       Int    @id @default(autoincrement())
   name     String @unique
-  count    Int
   photoUrl String
 }
 
@@ -42,13 +41,13 @@ model File {
 }
 
 model Sms {
-  id           Int      @id @default(autoincrement())
-  name         String
-  surname      String
+  id          Int      @id @default(autoincrement())
+  name        String
+  surname     String
   phoneNumber String
-  sms          String
+  sms         String
   isRead      Boolean  @default(false)
-  createdAt    DateTime @default(now())
+  createdAt   DateTime @default(now())
 }
 
 model Courses {
@@ -64,10 +63,12 @@ model Item {
   title     String
   subtitle  String
   author    String
-  price     Int
+  price     Int // for balls
   length    Int
   type      String
   fileUrl   String
+  libraryId Int
+  photoUrl  String?
   createdAt DateTime @default(now())
 }
 
@@ -88,8 +89,8 @@ model Notes {
   createdAt   DateTime @default(now())
 }
 
-model message{
-  id          Int      @id @default(autoincrement())
-  text        String
-  createdAt   DateTime @default(now())
+model Message {
+  id        Int      @id @default(autoincrement())
+  text      String
+  createdAt DateTime @default(now())
 }

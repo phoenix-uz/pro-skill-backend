@@ -3,5 +3,6 @@ export class CreateItemDto {
   subtitle: string;
   author: string;
   price: number;
-  fileurl: string;
+  libraryId: number;
+  length: number;
 }

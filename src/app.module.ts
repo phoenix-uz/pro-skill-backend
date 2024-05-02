@@ -15,6 +15,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { MessageModule } from './message/message.module';
 import { AdminModule } from './admin/admin.module';
+import { MentorModule } from './mentor/mentor.module';
 @Module({
   imports: [
     AuthModule,
@@ -34,6 +35,7 @@ import { AdminModule } from './admin/admin.module';
 
     AdminModule,
     MessageModule,
+    MentorModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],

@@ -19,4 +19,9 @@ export class SmsService {
     const sms = await this.prisma.sms.findMany();
     return sms;
   }
+
+  async count() {
+    const sms = await this.prisma.sms.count();
+    return sms;
+  }
 }

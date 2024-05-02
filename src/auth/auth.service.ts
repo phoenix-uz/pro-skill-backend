@@ -30,20 +30,20 @@ export class AuthService {
         },
       });
       //generate token
-      const payload = { sub: user.id, phone_number: user.phone_number };
+      const payload = { sub: user.id, phoneNumber: user.phoneNumber };
       const access_token = await this.jwtService.signAsync(payload);
       return {
         access_token: access_token,
-        user_id: user.id,
+        userId: user.id,
       };
     } catch (e) {
       throw new HttpException(e.message, HttpStatus.CONFLICT);
     }
   }
 
-  async login(phone_number: string, password: string) {
+  async login(phoneNumber: string, password: string) {
     const user = await this.prisma.user.findUnique({
-      where: { phone_number: phone_number },
+      where: { phoneNumber: phoneNumber },
     });
     if (!user) {
       throw new HttpException('User not found', HttpStatus.NOT_FOUND);
@@ -52,22 +52,12 @@ export class AuthService {
       throw new HttpException('Wrong password', HttpStatus.UNAUTHORIZED);
     }
     //generate token
-    const payload = { sub: user.id, phone_number: user.phone_number };
+    const payload = { sub: user.id, phoneNumber: user.phoneNumber };
     const access_token = await this.jwtService.signAsync(payload);
     return {
       access_token: access_token,
-      user_id: user.id,
+      userId: user.id,
     };
-  }
-
-  async getStudentCount() {
-    const user = await this.prisma.user.count();
-    return user;
-  }
-
-  async findAll() {
-    const user = await this.prisma.user.findMany();
-    return user;
   }
 
   async getProfile(user_id: number) {
@@ -75,8 +65,8 @@ export class AuthService {
       where: { id: user_id },
       select: {
         id: true,
-        fullname: true,
-        phone_number: true,
+        fullName: true,
+        phoneNumber: true,
         email: true,
         birthday: true,
         gender: true,
@@ -93,8 +83,8 @@ export class AuthService {
       await this.prisma.user.update({
         where: { id: user_id },
         data: {
-          fullname: body.fullname,
-          phone_number: body.phone_number,
+          fullName: body.fullName,
+          phoneNumber: body.phoneNumber,
           email: body.email,
           gender: body.gender,
           city: body.city,
@@ -111,21 +101,21 @@ export class AuthService {
     }
   }
 
-  async sendPhoneCode(phone_number: string) {
+  async sendPhoneCode(phoneNumber: string) {
     const code = await this.getRandomSixDigitNumber();
     const message = `Your code is ${code}`;
     await this.prisma.phoneCode.upsert({
-      where: { phone_number: phone_number },
+      where: { phoneNumber: phoneNumber },
       update: { code: code },
-      create: { phone_number: phone_number, code: code },
+      create: { phoneNumber: phoneNumber, code: code },
     });
-    await this.sendSms(phone_number, message);
+    await this.sendSms(phoneNumber, message);
     return 'sended';
   }
 
-  async verifyPhoneCode(phone_number: string, code: string) {
+  async verifyPhoneCode(phoneNumber: string, code: string) {
     const phoneCode = await this.prisma.phoneCode.findUnique({
-      where: { phone_number: phone_number },
+      where: { phoneNumber: phoneNumber },
     });
     if (!phoneCode) {
       throw new HttpException('Code not found', HttpStatus.NOT_FOUND);
@@ -136,13 +126,9 @@ export class AuthService {
     return 'verified';
   }
 
-  async changePassword(
-    phone_number: string,
-    new_password: string,
-    code: string,
-  ) {
+  async changePassword(phoneNumber: string, newPassword: string, code: string) {
     const phoneCode = await this.prisma.phoneCode.findUnique({
-      where: { phone_number: phone_number },
+      where: { phoneNumber: phoneNumber },
     });
     if (!phoneCode) {
       throw new HttpException('Phone number not found', HttpStatus.NOT_FOUND);
@@ -151,17 +137,17 @@ export class AuthService {
       throw new HttpException('Wrong code', HttpStatus.UNAUTHORIZED);
     }
     const password = await bcrypt.hash(
-      new_password,
+      newPassword,
       +process.env.BCRYPT_PASSWORD,
     );
     await this.prisma.user.update({
-      where: { phone_number: phone_number },
+      where: { phoneNumber: phoneNumber },
       data: { password: password },
     });
     return 'changed';
   }
 
-  async sendSms(number: string, message: string) {
+  async sendSms(phoneNumber: string, message: string) {
     let TOKEN = await this.cacheManager.get('smsToken');
     if (!TOKEN) {
       TOKEN = await this.getToken();
@@ -173,7 +159,7 @@ export class AuthService {
         Authorization: `Bearer ${TOKEN}`,
       },
       body: JSON.stringify({
-        mobile_phone: number,
+        mobile_phone: phoneNumber,
         message: message,
         from: process.env.SMS_FROM,
       }),
@@ -187,7 +173,7 @@ export class AuthService {
           Authorization: `Bearer ${TOKEN}`,
         },
         body: JSON.stringify({
-          mobile_phone: number,
+          mobile_phone: phoneNumber,
           message: message,
           from: process.env.SMS_FROM,
         }),
