@@ -16,6 +16,7 @@ model User {
   city        String?
   birthday    String?
   password    String
+  notes       Notes[]
   role        String   @default("user")
   createdAt   DateTime @default(now())
 }
@@ -30,6 +31,7 @@ model PhoneCode {
 model Library {
   id       Int    @id @default(autoincrement())
   name     String @unique
+  items    Item[]
   photoUrl String
 }
 
@@ -50,14 +52,6 @@ model Sms {
   createdAt   DateTime @default(now())
 }
 
-model Courses {
-  id          Int      @id @default(autoincrement())
-  title       String   @unique
-  description String
-  author      String
-  createdAt   DateTime @default(now())
-}
-
 model Item {
   id        Int      @id @default(autoincrement())
   title     String
@@ -70,6 +64,7 @@ model Item {
   libraryId Int
   photoUrl  String?
   createdAt DateTime @default(now())
+  Library   Library  @relation(fields: [libraryId], references: [id])
 }
 
 model News {
@@ -87,10 +82,71 @@ model Notes {
   description String
   userId      Int
   createdAt   DateTime @default(now())
+  User        User     @relation(fields: [userId], references: [id])
 }
 
 model Message {
   id        Int      @id @default(autoincrement())
   text      String
   createdAt DateTime @default(now())
+}
+
+model Courses {
+  id          Int       @id @default(autoincrement())
+  title       String    @unique
+  description String
+  author      String
+  time        String
+  photoUrls   String[]
+  modules     Modules[]
+  createdAt   DateTime  @default(now())
+}
+
+model Modules {
+  id        Int       @id @default(autoincrement())
+  Course    Courses   @relation(fields: [courseId], references: [id])
+  title     String
+  videoUrl  String
+  time      String
+  courseId  Int
+  Lessons   Lessons[]
+  createdAt DateTime  @default(now())
+}
+
+model Lessons {
+  id        Int      @id @default(autoincrement())
+  title     String
+  videoUrl  String
+  time      String
+  test      Test[]
+  moduleId  Int
+  Modules   Modules  @relation(fields: [moduleId], references: [id])
+  createdAt DateTime @default(now())
+}
+
+model Test {
+  id        Int         @id @default(autoincrement())
+  title     String
+  questions Questions[]
+  createdAt DateTime    @default(now())
+  Lessons   Lessons?    @relation(fields: [lessonsId], references: [id])
+  lessonsId Int?
+}
+
+model Questions {
+  id        Int       @id @default(autoincrement())
+  title     String
+  answers   Answers[]
+  testId    Int
+  Test      Test      @relation(fields: [testId], references: [id])
+  createdAt DateTime  @default(now())
+}
+
+model Answers {
+  id         Int       @id @default(autoincrement())
+  title      String
+  isCorrect  Boolean
+  questionId Int
+  Questions  Questions @relation(fields: [questionId], references: [id])
+  createdAt  DateTime  @default(now())
 }

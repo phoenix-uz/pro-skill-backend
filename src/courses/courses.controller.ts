@@ -22,6 +22,7 @@ export class CoursesController {
         title: { type: 'string' },
         description: { type: 'string' },
         author: { type: 'string' },
+        time: { type: 'string' },
       },
     },
   })
@@ -45,6 +46,7 @@ export class CoursesController {
         title: { type: 'string' },
         description: { type: 'string' },
         author: { type: 'string' },
+        time: { type: 'string' },
       },
     },
   })

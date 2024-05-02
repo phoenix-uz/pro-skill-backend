@@ -52,6 +52,10 @@ export class ItemControllerAdmin {
     @UploadedFiles() files: Express.Multer.File[],
     @Body() body: CreateItemDto,
   ) {
+    body.price = body.price ? +body.price : 0;
+    body.length = body.length ? +body.length : 0;
+    body.libraryId = +body.libraryId;
+
     return this.itemServiceAdmin.createItem(files, body);
   }
 
@@ -84,11 +88,14 @@ export class ItemControllerAdmin {
     @UploadedFiles() files: Express.Multer.File[],
     @Body() body: UpdateItemDto,
   ) {
+    body.price = body.price ? +body.price : 0;
+    body.length = body.length ? +body.length : 0;
+    body.libraryId = +body.libraryId;
     return this.itemServiceAdmin.update(files, body);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  remove(@Param('id') id: number) {
     return this.itemServiceAdmin.remove(+id);
   }
 }

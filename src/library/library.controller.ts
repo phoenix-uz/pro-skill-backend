@@ -82,4 +82,9 @@ export class LibraryController {
   async findAll() {
     return this.libraryService.findAll();
   }
+
+  @Get('withItems')
+  async findAllWithItems() {
+    return this.libraryService.findAllWithItems();
+  }
 }

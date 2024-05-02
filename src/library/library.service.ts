@@ -3,6 +3,8 @@ import { CreateLibraryDto } from './dto/create-library.dto';
 import { PrismaService } from 'src/prisma.service';
 import { promises as fsPromises } from 'fs';
 import { UpdateLibraryDto } from './dto/update-library.dto';
+import { auth } from 'telegram/client';
+import { title } from 'process';
 
 @Injectable()
 export class LibraryService {
@@ -40,17 +42,42 @@ export class LibraryService {
     //   },
     // ];
 
-    const libraries: any = await this.prisma.library.findMany();
-    for (let i = 0; i < libraries.length; i++) {
-      libraries[i].count = await this.prisma.item.count({
-        where: {
-          libraryId: libraries[i].id,
+    // include count of items in library
+    const libraries: any = await this.prisma.library.findMany({
+      select: {
+        id: true,
+        name: true,
+        photoUrl: true,
+        _count: {
+          select: {
+            items: true,
+          },
         },
-      });
-    }
+      },
+    });
+    libraries.forEach((library) => {
+      library.count = library._count.items;
+      delete library._count;
+    });
     return libraries;
   }
 
+  findAllWithItems() {
+    return this.prisma.library.findMany({
+      include: {
+        items: {
+          select: {
+            id: true,
+            title: true,
+            photoUrl: true,
+            length: true,
+            author: true,
+            price: true,
+          },
+        },
+      },
+    });
+  }
   findOne(id: number) {
     const library: any = this.prisma.library.findUnique({
       where: { id },
