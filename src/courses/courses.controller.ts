@@ -6,57 +6,94 @@ import {
   Patch,
   Param,
   Delete,
+  UseInterceptors,
+  UploadedFiles,
+  UseGuards,
 } from '@nestjs/common';
-import { CoursesService } from './courses.service';
+import { CoursesService, CoursesServiceAdmin } from './courses.service';
 import { CreateCourseDto } from './dto/create-course.dto';
-import { ApiBody, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
+import { FilesInterceptor } from '@nestjs/platform-express';
+import { UpdateCourseDto } from './dto/update-course.dto';
+import { AdminGuard } from 'src/admin/admin.guad';
+
+@UseGuards(AdminGuard)
+@ApiBearerAuth()
+@ApiTags('Courses', 'Admin')
+@Controller('courses')
+export class CoursesControllerAdmin {
+  constructor(private readonly coursesServiceAdmin: CoursesServiceAdmin) {}
+  @Post()
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    description: 'Array of files to upload',
+    schema: {
+      type: 'object',
+      properties: {
+        files: {
+          type: 'array',
+          items: {
+            type: 'string',
+            format: 'binary',
+          },
+        },
+        title: { type: 'string' },
+        description: { type: 'string' },
+        author: { type: 'string' },
+        time: { type: 'string' },
+      },
+    },
+  })
+  @UseInterceptors(FilesInterceptor('files'))
+  async create(
+    @UploadedFiles() files: Express.Multer.File[],
+    @Body() body: CreateCourseDto,
+  ) {
+    return this.coursesServiceAdmin.create(files, body);
+  }
+  @Patch()
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    description: 'Array of files to upload',
+    schema: {
+      type: 'object',
+      properties: {
+        files: {
+          type: 'array',
+          items: {
+            type: 'string',
+            format: 'binary',
+          },
+        },
+        id: { type: 'number' },
+        title: { type: 'string' },
+        description: { type: 'string' },
+        author: { type: 'string' },
+        time: { type: 'string' },
+      },
+    },
+  })
+  @UseInterceptors(FilesInterceptor('files'))
+  async update(
+    @UploadedFiles() files: Express.Multer.File[],
+    @Body() body: UpdateCourseDto,
+  ) {
+    body.id = +body.id;
+    return this.coursesServiceAdmin.update(files, body);
+  }
+
+  @Delete(':id')
+  remove(@Param('id') id: number) {
+    return this.coursesServiceAdmin.remove(+id);
+  }
+}
 
 @ApiTags('Courses')
 @Controller('courses')
 export class CoursesController {
   constructor(private readonly coursesService: CoursesService) {}
-  @ApiBody({
-    schema: {
-      type: 'object',
-      properties: {
-        title: { type: 'string' },
-        description: { type: 'string' },
-        author: { type: 'string' },
-        time: { type: 'string' },
-      },
-    },
-  })
-  @Post()
-  async CreateCourse(
-    @Body()
-    body: CreateCourseDto,
-  ) {
-    return this.coursesService.CreateCourse(body);
-  }
-
   @Get()
   findAll() {
     return this.coursesService.findAll();
-  }
-
-  @ApiBody({
-    schema: {
-      type: 'object',
-      properties: {
-        title: { type: 'string' },
-        description: { type: 'string' },
-        author: { type: 'string' },
-        time: { type: 'string' },
-      },
-    },
-  })
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() body: Body) {
-    return this.coursesService.update(+id, body);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.coursesService.remove(+id);
   }
 }

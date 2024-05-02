@@ -16,6 +16,9 @@ import { join } from 'path';
 import { MessageModule } from './message/message.module';
 import { AdminModule } from './admin/admin.module';
 import { MentorModule } from './mentor/mentor.module';
+import { ModulesModule } from './modules/modules.module';
+import { LessonsModule } from './lessons/lessons.module';
+import { QuestionsModule } from './questions/questions.module';
 @Module({
   imports: [
     AuthModule,
@@ -36,6 +39,9 @@ import { MentorModule } from './mentor/mentor.module';
     AdminModule,
     MessageModule,
     MentorModule,
+    ModulesModule,
+    LessonsModule,
+    QuestionsModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],

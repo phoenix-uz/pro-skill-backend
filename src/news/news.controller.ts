@@ -71,6 +71,7 @@ export class NewsControllerAdmin {
     @UploadedFile() file: Express.Multer.File,
     @Body() body: UpdateNewsDto,
   ) {
+    body.id = +body.id;
     return this.newsServiceAdmin.update(file, body);
   }
 

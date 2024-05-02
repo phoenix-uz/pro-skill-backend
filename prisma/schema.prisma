@@ -106,7 +106,6 @@ model Modules {
   id        Int       @id @default(autoincrement())
   Course    Courses   @relation(fields: [courseId], references: [id])
   title     String
-  videoUrl  String
   time      String
   courseId  Int
   Lessons   Lessons[]
@@ -114,32 +113,23 @@ model Modules {
 }
 
 model Lessons {
-  id        Int      @id @default(autoincrement())
+  id        Int         @id @default(autoincrement())
   title     String
   videoUrl  String
   time      String
-  test      Test[]
   moduleId  Int
-  Modules   Modules  @relation(fields: [moduleId], references: [id])
-  createdAt DateTime @default(now())
-}
-
-model Test {
-  id        Int         @id @default(autoincrement())
-  title     String
-  questions Questions[]
+  Modules   Modules     @relation(fields: [moduleId], references: [id])
   createdAt DateTime    @default(now())
-  Lessons   Lessons?    @relation(fields: [lessonsId], references: [id])
-  lessonsId Int?
+  questions Questions[]
 }
 
 model Questions {
   id        Int       @id @default(autoincrement())
   title     String
   answers   Answers[]
-  testId    Int
-  Test      Test      @relation(fields: [testId], references: [id])
   createdAt DateTime  @default(now())
+  Lesson    Lessons   @relation(fields: [lessonId], references: [id])
+  lessonId  Int
 }
 
 model Answers {
@@ -147,6 +137,6 @@ model Answers {
   title      String
   isCorrect  Boolean
   questionId Int
-  Questions  Questions @relation(fields: [questionId], references: [id])
+  Question   Questions @relation(fields: [questionId], references: [id])
   createdAt  DateTime  @default(now())
 }
