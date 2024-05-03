@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, UseGuards } from '@nestjs/common';
 import { SmsService } from './sms.service';
 import { CreateSmsDto } from './dto/create-sms.dto';
 import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
-import { AdminGuard } from 'src/admin/admin.guad';
+import { AdminGuard } from 'src/admin/admin.guard';
 
 @ApiTags('Sms')
 @Controller('sms')

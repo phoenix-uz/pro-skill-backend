@@ -12,7 +12,7 @@ import { QuestionsService } from './questions.service';
 import { CreateQuestionDto } from './dto/create-question.dto';
 import { UpdateQuestionDto } from './dto/update-question.dto';
 import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
-import { AdminGuard } from 'src/admin/admin.guad';
+import { AdminGuard } from 'src/admin/admin.guard';
 
 @UseGuards(AdminGuard)
 @ApiBearerAuth()

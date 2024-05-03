@@ -12,7 +12,7 @@ import { ModulesService } from './modules.service';
 import { CreateModuleDto } from './dto/create-module.dto';
 import { UpdateModuleDto } from './dto/update-module.dto';
 import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
-import { AdminGuard } from 'src/admin/admin.guad';
+import { AdminGuard } from 'src/admin/admin.guard';
 
 @UseGuards(AdminGuard)
 @ApiBearerAuth()

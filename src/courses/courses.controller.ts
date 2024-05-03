@@ -15,7 +15,7 @@ import { CreateCourseDto } from './dto/create-course.dto';
 import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { UpdateCourseDto } from './dto/update-course.dto';
-import { AdminGuard } from 'src/admin/admin.guad';
+import { AdminGuard } from 'src/admin/admin.guard';
 
 @UseGuards(AdminGuard)
 @ApiBearerAuth()

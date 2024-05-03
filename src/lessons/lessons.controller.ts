@@ -15,7 +15,7 @@ import { CreateLessonDto } from './dto/create-lesson.dto';
 import { UpdateLessonDto } from './dto/update-lesson.dto';
 import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { AdminGuard } from 'src/admin/admin.guad';
+import { AdminGuard } from 'src/admin/admin.guard';
 
 @ApiTags('Lessons', 'Admin')
 @UseGuards(AdminGuard)

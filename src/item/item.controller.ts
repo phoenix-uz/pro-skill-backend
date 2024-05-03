@@ -15,7 +15,7 @@ import { CreateItemDto } from './dto/create-item.dto';
 import { ApiBody, ApiTags, ApiConsumes, ApiBearerAuth } from '@nestjs/swagger';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { UpdateItemDto } from './dto/update-item.dto';
-import { AdminGuard } from 'src/admin/admin.guad';
+import { AdminGuard } from 'src/admin/admin.guard';
 
 @UseGuards(AdminGuard)
 @ApiBearerAuth()

@@ -12,7 +12,7 @@ import {
 import { NotesService } from './notes.service';
 import { CreateNoteDto } from './dto/create-note.dto';
 import { ApiTags, ApiBody, ApiBearerAuth } from '@nestjs/swagger';
-import { AuthGuard } from 'src/auth/auth.guad';
+import { AuthGuard } from 'src/auth/auth.guard';
 import { UpdateNoteDto } from './dto/update-note.dto';
 @ApiTags('Notes')
 @UseGuards(AuthGuard)

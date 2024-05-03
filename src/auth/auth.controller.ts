@@ -10,7 +10,7 @@ import {
 import { AuthService } from './auth.service';
 import { CreateAuthDto } from './dto/create-auth.dto';
 import { ApiBody, ApiTags, ApiBearerAuth } from '@nestjs/swagger';
-import { AuthGuard } from './auth.guad';
+import { AuthGuard } from './auth.guard';
 import { UpdateAuthDto } from './dto/update-auth.dto';
 
 @ApiTags('Authentications')

@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, UseGuards } from '@nestjs/common';
 import { MessageService } from './message.service';
 import { CreateMessageDto } from './dto/create-message.dto';
 import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
-import { MentorGuard } from 'src/mentor/mentor.guad';
+import { MentorGuard } from 'src/mentor/mentor.guard';
 
 @ApiTags('Message')
 @Controller('message')

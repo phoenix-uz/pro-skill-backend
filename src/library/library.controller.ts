@@ -13,7 +13,7 @@ import {
 import { LibraryService, LibraryServiceAdmin } from './library.service';
 import { CreateLibraryDto } from './dto/create-library.dto';
 import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
-import { AdminGuard } from 'src/admin/admin.guad';
+import { AdminGuard } from 'src/admin/admin.guard';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UpdateLibraryDto } from './dto/update-library.dto';
 

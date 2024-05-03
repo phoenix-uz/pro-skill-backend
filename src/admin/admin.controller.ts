@@ -1,7 +1,7 @@
 import { Controller, Post, Body, Get, UseGuards } from '@nestjs/common';
 import { AdminService } from './admin.service';
 import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
-import { AdminGuard } from './admin.guad';
+import { AdminGuard } from './admin.guard';
 
 @ApiTags('Admin')
 @Controller('admin')

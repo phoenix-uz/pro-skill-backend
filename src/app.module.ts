@@ -19,6 +19,7 @@ import { MentorModule } from './mentor/mentor.module';
 import { ModulesModule } from './modules/modules.module';
 import { LessonsModule } from './lessons/lessons.module';
 import { QuestionsModule } from './questions/questions.module';
+import { FinancesModule } from './finances/finances.module';
 @Module({
   imports: [
     AuthModule,
@@ -42,6 +43,7 @@ import { QuestionsModule } from './questions/questions.module';
     ModulesModule,
     LessonsModule,
     QuestionsModule,
+    FinancesModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],
