@@ -115,7 +115,7 @@ export class AuthService {
 
   async verifyPhoneCode(phoneNumber: string, code: string) {
     const phoneCode = await this.prisma.phoneCode.findUnique({
-      where: { phoneNumber: phoneNumber },
+      where: { phoneNumber: phoneNumber, code: code },
     });
     if (!phoneCode) {
       throw new HttpException('Code not found', HttpStatus.NOT_FOUND);
