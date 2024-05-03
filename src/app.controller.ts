@@ -5,6 +5,7 @@ import {
   HttpException,
   HttpStatus,
   Post,
+  Request,
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
@@ -110,5 +111,9 @@ export class AppController {
       'audio count': audioCount,
       'video count': videoCount,
     };
+  }
+  @Post('')
+  async post(@Request() req: any) {
+    console.log(req.body);
   }
 }
