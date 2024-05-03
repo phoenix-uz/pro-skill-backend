@@ -3,7 +3,6 @@ import { CreateLibraryDto } from './dto/create-library.dto';
 import { PrismaService } from 'src/prisma.service';
 import { promises as fsPromises } from 'fs';
 import { UpdateLibraryDto } from './dto/update-library.dto';
-import { auth } from 'telegram/client';
 import { title } from 'process';
 
 @Injectable()
