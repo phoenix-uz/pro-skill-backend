@@ -77,8 +77,8 @@ export class AuthController {
     },
   })
   @Post('verify-phone-code')
-  async verifyPhoneCode(@Body() body: { phone_number: string; code: string }) {
-    return this.authService.verifyPhoneCode(body.phone_number, body.code);
+  async verifyPhoneCode(@Body() body: { phoneNumber: string; code: string }) {
+    return this.authService.verifyPhoneCode(body.phoneNumber, body.code);
   }
 
   @ApiBody({
