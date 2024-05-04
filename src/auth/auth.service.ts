@@ -17,6 +17,7 @@ export class AuthService {
 
   async createUser(body: CreateAuthDto) {
     try {
+      await this.sendPhoneCode(body.phoneNumber);
       //hash password
       const password = await bcrypt.hash(
         body.password,
@@ -45,8 +46,15 @@ export class AuthService {
     const user = await this.prisma.user.findUnique({
       where: { phoneNumber: phoneNumber },
     });
+
     if (!user) {
       throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    }
+    if (!user.authorized) {
+      throw new HttpException(
+        'User not authorized via phone number . Use change password to authorize',
+        HttpStatus.UNAUTHORIZED,
+      );
     }
     if (!(await bcrypt.compare(password, user.password))) {
       throw new HttpException('Wrong password', HttpStatus.UNAUTHORIZED);
@@ -123,6 +131,10 @@ export class AuthService {
     if (phoneCode.code !== code) {
       throw new HttpException('Wrong code', HttpStatus.UNAUTHORIZED);
     }
+    await this.prisma.user.update({
+      where: { phoneNumber: phoneNumber },
+      data: { authorized: true },
+    });
     return 'verified';
   }
 

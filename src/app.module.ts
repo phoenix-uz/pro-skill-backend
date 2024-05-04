@@ -20,6 +20,7 @@ import { ModulesModule } from './modules/modules.module';
 import { LessonsModule } from './lessons/lessons.module';
 import { QuestionsModule } from './questions/questions.module';
 import { FinancesModule } from './finances/finances.module';
+import { PaymentsModule } from './payments/payments.module';
 @Module({
   imports: [
     AuthModule,
@@ -44,6 +45,7 @@ import { FinancesModule } from './finances/finances.module';
     LessonsModule,
     QuestionsModule,
     FinancesModule,
+    PaymentsModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],

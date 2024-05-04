@@ -16,6 +16,8 @@ model User {
   city        String?
   birthday    String?
   password    String
+  balls       Int      @default(100)
+  authorized  Boolean  @default(false)
   notes       Notes[]
   role        String   @default("user")
   createdAt   DateTime @default(now())
