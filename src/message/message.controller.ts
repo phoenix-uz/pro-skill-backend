@@ -15,7 +15,8 @@ export class MessageController {
     schema: {
       type: 'object',
       properties: {
-        text: { type: 'string' },
+        title: { type: 'string' },
+        description: { type: 'string'}
       },
     },
   })

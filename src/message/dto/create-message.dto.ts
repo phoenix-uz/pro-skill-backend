@@ -1,3 +1,4 @@
 export class CreateMessageDto {
-  text: string;
+  title: string;
+  description: string;
 }
