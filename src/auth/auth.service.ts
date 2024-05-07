@@ -24,19 +24,16 @@ export class AuthService {
         +process.env.BCRYPT_PASSWORD,
       );
       //create user
-      const user = await this.prisma.user.create({
+      await this.prisma.user.create({
         data: {
           ...body,
           password: password,
         },
       });
-      //generate token
-      const payload = { sub: user.id, phoneNumber: user.phoneNumber };
-      const access_token = await this.jwtService.signAsync(payload);
-      return {
-        access_token: access_token,
-        userId: user.id,
-      };
+      // //generate token
+      // const payload = { sub: user.id, phoneNumber: user.phoneNumber };
+      // const access_token = await this.jwtService.signAsync(payload);
+      return 'created ';
     } catch (e) {
       throw new HttpException(e.message, HttpStatus.CONFLICT);
     }
@@ -131,11 +128,17 @@ export class AuthService {
     if (phoneCode.code !== code) {
       throw new HttpException('Wrong code', HttpStatus.UNAUTHORIZED);
     }
-    await this.prisma.user.update({
+    const user = await this.prisma.user.update({
       where: { phoneNumber: phoneNumber },
       data: { authorized: true },
     });
-    return 'verified';
+    //generate token
+    const payload = { sub: user.id, phoneNumber: user.phoneNumber };
+    const access_token = await this.jwtService.signAsync(payload);
+    return {
+      access_token: access_token,
+      userId: user.id,
+    };
   }
 
   async changePassword(phoneNumber: string, newPassword: string, code: string) {
@@ -152,11 +155,17 @@ export class AuthService {
       newPassword,
       +process.env.BCRYPT_PASSWORD,
     );
-    await this.prisma.user.update({
+    const user = await this.prisma.user.update({
       where: { phoneNumber: phoneNumber },
       data: { password: password },
     });
-    return 'changed';
+    //generate token
+    const payload = { sub: user.id, phoneNumber: user.phoneNumber };
+    const access_token = await this.jwtService.signAsync(payload);
+    return {
+      access_token: access_token,
+      userId: user.id,
+    };
   }
 
   async sendSms(phoneNumber: string, message: string) {
