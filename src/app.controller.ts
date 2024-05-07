@@ -17,6 +17,7 @@ import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 const { videoDuration } = require('@numairawan/video-duration');
 import { PDFDocument } from 'pdf-lib';
 import * as mm from 'music-metadata';
+import { error } from 'console';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-unused-vars
 const fs = require('fs');
@@ -29,6 +30,7 @@ export class AppController {
 
   @ApiConsumes('multipart/form-data')
   @ApiBody({
+    description: 'Upload file loe ',
     schema: {
       type: 'object',
       properties: {
@@ -112,8 +114,16 @@ export class AppController {
       'video count': videoCount,
     };
   }
-  @Post('')
-  async post(@Request() req: any) {
-    console.log(req.body);
-  }
+  // @Post('')
+  // async post(@Request() req: any) {
+  //   console.log(req.body);
+  //   console.log(req);
+  //   return {
+  //     click_trans_id: req.body.click_trans_id,
+  //     merchant_trans_id: req.body.merchant_trans_id,
+  //     merchant_prepare_id: 1,
+  //     error: 0,
+  //     error_message: 'Success',
+  //   };
+  // }
 }
