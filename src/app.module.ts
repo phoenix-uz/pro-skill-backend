@@ -21,6 +21,8 @@ import { LessonsModule } from './lessons/lessons.module';
 import { QuestionsModule } from './questions/questions.module';
 import { FinancesModule } from './finances/finances.module';
 import { PaymentsModule } from './payments/payments.module';
+import { BallsModule } from './balls/balls.module';
+import { CheckModule } from './check/check.module';
 @Module({
   imports: [
     AuthModule,
@@ -46,6 +48,8 @@ import { PaymentsModule } from './payments/payments.module';
     QuestionsModule,
     FinancesModule,
     PaymentsModule,
+    BallsModule,
+    CheckModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],
