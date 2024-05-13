@@ -16,7 +16,7 @@ export class MessageController {
       type: 'object',
       properties: {
         title: { type: 'string' },
-        description: { type: 'string'}
+        description: { type: 'string' },
       },
     },
   })

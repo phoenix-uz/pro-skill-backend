@@ -113,4 +113,9 @@ export class ItemController {
   findOne(@Param('id') id: string) {
     return this.itemService.findOne(+id);
   }
+
+  @Get('title/:title')
+  findLike(@Param('title') title: string) {
+    return this.itemService.findLike(title);
+  }
 }

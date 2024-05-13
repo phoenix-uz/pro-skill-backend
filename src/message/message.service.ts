@@ -9,7 +9,8 @@ export class MessageService {
   async create(body: CreateMessageDto) {
     const message = await this.prisma.message.create({
       data: {
-        ...body,
+        title: body.title,
+        description: body.description,
       },
     });
     return message;

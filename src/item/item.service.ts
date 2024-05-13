@@ -22,6 +22,33 @@ export class ItemService {
       where: { id: id },
     });
   }
+
+  async findLike(title: string) {
+    return await this.prisma.item.findMany({
+      where: {
+        title: {
+          contains: title,
+          mode: 'insensitive',
+        },
+      },
+
+      orderBy: {
+        title: 'asc',
+      },
+
+      select: {
+        id: true,
+        title: true,
+        subtitle: true,
+        author: true,
+        price: true,
+        length: true,
+        libraryId: true,
+        type: true,
+        photoUrl: true,
+      },
+    });
+  }
 }
 
 export class ItemServiceAdmin extends ItemService {
