@@ -62,6 +62,7 @@ export class AuthService {
     return {
       access_token: access_token,
       userId: user.id,
+      balls: user.balls,
     };
   }
 
@@ -75,6 +76,7 @@ export class AuthService {
         email: true,
         birthday: true,
         gender: true,
+        balls: true,
       },
     });
     if (!user) {
@@ -138,6 +140,7 @@ export class AuthService {
     return {
       access_token: access_token,
       userId: user.id,
+      balls: user.balls,
     };
   }
 
@@ -165,6 +168,7 @@ export class AuthService {
     return {
       access_token: access_token,
       userId: user.id,
+      balls: user.balls,
     };
   }
 
