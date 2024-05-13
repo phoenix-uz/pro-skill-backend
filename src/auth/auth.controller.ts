@@ -22,13 +22,13 @@ export class AuthController {
     schema: {
       type: 'object',
       properties: {
-        fullName: { type: 'string' },
-        email: { type: 'string' },
-        phoneNumber: { type: 'string' },
+        fullName: { type: 'string', example: 'Rediska Kolobokova' },
+        email: { type: 'string', example: 'karediska@gmail.com' },
+        phoneNumber: { type: 'string', example: '+998331234567' },
         gender: { type: 'string' },
         city: { type: 'string' },
         birthday: { type: 'string' },
-        password: { type: 'string' },
+        password: { type: 'string', example: 'password' },
       },
     },
   })
