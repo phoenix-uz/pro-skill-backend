@@ -12,7 +12,7 @@ import {
 } from '@nestjs/common';
 import { ItemService, ItemServiceAdmin } from './item.service';
 import { CreateItemDto } from './dto/create-item.dto';
-import { ApiBody, ApiTags, ApiConsumes, ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBody, ApiTags, ApiConsumes,ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { UpdateItemDto } from './dto/update-item.dto';
 import { AdminGuard } from 'src/admin/admin.guard';
@@ -25,6 +25,7 @@ export class ItemControllerAdmin {
   constructor(private readonly itemServiceAdmin: ItemServiceAdmin) {}
 
   @Post()
+  @ApiOperation({ summary: 'Create new item' })
   @ApiConsumes('multipart/form-data')
   @ApiBody({
     description: 'Array of files to upload',
@@ -60,6 +61,7 @@ export class ItemControllerAdmin {
   }
 
   @Patch()
+  @ApiOperation({ summary: 'Update item' })
   @ApiConsumes('multipart/form-data')
   @ApiBody({
     description: 'Array of files to upload',
@@ -95,6 +97,7 @@ export class ItemControllerAdmin {
   }
 
   @Delete(':id')
+  @ApiOperation({ summary: 'Delete item by id' })
   remove(@Param('id') id: number) {
     return this.itemServiceAdmin.remove(+id);
   }
@@ -106,15 +109,18 @@ export class ItemController {
   constructor(private readonly itemService: ItemService) {}
 
   @Get()
+  @ApiOperation({ summary: 'Get all items' })
   findAll() {
     return this.itemService.findAll();
   }
   @Get(':id')
+  @ApiOperation({ summary: 'Get item by id' })
   findOne(@Param('id') id: string) {
     return this.itemService.findOne(+id);
   }
 
   @Get('title/:title')
+  @ApiOperation({ summary: 'Get item by title' })
   findLike(@Param('title') title: string) {
     return this.itemService.findLike(title);
   }

@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common';
 import { NotesService } from './notes.service';
 import { CreateNoteDto } from './dto/create-note.dto';
-import { ApiTags, ApiBody, ApiBearerAuth } from '@nestjs/swagger';
+import { ApiTags, ApiBody, ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { UpdateNoteDto } from './dto/update-note.dto';
 @ApiTags('Notes')
@@ -31,6 +31,7 @@ export class NotesController {
     },
   })
   @Post()
+  @ApiOperation({ summary: 'Add new note' })
   async addNotes(
     @Request() req: any,
     @Body()
@@ -45,8 +46,15 @@ export class NotesController {
   // }
 
   @Get('')
+  @ApiOperation({ summary: 'Get all notes' })
   findByUserId(@Request() req: any) {
     return this.notesService.findByUserId(+req.userId);
+  }
+
+  @Get(':userId')
+  @ApiOperation({ summary: 'Get note by user id' })
+  findOne(@Request() req: any, @Param('userId') id: string) {
+    return this.notesService.findOne(+req.userId);
   }
 
   @ApiBody({
@@ -59,6 +67,7 @@ export class NotesController {
     },
   })
   @Patch(':id')
+  @ApiOperation({ summary: 'Update note' })
   update(
     @Request() req: any,
     @Param('id') id: string,
@@ -68,6 +77,7 @@ export class NotesController {
   }
 
   @Delete(':id')
+  @ApiOperation({ summary: 'Delete note' })
   remove(@Request() req: any, @Param('id') id: string) {
     return this.notesService.remove(+req.userId, +id);
   }

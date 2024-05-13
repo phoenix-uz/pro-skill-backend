@@ -12,7 +12,7 @@ import {
 } from '@nestjs/common';
 import { LibraryService, LibraryServiceAdmin } from './library.service';
 import { CreateLibraryDto } from './dto/create-library.dto';
-import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiConsumes, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AdminGuard } from 'src/admin/admin.guard';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UpdateLibraryDto } from './dto/update-library.dto';
@@ -37,6 +37,7 @@ export class LibraryControllerAdmin {
     },
   })
   @Post()
+  @ApiOperation({ summary: 'Create new library' })
   @UseInterceptors(FileInterceptor('file'))
   createLibrary(
     @UploadedFile() file: Express.Multer.File,
@@ -60,6 +61,7 @@ export class LibraryControllerAdmin {
     },
   })
   @Patch()
+  @ApiOperation({ summary: 'Update library' })
   @UseInterceptors(FileInterceptor('file'))
   updateLibrary(
     @UploadedFile() file: Express.Multer.File,
@@ -69,8 +71,9 @@ export class LibraryControllerAdmin {
   }
 
   @Delete(':id')
+  @ApiOperation({ summary: 'Remove library by id' })
   removeLibrary(@Param('id') id: number) {
-    return this.libraryServiceAdmin.remove(id);
+    return this.libraryServiceAdmin.remove(+id);
   }
 }
 @ApiTags('Library')
@@ -79,11 +82,13 @@ export class LibraryController {
   constructor(private readonly libraryService: LibraryService) {}
 
   @Get('/')
+  @ApiOperation({ summary: 'Get all libraries' })
   async findAll() {
     return this.libraryService.findAll();
   }
 
   @Get('withItems')
+  @ApiOperation({ summary: 'Get all libraries with items' })
   async findAllWithItems() {
     return this.libraryService.findAllWithItems();
   }

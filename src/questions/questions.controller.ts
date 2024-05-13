@@ -11,7 +11,7 @@ import {
 import { QuestionsService } from './questions.service';
 import { CreateQuestionDto } from './dto/create-question.dto';
 import { UpdateQuestionDto } from './dto/update-question.dto';
-import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AdminGuard } from 'src/admin/admin.guard';
 
 @UseGuards(AdminGuard)
@@ -33,6 +33,7 @@ export class QuestionsController {
     },
   })
   @Post()
+  @ApiOperation({ summary: 'Create new question' })
   create(@Body() body: CreateQuestionDto) {
     return this.questionsService.create(body);
   }
@@ -50,20 +51,24 @@ export class QuestionsController {
     },
   })
   @Patch()
+  @ApiOperation({ summary: 'Update question' })
   update(@Body() body: UpdateQuestionDto) {
     return this.questionsService.update(body);
   }
   @Get()
+  @ApiOperation({ summary: 'Get all questions' })
   findAll() {
     return this.questionsService.findAll();
   }
 
   @Get(':id')
+  @ApiOperation({ summary: 'Get question by id' })
   findOne(@Param('id') id: string) {
     return this.questionsService.findOne(+id);
   }
 
   @Delete(':id')
+  @ApiOperation({ summary: 'Delete question by id' })
   remove(@Param('id') id: string) {
     return this.questionsService.remove(+id);
   }

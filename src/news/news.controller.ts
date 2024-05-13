@@ -13,7 +13,7 @@ import {
 import { NewsService, NewsServiceAdmin } from './news.service';
 import { CreateNewsDto } from './dto/create-news.dto';
 import { UpdateNewsDto } from './dto/update-news.dto';
-import { ApiTags, ApiBody, ApiBearerAuth, ApiConsumes } from '@nestjs/swagger';
+import { ApiTags, ApiBody, ApiBearerAuth, ApiConsumes, ApiOperation } from '@nestjs/swagger';
 import { AdminGuard } from 'src/admin/admin.guard';
 
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -41,6 +41,7 @@ export class NewsControllerAdmin {
     },
   })
   @Post()
+  @ApiOperation({ summary: 'Create new news' })
   @UseInterceptors(FileInterceptor('file'))
   addNews(
     @UploadedFile() file: Express.Multer.File,
@@ -66,6 +67,7 @@ export class NewsControllerAdmin {
     },
   })
   @Patch()
+  @ApiOperation({ summary: 'Update news' })
   @UseInterceptors(FileInterceptor('file'))
   update(
     @UploadedFile() file: Express.Multer.File,
@@ -76,6 +78,7 @@ export class NewsControllerAdmin {
   }
 
   @Delete(':id')
+  @ApiOperation({ summary: 'Remove news by id' })
   remove(@Param('id') id: string) {
     return this.newsServiceAdmin.remove(+id);
   }
@@ -86,11 +89,13 @@ export class NewsControllerAdmin {
 export class NewsController {
   constructor(private readonly newsService: NewsService) {}
   @Get()
+  @ApiOperation({ summary: 'Get all news' })
   findAll() {
     return this.newsService.findAll();
   }
 
   @Get(':id')
+  @ApiOperation({ summary: 'Get news by id' })
   findOne(@Param('id') id: string) {
     return this.newsService.findOne(+id);
   }

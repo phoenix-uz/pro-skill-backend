@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Body, UseGuards } from '@nestjs/common';
 import { SmsService } from './sms.service';
 import { CreateSmsDto } from './dto/create-sms.dto';
-import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AdminGuard } from 'src/admin/admin.guard';
 
 @ApiTags('Sms')
@@ -21,6 +21,7 @@ export class SmsController {
     },
   })
   @Post()
+  @ApiOperation ({ summary: 'Register new sms' })
   async registerUser(
     @Body()
     body: CreateSmsDto,
@@ -32,12 +33,14 @@ export class SmsController {
   @UseGuards(AdminGuard)
   @ApiBearerAuth()
   @Get()
+  @ApiOperation({ summary: 'Get all sms' })
   findAll() {
     return this.smsService.findAll();
   }
 
   @ApiTags('Admin', 'Finances')
   @Get('count')
+  @ApiOperation({ summary: 'Get sms count' })
   count() {
     return this.smsService.count();
   }

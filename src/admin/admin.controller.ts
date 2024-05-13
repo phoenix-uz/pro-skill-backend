@@ -1,6 +1,6 @@
 import { Controller, Post, Body, Get, UseGuards } from '@nestjs/common';
 import { AdminService } from './admin.service';
-import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AdminGuard } from './admin.guard';
 
 @ApiTags('Admin')
@@ -19,12 +19,14 @@ export class AdminController {
     },
   })
   @Post('login')
+  @ApiOperation({ summary: 'Login with admin name and password' })
   login(@Body() body: { name: string; password: string }) {
     return this.adminService.login(body.name, body.password);
   }
 
   @UseGuards(AdminGuard)
   @ApiBearerAuth()
+  @ApiOperation({ summary: 'Get count of students' })
   @Get('students-count')
   async getUser() {
     return await this.adminService.getStudentCount();
@@ -32,6 +34,7 @@ export class AdminController {
 
   @UseGuards(AdminGuard)
   @ApiBearerAuth()
+  @ApiOperation({ summary: 'Get all students' })
   @Get('show-all-users')
   findAll() {
     return this.adminService.findAll();

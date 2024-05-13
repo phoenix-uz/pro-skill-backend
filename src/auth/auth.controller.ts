@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateAuthDto } from './dto/create-auth.dto';
-import { ApiBody, ApiTags, ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBody, ApiTags, ApiBearerAuth, ApiConsumes, ApiOperation } from '@nestjs/swagger';
 import { AuthGuard } from './auth.guard';
 import { UpdateAuthDto } from './dto/update-auth.dto';
 
@@ -18,6 +18,7 @@ import { UpdateAuthDto } from './dto/update-auth.dto';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  @ApiOperation({ summary: 'Register new user' })
   @ApiBody({
     schema: {
       type: 'object',
@@ -40,6 +41,7 @@ export class AuthController {
     return this.authService.createUser(body);
   }
 
+  @ApiOperation({ summary: 'Login user and get token' })
   @ApiBody({
     schema: {
       type: 'object',
@@ -53,7 +55,7 @@ export class AuthController {
   async login(@Body() body: { phoneNumber: string; password: string }) {
     return this.authService.login(body.phoneNumber, body.password);
   }
-
+  @ApiOperation({ summary: 'Send code to phone number' })
   @ApiBody({
     schema: {
       type: 'object',
@@ -66,7 +68,7 @@ export class AuthController {
   async sendPhoneCode(@Body() body: { phoneNumber: string }) {
     return this.authService.sendPhoneCode(body.phoneNumber);
   }
-
+  @ApiOperation({ summary: 'Verify phone number with code' })
   @ApiBody({
     schema: {
       type: 'object',
@@ -81,6 +83,7 @@ export class AuthController {
     return this.authService.verifyPhoneCode(body.phoneNumber, body.code);
   }
 
+  @ApiOperation({ summary: 'Change password' })
   @ApiBody({
     schema: {
       type: 'object',
@@ -104,12 +107,14 @@ export class AuthController {
 
   @UseGuards(AuthGuard)
   @ApiBearerAuth()
+  @ApiOperation({ summary: 'Get user profile' })
   @Get('profile')
   profile(@Request() req: any) {
     return this.authService.getProfile(req.userId);
   }
   @UseGuards(AuthGuard)
   @ApiBearerAuth()
+  @ApiOperation({ summary: 'Update user profile' })
   @ApiBody({
     schema: {
       type: 'object',

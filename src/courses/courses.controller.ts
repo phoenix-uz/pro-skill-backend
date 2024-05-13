@@ -12,7 +12,7 @@ import {
 } from '@nestjs/common';
 import { CoursesService, CoursesServiceAdmin } from './courses.service';
 import { CreateCourseDto } from './dto/create-course.dto';
-import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiConsumes, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { UpdateCourseDto } from './dto/update-course.dto';
 import { AdminGuard } from 'src/admin/admin.guard';
@@ -24,6 +24,7 @@ import { AdminGuard } from 'src/admin/admin.guard';
 export class CoursesControllerAdmin {
   constructor(private readonly coursesServiceAdmin: CoursesServiceAdmin) {}
   @Post()
+  @ApiOperation({ summary: 'Create new course' })
   @ApiConsumes('multipart/form-data')
   @ApiBody({
     description: 'Array of files to upload',
@@ -52,6 +53,7 @@ export class CoursesControllerAdmin {
     return this.coursesServiceAdmin.create(files, body);
   }
   @Patch()
+  @ApiOperation({ summary: 'Update course' })
   @ApiConsumes('multipart/form-data')
   @ApiBody({
     description: 'Array of files to upload',
@@ -83,6 +85,7 @@ export class CoursesControllerAdmin {
   }
 
   @Delete(':id')
+  @ApiOperation({ summary: 'Delete course' })
   remove(@Param('id') id: number) {
     return this.coursesServiceAdmin.remove(+id);
   }
@@ -93,6 +96,7 @@ export class CoursesControllerAdmin {
 export class CoursesController {
   constructor(private readonly coursesService: CoursesService) {}
   @Get()
+  @ApiOperation({ summary: 'Get all courses' })
   findAll() {
     return this.coursesService.findAll();
   }

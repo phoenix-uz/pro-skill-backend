@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateLibraryDto } from './dto/create-library.dto';
 import { PrismaService } from 'src/prisma.service';
 import { promises as fsPromises } from 'fs';
@@ -142,9 +142,16 @@ export class LibraryServiceAdmin extends LibraryService {
   async remove(id: number) {
     // delete file
     const library = await this.prisma.library.delete({
-      where: { id },
+      where: { id: id },
     });
+    try{
     await fsPromises.unlink(library.photoUrl);
+    }catch (error) {
+      throw new HttpException(
+        'Failed to delete item',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
     return library;
   }
 }

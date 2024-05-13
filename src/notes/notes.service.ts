@@ -36,6 +36,20 @@ export class NotesService {
       );
     }
   }
+  async findOne(userId: number) {
+    try {
+      const findNotes = await this.prisma.notes.findFirst({
+        where: { userId: userId },
+      });
+      return findNotes;
+    } catch (error) {
+      throw new HttpException(
+        'Failed to retrieve notes',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+      
+    }
+  }
 
   async update(userId: number, id: number, body: UpdateNoteDto) {
     try {

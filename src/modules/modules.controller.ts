@@ -11,7 +11,7 @@ import {
 import { ModulesService } from './modules.service';
 import { CreateModuleDto } from './dto/create-module.dto';
 import { UpdateModuleDto } from './dto/update-module.dto';
-import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AdminGuard } from 'src/admin/admin.guard';
 
 @UseGuards(AdminGuard)
@@ -32,6 +32,7 @@ export class ModulesController {
     },
   })
   @Post()
+  @ApiOperation({ summary: 'Create new module' })
   create(@Body() createModuleDto: CreateModuleDto) {
     return this.modulesService.create(createModuleDto);
   }
@@ -47,21 +48,25 @@ export class ModulesController {
     },
   })
   @Patch(':id')
+  @ApiOperation({ summary: 'Update module' })
   update(@Param('id') id: string, @Body() body: UpdateModuleDto) {
     return this.modulesService.update(+id, body);
   }
 
   @Delete(':id')
+  @ApiOperation({ summary: 'Delete module' })
   remove(@Param('id') id: number) {
     return this.modulesService.remove(+id);
   }
 
   @Get('byCourse/:id')
+  @ApiOperation({ summary: 'Get all modules by course id' })
   findByCourseId(@Param('id') id: number) {
     return this.modulesService.findByCourseId(+id);
   }
 
   @Get(':id')
+  @ApiOperation({ summary: 'Get module by id' })
   findOne(@Param('id') id: string) {
     return this.modulesService.findOne(+id);
   }

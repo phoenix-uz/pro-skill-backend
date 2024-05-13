@@ -13,7 +13,7 @@ import {
 import { LessonsService } from './lessons.service';
 import { CreateLessonDto } from './dto/create-lesson.dto';
 import { UpdateLessonDto } from './dto/update-lesson.dto';
-import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiConsumes, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { AdminGuard } from 'src/admin/admin.guard';
 
@@ -40,6 +40,7 @@ export class LessonsController {
     },
   })
   @Post()
+  @ApiOperation({ summary: 'Create new lesson' })
   @UseInterceptors(FileInterceptor('file'))
   addLesson(
     @UploadedFile() file: Express.Multer.File,
@@ -65,6 +66,7 @@ export class LessonsController {
     },
   })
   @Patch()
+  @ApiOperation({ summary: 'Update lesson' })
   @UseInterceptors(FileInterceptor('file'))
   updateLesson(
     @UploadedFile() file: Express.Multer.File,
@@ -75,16 +77,19 @@ export class LessonsController {
     return this.lessonsService.update(file, body);
   }
   @Delete(':id')
+  @ApiOperation({ summary: 'Delete lesson by id' })
   remove(@Param('id') id: string) {
     return this.lessonsService.remove(+id);
   }
 
   @Get('module/:id')
+  @ApiOperation({ summary: 'Get lessons by module id' })
   findByModuleId(@Param('id') id: string) {
     return this.lessonsService.findByModuleId(+id);
   }
 
   @Get(':id')
+  @ApiOperation({ summary: 'Get lesson by id' })
   findOne(@Param('id') id: string) {
     return this.lessonsService.findOne(+id);
   }
