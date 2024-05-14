@@ -9,13 +9,21 @@ import {
   UseInterceptors,
   UploadedFiles,
   UseGuards,
+  Request,
 } from '@nestjs/common';
 import { ItemService, ItemServiceAdmin } from './item.service';
 import { CreateItemDto } from './dto/create-item.dto';
-import { ApiBody, ApiTags, ApiConsumes,ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
+import {
+  ApiBody,
+  ApiTags,
+  ApiConsumes,
+  ApiOperation,
+  ApiBearerAuth,
+} from '@nestjs/swagger';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { UpdateItemDto } from './dto/update-item.dto';
 import { AdminGuard } from 'src/admin/admin.guard';
+import { AuthGuard } from 'src/auth/auth.guard';
 
 @UseGuards(AdminGuard)
 @ApiBearerAuth()
@@ -107,6 +115,27 @@ export class ItemControllerAdmin {
 @Controller('item')
 export class ItemController {
   constructor(private readonly itemService: ItemService) {}
+
+  @ApiTags('Purchase')
+  @Post('buy')
+  @ApiOperation({ summary: 'Buy item' })
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth()
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        itemId: { type: 'number' },
+      },
+    },
+  })
+  async buy(
+    @Request() req: any,
+    @Body()
+    body: { itemId: number },
+  ) {
+    return this.itemService.buyItem(body.itemId, req.userId);
+  }
 
   @Get()
   @ApiOperation({ summary: 'Get all items' })

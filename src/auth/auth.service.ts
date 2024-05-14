@@ -67,6 +67,7 @@ export class AuthService {
   }
 
   async getProfile(user_id: number) {
+    //include purchases
     const user = await this.prisma.user.findUnique({
       where: { id: user_id },
       select: {
@@ -77,6 +78,13 @@ export class AuthService {
         birthday: true,
         gender: true,
         balls: true,
+        city: true,
+        purchases: {
+          select: {
+            id: true,
+            itemId: true,
+          },
+        },
       },
     });
     if (!user) {
@@ -134,6 +142,10 @@ export class AuthService {
       where: { phoneNumber: phoneNumber },
       data: { authorized: true },
     });
+    //get all purchases
+    const purchases = await this.prisma.purchases.findMany({
+      where: { userId: user.id },
+    });
     //generate token
     const payload = { sub: user.id, phoneNumber: user.phoneNumber };
     const access_token = await this.jwtService.signAsync(payload);
@@ -141,6 +153,7 @@ export class AuthService {
       access_token: access_token,
       userId: user.id,
       balls: user.balls,
+      purchased: purchases,
     };
   }
 

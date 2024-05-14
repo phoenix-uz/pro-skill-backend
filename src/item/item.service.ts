@@ -13,6 +13,35 @@ import { UpdateItemDto } from './dto/update-item.dto';
 export class ItemService {
   constructor(public readonly prisma: PrismaService) {}
 
+  async buyItem(itemId: number, userId: number) {
+    const item = await this.prisma.item.findUnique({
+      where: { id: itemId },
+    });
+    if (!item) {
+      throw new HttpException('Item not found', HttpStatus.NOT_FOUND);
+    }
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+    });
+    if (!user) {
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    }
+    if (user.balls < item.price) {
+      throw new HttpException('Insufficient balance', HttpStatus.BAD_REQUEST);
+    }
+    await this.prisma.user.update({
+      where: { id: userId },
+      data: { balls: user.balls - item.price },
+    });
+    const purchase = await this.prisma.purchases.create({
+      data: {
+        userId: userId,
+        itemId: itemId,
+      },
+    });
+    return purchase;
+  }
+
   async findAll() {
     const items = await this.prisma.item.findMany();
     return items;
