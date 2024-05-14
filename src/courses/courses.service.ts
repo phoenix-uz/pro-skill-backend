@@ -20,7 +20,11 @@ export class CoursesServiceAdmin extends CoursesService {
 
       // Use map to create an array of promises for each file upload operation
       const uploadPromises = files.map(async (file) => {
-        const filePath = `${process.env.UPLOADS_DIR}/${Date.now()}-${file.originalname}`;
+        //random file name
+        const randomFileName = Math.random().toString(36).substring(7);
+        // extension
+        const extension = file.originalname.split('.').pop();
+        const filePath = `${process.env.UPLOADS_DIR}/${Date.now()}${randomFileName}${extension}`;
 
         // Await the file write operation
         await fsPromises.writeFile(filePath, file.buffer);
@@ -51,7 +55,11 @@ export class CoursesServiceAdmin extends CoursesService {
 
       // Use map to create an array of promises for each file upload operation
       const uploadPromises = files.map(async (file) => {
-        const filePath = `${process.env.UPLOADS_DIR}/${Date.now()}-${file.originalname}`;
+        //random file name
+        const randomFileName = Math.random().toString(36).substring(7);
+        // extension
+        const extension = file.originalname.split('.').pop();
+        const filePath = `${process.env.UPLOADS_DIR}/${Date.now()}${randomFileName}.${extension}`;
 
         // Await the file write operation
         await fsPromises.writeFile(filePath, file.buffer);

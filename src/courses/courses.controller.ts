@@ -12,7 +12,13 @@ import {
 } from '@nestjs/common';
 import { CoursesService, CoursesServiceAdmin } from './courses.service';
 import { CreateCourseDto } from './dto/create-course.dto';
-import { ApiBearerAuth, ApiBody, ApiConsumes, ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiConsumes,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { UpdateCourseDto } from './dto/update-course.dto';
 import { AdminGuard } from 'src/admin/admin.guard';
