@@ -62,7 +62,11 @@ export class AuthService {
     return {
       access_token: access_token,
       userId: user.id,
+<<<<<<< HEAD
       balss: user.balls
+=======
+      balls: user.balls,
+>>>>>>> 3eb05751da5199017805b9b8a723d04f0449ff8c
     };
   }
 
@@ -140,7 +144,11 @@ export class AuthService {
     return {
       access_token: access_token,
       userId: user.id,
+<<<<<<< HEAD
       balss: user.balls
+=======
+      balls: user.balls,
+>>>>>>> 3eb05751da5199017805b9b8a723d04f0449ff8c
     };
   }
 
@@ -168,7 +176,11 @@ export class AuthService {
     return {
       access_token: access_token,
       userId: user.id,
+<<<<<<< HEAD
       balss: user.balls
+=======
+      balls: user.balls,
+>>>>>>> 3eb05751da5199017805b9b8a723d04f0449ff8c
     };
   }
 
