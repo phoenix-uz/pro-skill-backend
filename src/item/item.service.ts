@@ -8,10 +8,34 @@ import { PDFDocument } from 'pdf-lib';
 const { videoDuration } = require('@numairawan/video-duration');
 import { promises as fsPromises } from 'fs';
 import { UpdateItemDto } from './dto/update-item.dto';
+import { auth } from 'telegram/client';
 
 @Injectable()
 export class ItemService {
   constructor(public readonly prisma: PrismaService) {}
+
+  async getBoughtItems(userId: number) {
+    return await this.prisma.purchases.findMany({
+      where: { userId: userId },
+      select: {
+        item: {
+          select: {
+            id: true,
+            title: true,
+            subtitle: true,
+            author: true,
+            price: true,
+            length: true,
+            libraryId: true,
+            type: true,
+            photoUrl: true,
+            fileUrl: true,
+            createdAt: true,
+          },
+        },
+      },
+    });
+  }
 
   async buyItem(itemId: number, userId: number) {
     const item = await this.prisma.item.findUnique({
@@ -28,6 +52,12 @@ export class ItemService {
     }
     if (user.balls < item.price) {
       throw new HttpException('Insufficient balance', HttpStatus.BAD_REQUEST);
+    }
+    const findPurchase = await this.prisma.purchases.findFirst({
+      where: { userId: userId, itemId: itemId },
+    });
+    if (findPurchase) {
+      throw new HttpException('Item already purchased', HttpStatus.BAD_REQUEST);
     }
     await this.prisma.user.update({
       where: { id: userId },

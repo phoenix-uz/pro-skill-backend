@@ -117,6 +117,15 @@ export class ItemController {
   constructor(private readonly itemService: ItemService) {}
 
   @ApiTags('Purchase')
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Get bought items' })
+  @Get('bought')
+  async getBoughtItems(@Request() req: any) {
+    return this.itemService.getBoughtItems(req.userId);
+  }
+
+  @ApiTags('Purchase')
   @Post('buy')
   @ApiOperation({ summary: 'Buy item' })
   @UseGuards(AuthGuard)

@@ -3,44 +3,12 @@ import { CreateLibraryDto } from './dto/create-library.dto';
 import { PrismaService } from 'src/prisma.service';
 import { promises as fsPromises } from 'fs';
 import { UpdateLibraryDto } from './dto/update-library.dto';
-import { title } from 'process';
 
 @Injectable()
 export class LibraryService {
   constructor(public readonly prisma: PrismaService) {}
 
   async findAll() {
-    // const library = [
-    //   {
-    //     id: 1,
-    //     name: 'Book',
-    //     count: 10,
-    //     photourl:
-    //       'https://cdn-storage.pfcontent.net/storage/8.0/photo.aspx?photo=591361214&x=P0ttaT57LmsC97JAJVQS4Jp943xJLYRK&size=700&m=1475291093',
-    //   },
-    //   {
-    //     id: 2,
-    //     name: 'Book',
-    //     count: 10,
-    //     photoUrl:
-    //       'https://cdn-storage.pfcontent.net/storage/8.0/photo.aspx?photo=591361214&x=P0ttaT57LmsC97JAJVQS4Jp943xJLYRK&size=700&m=1475291093',
-    //   },
-    //   {
-    //     id: 3,
-    //     name: 'Book',
-    //     count: 10,
-    //     photoUrl:
-    //       'https://cdn-storage.pfcontent.net/storage/8.0/photo.aspx?photo=591361214&x=P0ttaT57LmsC97JAJVQS4Jp943xJLYRK&size=700&m=1475291093',
-    //   },
-    //   {
-    //     id: 4,
-    //     name: 'Book',
-    //     count: 10,
-    //     photoUrl:
-    //       'https://cdn-storage.pfcontent.net/storage/8.0/photo.aspx?photo=591361214&x=P0ttaT57LmsC97JAJVQS4Jp943xJLYRK&size=700&m=1475291093',
-    //   },
-    // ];
-
     // include count of items in library
     const libraries: any = await this.prisma.library.findMany({
       select: {
@@ -68,6 +36,7 @@ export class LibraryService {
           select: {
             id: true,
             title: true,
+            subtitle: true,
             photoUrl: true,
             length: true,
             author: true,
@@ -144,9 +113,9 @@ export class LibraryServiceAdmin extends LibraryService {
     const library = await this.prisma.library.delete({
       where: { id: id },
     });
-    try{
-    await fsPromises.unlink(library.photoUrl);
-    }catch (error) {
+    try {
+      await fsPromises.unlink(library.photoUrl);
+    } catch (error) {
       throw new HttpException(
         'Failed to delete item',
         HttpStatus.INTERNAL_SERVER_ERROR,
