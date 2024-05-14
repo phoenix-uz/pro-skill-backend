@@ -8,7 +8,6 @@ import { PDFDocument } from 'pdf-lib';
 const { videoDuration } = require('@numairawan/video-duration');
 import { promises as fsPromises } from 'fs';
 import { UpdateItemDto } from './dto/update-item.dto';
-import { auth } from 'telegram/client';
 
 @Injectable()
 export class ItemService {
