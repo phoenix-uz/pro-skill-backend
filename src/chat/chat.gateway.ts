@@ -1,3 +1,5 @@
+import { UnauthorizedException } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 import {
   WebSocketGateway,
   SubscribeMessage,
@@ -8,58 +10,98 @@ import {
 } from '@nestjs/websockets';
 import { Socket } from 'socket.io';
 import { PrismaService } from 'src/prisma.service';
-async function getUserId(token) {
-  try {
-    const payload = await this.jwtService.verifyAsync(token, {
-      secret: process.env.JWT_SECRET,
-    });
-    const userId = payload.sub;
-    return userId;
-  } catch {
-    throw new UnauthorizedException();
-  }
-}
+
 @WebSocketGateway()
 export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private jwtService: JwtService,
+  ) {}
   private connectedUsers: Map<string, Socket> = new Map(); // Map to store connected clients
-
-  async handleConnection(client: Socket) {
-    const userId = await getUserId(client.handshake.headers.authorization);
-    await this.prisma.user.update({
-      where: { id: userId },
-      data: { online: true },
+  private mentorClient: Socket; // Store mentor client
+  splitToken(token) {
+    const [type, splitedToken] = token.split(' ');
+    return type === 'Bearer' ? splitedToken : undefined;
+  }
+  async checkIsMentor(token) {
+    const splitedToken = this.splitToken(token);
+    const payload = await this.jwtService.verifyAsync(splitedToken, {
+      secret: process.env.JWT_SECRET,
     });
-    console.log(`Client connected: ${client.id}`);
+    try {
+      if (payload.name === process.env.MENTOR_NAME) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch {
+      return false;
+    }
+  }
+  async getUserId(token) {
+    const splitedToken = this.splitToken(token);
+    const payload = await this.jwtService.verifyAsync(splitedToken, {
+      secret: process.env.JWT_SECRET,
+    });
+    return payload.sub;
+  }
+  async handleConnection(client: Socket) {
+    const token = client.handshake.headers.authorization;
+    const isMentor = await this.checkIsMentor(token);
 
-    this.connectedUsers.set(client.id, client); // Store client in map
+    if (!isMentor) {
+      const userId = await this.getUserId(token);
+      await this.prisma.user.update({
+        where: { id: userId },
+        data: { online: true },
+      });
+      console.log(`User connected: ${userId}`);
+      this.connectedUsers.set(client.id, client); // Store client in map
+    } else {
+      this.mentorClient = client;
+      console.log('Mentor connected');
+    }
   }
 
   async handleDisconnect(client: Socket) {
-    const userId = await getUserId(client.handshake.headers.authorization);
-    await this.prisma.user.update({
-      where: { id: userId },
-      data: { online: false },
-    });
-    console.log(`Client disconnected: ${client.id}`);
-    this.connectedUsers.delete(client.id); // Remove client from map
+    const token = client.handshake.headers.authorization;
+    const isMentor = await this.checkIsMentor(token);
+    if (!isMentor) {
+      const userId = await this.getUserId(token);
+      await this.prisma.user.update({
+        where: { id: userId },
+        data: { online: false },
+      });
+      this.connectedUsers.delete(userId);
+      console.log(`User disconnected: ${userId}`);
+    } else {
+      this.mentorClient = null;
+      console.log('Mentor disconnected');
+    }
   }
 
   @SubscribeMessage('message')
   async handleMessage(
     @ConnectedSocket() client: Socket,
-    @MessageBody() message: string,
+    @MessageBody()
+    { message, userId }: { message: string; userId: number | null | undefined },
   ) {
-    const userId = await getUserId(client.handshake.headers.authorization);
-    await this.prisma.chat.create({
-      data: {
-        message,
-        userId,
-        fromMentor: false,
-      },
-    });
-    console.log(`Received message from ${client.id}: ${message}`);
-    client.emit('message', message); // Send message back to sender
+    const token = client.handshake.headers.authorization;
+    const isMentor = await this.checkIsMentor(token);
+
+    console.log('isMentor', isMentor);
+
+    // const isMentor = await checkIsMentor(token);
+
+    // await this.prisma.chat.create({
+    //   data: {
+    //     message,
+    //     userId,
+    //     fromMentor: false,
+    //   },
+    // });
+    // console.log(`Received message from ${client.id}: ${message}`);
+    // client.emit('message', message); // Send message back to sender
 
     // Broadcast message to all other connected clients
     this.broadcastMessage(client, message);
