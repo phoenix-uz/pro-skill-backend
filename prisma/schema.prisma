@@ -8,21 +8,24 @@ generator client {
 }
 
 model User {
-  id          Int         @id @default(autoincrement())
-  fullName    String
-  email       String      @unique
-  phoneNumber String      @unique
-  gender      String?
-  city        String?
-  birthday    String?
-  password    String
-  balls       Int         @default(100)
-  authorized  Boolean     @default(false)
-  notes       Notes[]
-  online      Boolean     @default(false)
-  role        String      @default("user")
-  createdAt   DateTime    @default(now())
-  purchases   Purchases[]
+  id           Int         @id @default(autoincrement())
+  fullName     String
+  email        String      @unique
+  phoneNumber  String      @unique
+  gender       String?
+  city         String?
+  birthday     String?
+  password     String
+  balls        Int         @default(100)
+  authorized   Boolean     @default(false)
+  notes        Notes[]
+  online       Boolean     @default(false)
+  role         String      @default("user")
+  isLessonPaid Boolean     @default(false)
+  isCoursePaid Boolean     @default(false)
+  isModulePaid Boolean     @default(false)
+  createdAt    DateTime    @default(now())
+  purchases    Purchases[]
 }
 
 model PhoneCode {
@@ -163,4 +166,14 @@ model Chat {
   message    String
   fromMentor Boolean
   createdAt  DateTime @default(now())
+}
+
+model ClickCardTokens {
+  id          Int      @id @default(autoincrement())
+  userId      Int
+  cardNumber  String
+  cardToken   String
+  expireDate  String
+  phoneNumber String
+  createdAt   DateTime @default(now())
 }

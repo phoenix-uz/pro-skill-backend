@@ -52,6 +52,7 @@ import { ChatModule } from './chat/chat.module';
     BallsModule,
     CheckModule,
     ChatModule,
+    PaymentsModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],

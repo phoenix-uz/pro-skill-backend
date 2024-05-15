@@ -1,11 +1,13 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { getClickHeader } from './functions';
+import { PrismaService } from 'src/prisma.service';
 
 @Injectable()
 export class PaymentsService {}
 
 @Injectable()
 export class ClickService {
+  constructor(private readonly prisma: PrismaService) {}
   async createInvoice(
     amount: number,
     phone_number: string,
@@ -52,7 +54,7 @@ export class ClickService {
         headers: getClickHeader(),
       },
     ).catch((error) => {
-      return error;
+      throw new HttpException(error, HttpStatus.BAD_REQUEST);
     });
     const data = await response.json();
     return data;
@@ -92,7 +94,11 @@ export class ClickService {
     return data;
   }
 
-  async createCardToken(card_number: string, expire_date: string) {
+  async createCardToken(
+    card_number: string,
+    expire_date: string,
+    userId: number,
+  ) {
     const response = await fetch(
       'https://api.click.uz/v2/merchant/card_token/request',
       {
@@ -106,14 +112,31 @@ export class ClickService {
         }),
       },
     ).catch((error) => {
-      return error;
+      throw new HttpException(error, HttpStatus.BAD_REQUEST);
+    });
+    const data = await response.json();
+    await this.prisma.clickCardTokens.create({
+      data: {
+        userId: +userId,
+        cardNumber: card_number,
+        expireDate: expire_date,
+        phoneNumber: data.phone_number,
+        cardToken: data.card_token,
+      },
     });
 
-    const data = await response.json();
     return data;
   }
 
-  async confirmCardToken(card_token: string, sms_code: number) {
+  async confirmCardToken(card_number: string, sms_code: number) {
+    const card_token = await this.prisma.clickCardTokens.findFirst({
+      where: {
+        cardNumber: card_number,
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
     const response = await fetch(
       'https://api.click.uz/v2/merchant/card_token/verify',
       {
@@ -121,12 +144,12 @@ export class ClickService {
         headers: getClickHeader(),
         body: JSON.stringify({
           service_id: process.env.CLICK_SERVICE_ID,
-          card_token: card_token,
+          card_token: card_token.cardToken,
           sms_code: sms_code,
         }),
       },
     ).catch((error) => {
-      return error;
+      throw new HttpException(error, HttpStatus.BAD_REQUEST);
     });
 
     const data = await response.json();
@@ -134,10 +157,24 @@ export class ClickService {
   }
 
   async payWithCardToken(
-    card_token: string,
+    card_number: string,
     amount: number,
     merchant_trans_id: string,
   ) {
+    const card_token = await this.prisma.clickCardTokens.findFirst({
+      where: {
+        cardNumber: card_number,
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+    console.log(card_token.cardToken);
+    const numStr: string = amount.toFixed(2); // Converts number to "3000.00"
+
+    // Replace the decimal separator "." with ","
+    const formattedNum: string = numStr.replace('.', ',');
+    console.log(formattedNum);
     const response = await fetch(
       'https://api.click.uz/v2/merchant/card_token/payment',
       {
@@ -145,16 +182,23 @@ export class ClickService {
         headers: getClickHeader(),
         body: JSON.stringify({
           service_id: process.env.CLICK_SERVICE_ID,
-          card_token: card_token,
-          amount: amount,
-          transaction_parameter: merchant_trans_id,
+          card_token: card_token.cardToken,
+          amount: 1000.0,
+          transaction_parameter: "686",
         }),
       },
     ).catch((error) => {
-      return error;
+      throw new HttpException(error, HttpStatus.BAD_REQUEST);
     });
 
     const data = await response.json();
+    console.log(data);
+    await this.prisma.clickCardTokens.deleteMany({
+      where: {
+        cardNumber: card_number,
+      },
+    });
+
     return data;
   }
 
