@@ -32,22 +32,27 @@ export class NotesService {
     } catch (error) {
       throw new HttpException(
         'Failed to update notes',
-        HttpStatus.INTERNAL_SERVER_ERROR,
+        HttpStatus.BAD_REQUEST,
       );
     }
   }
-  async findOne(userId: number) {
+  async findOne(userId: number, noteId?: number) {
     try {
       const findNotes = await this.prisma.notes.findFirst({
-        where: { userId: userId },
+        where: {
+          userId: userId,
+          id: noteId,
+        },
       });
+      if (!findNotes) {
+        throw new HttpException('Note not found', HttpStatus.NOT_FOUND);
+      }
       return findNotes;
     } catch (error) {
       throw new HttpException(
         'Failed to retrieve notes',
-        HttpStatus.INTERNAL_SERVER_ERROR,
+        HttpStatus.BAD_REQUEST,
       );
-      
     }
   }
 
@@ -62,7 +67,7 @@ export class NotesService {
       console.log(error);
       throw new HttpException(
         'Failed to update notes',
-        HttpStatus.INTERNAL_SERVER_ERROR,
+        HttpStatus.BAD_REQUEST,
       );
     }
   }
@@ -76,7 +81,7 @@ export class NotesService {
     } catch (error) {
       throw new HttpException(
         'Failed to delete notes',
-        HttpStatus.INTERNAL_SERVER_ERROR,
+        HttpStatus.BAD_REQUEST,
       );
     }
   }

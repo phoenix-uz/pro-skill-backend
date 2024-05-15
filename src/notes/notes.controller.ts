@@ -8,6 +8,8 @@ import {
   Delete,
   UseGuards,
   Request,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 import { NotesService } from './notes.service';
 import { CreateNoteDto } from './dto/create-note.dto';
@@ -51,10 +53,14 @@ export class NotesController {
     return this.notesService.findByUserId(+req.userId);
   }
 
-  @Get(':userId')
-  @ApiOperation({ summary: 'Get note by user id' })
-  findOne(@Request() req: any, @Param('userId') id: string) {
-    return this.notesService.findOne(+req.userId);
+  @Get(':userId/:id')
+  @ApiOperation({ summary: 'Get note by user id and note id' })
+  async findOneById(@Param('userId') userId: string, @Param('id') id: string) {
+    const note = await this.notesService.findOne(Number(userId), Number(id));
+    if (!note) {
+      throw new HttpException('Note not found', HttpStatus.NOT_FOUND);
+    }
+    return note;
   }
 
   @ApiBody({
