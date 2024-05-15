@@ -1,14 +1,8 @@
-<<<<<<< HEAD
 import { Controller, Request, Body, Post, UseGuards } from '@nestjs/common';
 import { ClickService, PaymentsService } from './payments.service';
 import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
 import { PrismaService } from 'src/prisma.service';
 import { AuthGuard } from 'src/auth/auth.guard';
-=======
-import { Controller, Post, Request, Body, Get } from '@nestjs/common';
-import { PaymentsService } from './payments.service';
-import { ApiBody, ApiTags, ApiOperation } from '@nestjs/swagger';
->>>>>>> c2f2dd92c0d6764c22db598ec0eab93a75fecd0d
 
 @ApiTags('payments')
 @Controller('payments')
