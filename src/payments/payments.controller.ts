@@ -1,6 +1,6 @@
-import { Controller, Post, Request, Body } from '@nestjs/common';
+import { Controller, Post, Request, Body, Get } from '@nestjs/common';
 import { PaymentsService } from './payments.service';
-import { ApiBody, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiTags, ApiOperation } from '@nestjs/swagger';
 
 @ApiTags('payments')
 @Controller('payments')
@@ -13,3 +13,4 @@ export class PaymentsController {
 export class ClickService {
   constructor(private readonly clickService: ClickService) {}
 }
+
