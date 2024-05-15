@@ -1,26 +1,60 @@
-import { Injectable } from '@nestjs/common';
-import { CreateCheckDto } from './dto/create-check.dto';
-import { UpdateCheckDto } from './dto/update-check.dto';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { PrismaService } from 'src/prisma.service';
 
 @Injectable()
 export class CheckService {
-  create(createCheckDto: CreateCheckDto) {
-    return 'This action adds a new check';
-  }
+  constructor(private readonly prisma: PrismaService) {}
 
-  findAll() {
-    return `This action returns all check`;
-  }
+  async check(questions: number[], answers: number[]) {
+    if (questions.length !== answers.length) {
+      throw new HttpException(
+        'Questions and answers should be equal in length',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
 
-  findOne(id: number) {
-    return `This action returns a #${id} check`;
-  }
+    let balls = 0;
+    const checked = [];
 
-  update(id: number, updateCheckDto: UpdateCheckDto) {
-    return `This action updates a #${id} check`;
-  }
+    for (let index = 0; index < questions.length; index++) {
+      const questionId = questions[index];
+      const answerId = answers[index];
 
-  remove(id: number) {
-    return `This action removes a #${id} check`;
+      try {
+        const oneQuestion = await this.prisma.questions.findUnique({
+          where: { id: questionId },
+        });
+
+        if (!oneQuestion) {
+          throw new HttpException('Question not found', HttpStatus.NOT_FOUND);
+        }
+
+        const correctAnswer = await this.prisma.answers.findFirst({
+          where: { questionId, isCorrect: true },
+        });
+
+        if (!correctAnswer) {
+          throw new HttpException(
+            'Correct answer not found',
+            HttpStatus.NOT_FOUND,
+          );
+        }
+
+        if (correctAnswer.id === answerId) {
+          checked.push(true);
+          balls++;
+        } else {
+          checked.push(false);
+        }
+      } catch (error) {
+        // Handle any errors here
+        console.error(
+          `Error processing question ${questionId}: ${error.message}`,
+        );
+        checked.push(false); // Assuming failed questions are marked as incorrect
+      }
+    }
+
+    return checked;
   }
 }

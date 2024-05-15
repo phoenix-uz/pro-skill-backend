@@ -23,6 +23,7 @@ import { FinancesModule } from './finances/finances.module';
 import { PaymentsModule } from './payments/payments.module';
 import { BallsModule } from './balls/balls.module';
 import { CheckModule } from './check/check.module';
+import { ChatModule } from './chat/chat.module';
 @Module({
   imports: [
     AuthModule,
@@ -50,6 +51,7 @@ import { CheckModule } from './check/check.module';
     PaymentsModule,
     BallsModule,
     CheckModule,
+    ChatModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],
