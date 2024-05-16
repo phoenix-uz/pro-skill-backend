@@ -177,3 +177,24 @@ model ClickCardTokens {
   phoneNumber String
   createdAt   DateTime @default(now())
 }
+
+model CustomerOrder {
+  id           Int                @id @default(autoincrement())
+  paycomId     String             @unique
+  amount       Int
+  delivered    Boolean            @default(false)
+  transactions OrderTransaction[]
+}
+
+model OrderTransaction {
+  id          Int            @id @default(autoincrement())
+  paycomId    String         @unique
+  paycomTime  DateTime?
+  createTime  BigInt?
+  performTime BigInt?
+  cancelTime  BigInt?
+  reason      String
+  state       String
+  orderId     Int?           @unique
+  order       CustomerOrder? @relation(fields: [orderId], references: [id])
+}
