@@ -137,6 +137,10 @@ export class ClickService {
         createdAt: 'desc',
       },
     });
+    console.log(card_token.cardToken);
+    console.log(sms_code);
+    console.log(process.env.CLICK_SERVICE_ID);
+    console.log(getClickHeader());
     const response = await fetch(
       'https://api.click.uz/v2/merchant/card_token/verify',
       {

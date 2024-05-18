@@ -3,17 +3,14 @@ import { CreateLessonDto } from './dto/create-lesson.dto';
 import { UpdateLessonDto } from './dto/update-lesson.dto';
 import { promises as fsPromises } from 'fs';
 import { PrismaService } from 'src/prisma.service';
+import saveFile from 'src/functions';
 
 @Injectable()
 export class LessonsService {
   constructor(public readonly prisma: PrismaService) {}
   async create(file: Express.Multer.File, body: CreateLessonDto) {
     try {
-      const filePath =
-        process.env.UPLOADS_DIR + `/${Date.now()}-${file.originalname}`; // Constructing the file path
-
-      // Saving the file to the local path
-      await fsPromises.writeFile(filePath, file.buffer);
+      const filePath = await saveFile(file);
       return await this.prisma.lessons.create({
         data: {
           videoUrl: filePath,
@@ -27,11 +24,7 @@ export class LessonsService {
 
   async update(file: Express.Multer.File, body: UpdateLessonDto) {
     try {
-      const filePath =
-        process.env.UPLOADS_DIR + `/${Date.now()}-${file.originalname}`; // Constructing the file path
-
-      // Saving the file to the local path
-      await fsPromises.writeFile(filePath, file.buffer);
+      const filePath = await saveFile(file);
       if (!file) {
         const updateLesson = await this.prisma.lessons.update({
           where: { id: +body.id },

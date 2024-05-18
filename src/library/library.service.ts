@@ -3,6 +3,7 @@ import { CreateLibraryDto } from './dto/create-library.dto';
 import { PrismaService } from 'src/prisma.service';
 import { promises as fsPromises } from 'fs';
 import { UpdateLibraryDto } from './dto/update-library.dto';
+import saveFile from 'src/functions';
 
 @Injectable()
 export class LibraryService {
@@ -61,11 +62,7 @@ export class LibraryService {
 
 export class LibraryServiceAdmin extends LibraryService {
   async create(file: Express.Multer.File, body: CreateLibraryDto) {
-    const filePath =
-      process.env.UPLOADS_DIR + `/${Date.now()}-${file.originalname}`; // Constructing the file path
-
-    // Saving the file to the local path
-    await fsPromises.writeFile(filePath, file.buffer);
+    const filePath = await saveFile(file);
     const library = await this.prisma.library.create({
       data: {
         ...body,
@@ -85,11 +82,7 @@ export class LibraryServiceAdmin extends LibraryService {
       });
       return library;
     } else {
-      const filePath =
-        process.env.UPLOADS_DIR + `/${Date.now()}-${file.originalname}`; // Constructing the file path
-
-      // Saving the file to the local path
-      await fsPromises.writeFile(filePath, file.buffer);
+      const filePath = await saveFile(file);
       //delete old file
       const oldLibrary = await this.prisma.library.findUnique({
         where: { id: body.id },

@@ -3,6 +3,7 @@ import { PrismaService } from 'src/prisma.service';
 import { CreateCourseDto } from './dto/create-course.dto';
 import { promises as fsPromises } from 'fs';
 import { UpdateCourseDto } from './dto/update-course.dto';
+import saveFile from 'src/functions';
 
 @Injectable()
 export class CoursesService {
@@ -20,15 +21,7 @@ export class CoursesServiceAdmin extends CoursesService {
 
       // Use map to create an array of promises for each file upload operation
       const uploadPromises = files.map(async (file) => {
-        //random file name
-        const randomFileName = Math.random().toString(36).substring(7);
-        // extension
-        const extension = file.originalname.split('.').pop();
-        const filePath = `${process.env.UPLOADS_DIR}/${Date.now()}${randomFileName}${extension}`;
-
-        // Await the file write operation
-        await fsPromises.writeFile(filePath, file.buffer);
-
+        const filePath = await saveFile(file);
         // Push the file path into the photoUrls array
         photoUrls.push(filePath);
       });
@@ -55,15 +48,7 @@ export class CoursesServiceAdmin extends CoursesService {
 
       // Use map to create an array of promises for each file upload operation
       const uploadPromises = files.map(async (file) => {
-        //random file name
-        const randomFileName = Math.random().toString(36).substring(7);
-        // extension
-        const extension = file.originalname.split('.').pop();
-        const filePath = `${process.env.UPLOADS_DIR}/${Date.now()}${randomFileName}.${extension}`;
-
-        // Await the file write operation
-        await fsPromises.writeFile(filePath, file.buffer);
-
+        const filePath = await saveFile(file);
         // Push the file path into the photoUrls array
         photoUrls.push(filePath);
       });

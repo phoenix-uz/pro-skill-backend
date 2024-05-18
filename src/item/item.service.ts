@@ -8,6 +8,7 @@ import { PDFDocument } from 'pdf-lib';
 const { videoDuration } = require('@numairawan/video-duration');
 import { promises as fsPromises } from 'fs';
 import { UpdateItemDto } from './dto/update-item.dto';
+import saveFile from 'src/functions';
 
 @Injectable()
 export class ItemService {
@@ -113,18 +114,10 @@ export class ItemServiceAdmin extends ItemService {
   async createItem(files: Express.Multer.File[], body: CreateItemDto) {
     // coverImage
     const coverImage = files[0];
-    const imagePath =
-      process.env.UPLOADS_DIR + `/${Date.now()}-${coverImage.originalname}`; // Constructing the file path
-
-    // Saving the file to the local path
-    await fsPromises.writeFile(imagePath, coverImage.buffer);
+    const imagePath = await saveFile(coverImage);
 
     const file = files[1];
-    const filePath =
-      process.env.UPLOADS_DIR + `/${Date.now()}-${file.originalname}`; // Constructing the file path
-
-    // Saving the file to the local path
-    await fsPromises.writeFile(filePath, file.buffer);
+    const filePath = await saveFile(file);
     const type = file.originalname.split('.').pop();
     if (body.length) {
       return await this.prisma.item.create({
@@ -176,18 +169,11 @@ export class ItemServiceAdmin extends ItemService {
       );
     }
     const coverImage = files[0];
-    const imagePath =
-      process.env.UPLOADS_DIR + `/${Date.now()}-${coverImage.originalname}`; // Constructing the file path
-
-    // Saving the file to the local path
-    await fsPromises.writeFile(imagePath, coverImage.buffer);
+    const imagePath = await saveFile(coverImage);
 
     const file = files[1];
-    const filePath =
-      process.env.UPLOADS_DIR + `/${Date.now()}-${file.originalname}`; // Constructing the file path
+    const filePath = await saveFile(file);
 
-    // Saving the file to the local path
-    await fsPromises.writeFile(filePath, file.buffer);
     const type = file.originalname.split('.').pop();
     if (body.length) {
       return await this.prisma.item.update({

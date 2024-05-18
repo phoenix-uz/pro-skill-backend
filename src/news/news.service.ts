@@ -3,6 +3,7 @@ import { CreateNewsDto } from './dto/create-news.dto';
 import { UpdateNewsDto } from './dto/update-news.dto';
 import { PrismaService } from 'src/prisma.service';
 import { promises as fsPromises } from 'fs';
+import saveFile from 'src/functions';
 
 @Injectable()
 export class NewsService {
@@ -35,11 +36,7 @@ export class NewsService {
 export class NewsServiceAdmin extends NewsService {
   async addNews(file: Express.Multer.File, body: CreateNewsDto) {
     try {
-      const filePath =
-        process.env.UPLOADS_DIR + `/${Date.now()}-${file.originalname}`; // Constructing the file path
-
-      // Saving the file to the local path
-      await fsPromises.writeFile(filePath, file.buffer);
+      const filePath = await saveFile(file);
 
       return await this.prisma.news.create({
         data: {
@@ -65,11 +62,7 @@ export class NewsServiceAdmin extends NewsService {
         });
         return updateNews;
       }
-      const filePath =
-        process.env.UPLOADS_DIR + `/${Date.now()}-${file.originalname}`; // Constructing the file path
-
-      // Saving the file to the local path
-      await fsPromises.writeFile(filePath, file.buffer);
+      const filePath = await saveFile(file);
 
       //delete old file
       const oldNews = await this.prisma.news.findUnique({

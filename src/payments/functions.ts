@@ -15,7 +15,8 @@ export function getClickHeader() {
     return compute;
   }
   const sha1Hash = generateSHA1(timestamp, process.env.CLICK_SECRET_KEY);
-  const auth = process.env.CLICK_MERCHANT_USER_ID + sha1Hash + ':' + timestamp;
+  const auth =
+    process.env.CLICK_MERCHANT_USER_ID + ':' + sha1Hash + ':' + timestamp;
   const authHeaders = new Headers();
   authHeaders.append('accept', 'application/json');
   authHeaders.append('Content-Type', 'application/json');
