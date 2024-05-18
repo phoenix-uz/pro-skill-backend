@@ -38,7 +38,7 @@ import { ChatModule } from './chat/chat.module';
     //for serving static files
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'uploads'), // Path to the uploads directory
-      serveRoot: '../uploads', // URL path to serve the files from
+      serveRoot: 'dist/uploads', // URL path to serve the files from
     }),
 
     AdminModule,
