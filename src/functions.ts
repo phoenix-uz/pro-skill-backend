@@ -4,6 +4,5 @@ export default async function saveFile(file: Express.Multer.File) {
   const extension = file.originalname.split('.').pop();
   const filePath = `${process.env.UPLOADS_DIR}/${Date.now()}${randomFileName}.${extension}`;
   await fsPromises.writeFile(filePath, file.buffer);
-  const path = filePath.replace('dist', '');
-  return path;
+  return filePath;
 }
