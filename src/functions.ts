@@ -2,7 +2,7 @@ import { promises as fsPromises } from 'fs';
 import path from 'path';
 
 export default async function saveFile(file: Express.Multer.File) {
-  const uploadsDir = process.env.UPLOADS_DIR || 'dist/uploads'; // Default to 'dist/uploads' if not set
+  const uploadsDir = process.env.UPLOADS_DIR || 'uploads'; // Default to 'dist/uploads' if not set
   const randomFileName = Math.random().toString(36).substring(7);
   const extension = file.originalname.split('.').pop();
   const filePath = path.join(
