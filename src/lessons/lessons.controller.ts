@@ -99,4 +99,9 @@ export class LessonsController {
   findOne(@Param('id') id: string) {
     return this.lessonsService.findOne(+id);
   }
+  @Get()
+  @ApiOperation({ summary: 'Get all lessons' })
+  findAll() {
+    return this.lessonsService.findAll();
+  }
 }

@@ -4,6 +4,7 @@ import { UpdateLessonDto } from './dto/update-lesson.dto';
 import { promises as fsPromises } from 'fs';
 import { PrismaService } from 'src/prisma.service';
 import saveFile from 'src/functions';
+import { find } from 'rxjs';
 
 @Injectable()
 export class LessonsService {
@@ -20,6 +21,9 @@ export class LessonsService {
     } catch (error) {
       throw new HttpException(error, HttpStatus.FORBIDDEN);
     }
+  }
+  async findAll() {
+    return await this.prisma.lessons.findMany();
   }
 
   async update(file: Express.Multer.File, body: UpdateLessonDto) {
