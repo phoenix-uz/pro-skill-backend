@@ -106,4 +106,10 @@ export class CoursesController {
   findAll() {
     return this.coursesService.findAll();
   }
+  @Get(':id')
+  @ApiOperation({ summary: 'Get course by id' })
+  findOne(@Param('id') id: string) {
+    return this.coursesService.findOne(+id);
+  }
+
 }
