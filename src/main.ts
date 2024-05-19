@@ -8,7 +8,7 @@ async function bootstrap() {
   const config = new DocumentBuilder()
     .setTitle('Pro-Skill')
     .setDescription('The Pro-Skill API description')
-    .setVersion('0.3')
+    .setVersion('0.4')
     .addBearerAuth({
       description: 'Default JWT Authorization',
       type: 'http',

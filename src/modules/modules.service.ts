@@ -41,4 +41,8 @@ export class ModulesService {
       where: { id: id },
     });
   }
+
+  async findAll() {
+    return await this.prisma.modules.findMany();
+  }
 }

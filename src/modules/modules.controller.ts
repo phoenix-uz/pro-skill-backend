@@ -70,4 +70,10 @@ export class ModulesController {
   findOne(@Param('id') id: string) {
     return this.modulesService.findOne(+id);
   }
+
+  @Get('all')
+  @ApiOperation({ summary: 'Get all modules' })
+  findAll() {
+    return this.modulesService.findAll();
+  }
 }

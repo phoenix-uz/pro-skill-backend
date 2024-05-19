@@ -46,8 +46,8 @@ exports.AppModule = AppModule = __decorate([
             news_module_1.NewsModule,
             notes_module_1.NotesModule,
             serve_static_1.ServeStaticModule.forRoot({
-                rootPath: (0, path_1.join)(__dirname, '..', 'uploads'),
-                serveRoot: 'dist/uploads',
+                rootPath: (0, path_1.join)(__dirname, '..', 'public'),
+                serveRoot: '/public',
             }),
             admin_module_1.AdminModule,
             message_module_1.MessageModule,
