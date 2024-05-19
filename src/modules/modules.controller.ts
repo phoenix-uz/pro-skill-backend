@@ -71,7 +71,7 @@ export class ModulesController {
     return this.modulesService.findOne(+id);
   }
 
-  @Get('all')
+  @Get('')
   @ApiOperation({ summary: 'Get all modules' })
   findAll() {
     return this.modulesService.findAll();
