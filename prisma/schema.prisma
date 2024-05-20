@@ -118,7 +118,7 @@ model Modules {
   title     String
   time      String
   courseId  Int
-  Lessons   Lessons[]
+  lessons   Lessons[]
   createdAt DateTime  @default(now())
 }
 

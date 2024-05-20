@@ -75,7 +75,16 @@ export class AuthService {
       throw new HttpException('User not found', HttpStatus.NOT_FOUND);
     }
     if (user.isCoursePaid) {
-      const courses = await this.prisma.courses.findFirst();
+      //include courses and modules and lessons
+      const courses = await this.prisma.courses.findFirst({
+        include: {
+          modules: {
+            include: {
+              lessons: true,
+            },
+          },
+        },
+      });
       user.courses = courses;
     }
     if (user.isModulePaid) {

@@ -30,13 +30,10 @@ export class NotesService {
       });
       return findNotes;
     } catch (error) {
-      throw new HttpException(
-        'Failed to update notes',
-        HttpStatus.BAD_REQUEST,
-      );
+      throw new HttpException('Failed to update notes', HttpStatus.BAD_REQUEST);
     }
   }
-  async findOne(userId: number, noteId?: number) {
+  async findOne(userId: number, noteId: number) {
     try {
       const findNotes = await this.prisma.notes.findFirst({
         where: {
@@ -65,10 +62,7 @@ export class NotesService {
       return updateNotes;
     } catch (error) {
       console.log(error);
-      throw new HttpException(
-        'Failed to update notes',
-        HttpStatus.BAD_REQUEST,
-      );
+      throw new HttpException('Failed to update notes', HttpStatus.BAD_REQUEST);
     }
   }
 
@@ -79,10 +73,7 @@ export class NotesService {
       });
       return deletednotes;
     } catch (error) {
-      throw new HttpException(
-        'Failed to delete notes',
-        HttpStatus.BAD_REQUEST,
-      );
+      throw new HttpException('Failed to delete notes', HttpStatus.BAD_REQUEST);
     }
   }
 }

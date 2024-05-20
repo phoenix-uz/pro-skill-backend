@@ -40,21 +40,16 @@ export class NotesController {
     return this.notesService.create(req.userId, body);
   }
 
-  // @Get('all-notes')
-  // findAll() {
-  //   return this.notesService.findAll();
-  // }
-
   @Get('')
   @ApiOperation({ summary: 'Get all notes' })
   findByUserId(@Request() req: any) {
     return this.notesService.findByUserId(+req.userId);
   }
 
-  @Get(':userId/:id')
-  @ApiOperation({ summary: 'Get note by user id and note id' })
-  async findOneById(@Param('userId') userId: string) {
-    const note = await this.notesService.findOne(Number(userId));
+  @Get(':id')
+  @ApiOperation({ summary: 'Get id' })
+  async findOneById(@Param('id') id: string, @Request() req: any) {
+    const note = await this.notesService.findOne(req.userId, +id);
     return note;
   }
 
