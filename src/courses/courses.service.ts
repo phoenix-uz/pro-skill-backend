@@ -1,7 +1,6 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
 import { CreateCourseDto } from './dto/create-course.dto';
-import { promises as fsPromises } from 'fs';
 import { UpdateCourseDto } from './dto/update-course.dto';
 import saveFile from 'src/functions';
 
@@ -45,10 +44,7 @@ export class CoursesServiceAdmin extends CoursesService {
       });
       return course;
     } catch (error) {
-      throw new HttpException(
-        'Failed to create course',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+      throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
   async update(files: Express.Multer.File[], body: UpdateCourseDto) {

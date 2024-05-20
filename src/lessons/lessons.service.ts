@@ -4,7 +4,6 @@ import { UpdateLessonDto } from './dto/update-lesson.dto';
 import { promises as fsPromises } from 'fs';
 import { PrismaService } from 'src/prisma.service';
 import saveFile from 'src/functions';
-import { find } from 'rxjs';
 
 @Injectable()
 export class LessonsService {
