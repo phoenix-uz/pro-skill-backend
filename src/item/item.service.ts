@@ -218,9 +218,6 @@ export class ItemServiceAdmin extends ItemService {
       const deletedItem = await this.prisma.item.delete({
         where: { id: id },
       });
-      // Deleting the file from the local path
-      await fsPromises.unlink(deletedItem.fileUrl);
-      await fsPromises.unlink(deletedItem.photoUrl);
       return deletedItem;
     } catch (error) {
       throw new HttpException(

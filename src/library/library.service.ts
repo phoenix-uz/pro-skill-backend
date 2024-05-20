@@ -1,7 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateLibraryDto } from './dto/create-library.dto';
 import { PrismaService } from 'src/prisma.service';
-import { promises as fsPromises } from 'fs';
 import { UpdateLibraryDto } from './dto/update-library.dto';
 import saveFile from 'src/functions';
 
@@ -83,12 +82,6 @@ export class LibraryServiceAdmin extends LibraryService {
       return library;
     } else {
       const filePath = await saveFile(file);
-      //delete old file
-      const oldLibrary = await this.prisma.library.findUnique({
-        where: { id: body.id },
-      });
-      await fsPromises.unlink(oldLibrary.photoUrl);
-
       const library = await this.prisma.library.update({
         where: { id: body.id },
         data: {
@@ -107,7 +100,6 @@ export class LibraryServiceAdmin extends LibraryService {
       where: { id: id },
     });
     try {
-      await fsPromises.unlink(library.photoUrl);
     } catch (error) {
       throw new HttpException(
         'Failed to delete item',

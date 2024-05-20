@@ -68,27 +68,23 @@ export class AuthService {
 
   async getProfile(user_id: number) {
     //include purchases
-    const user = await this.prisma.user.findUnique({
+    const user: any = await this.prisma.user.findUnique({
       where: { id: user_id },
-      select: {
-        id: true,
-        fullName: true,
-        phoneNumber: true,
-        email: true,
-        birthday: true,
-        gender: true,
-        balls: true,
-        city: true,
-        purchases: {
-          select: {
-            id: true,
-            itemId: true,
-          },
-        },
-      },
     });
     if (!user) {
       throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    }
+    if (user.isCoursePaid) {
+      const courses = await this.prisma.courses.findFirst();
+      user.courses = courses;
+    }
+    if (user.isModulePaid) {
+      const modules = await this.prisma.modules.findFirst();
+      user.modules = modules;
+    }
+    if (user.isLessonPaid) {
+      const lessons = await this.prisma.lessons.findFirst();
+      user.lessons = lessons;
     }
     return user;
   }

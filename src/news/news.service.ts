@@ -63,13 +63,6 @@ export class NewsServiceAdmin extends NewsService {
         return updateNews;
       }
       const filePath = await saveFile(file);
-
-      //delete old file
-      const oldNews = await this.prisma.news.findUnique({
-        where: { id: +body.id },
-      });
-      await fsPromises.unlink(oldNews.photoUrl);
-
       const updateNews = await this.prisma.news.update({
         where: { id: +body.id },
         data: {
@@ -93,8 +86,7 @@ export class NewsServiceAdmin extends NewsService {
       const news = await this.prisma.news.delete({
         where: { id: id },
       });
-      // delete file
-      await fsPromises.unlink(news.photoUrl);
+
       return news;
     } catch (error) {
       throw new HttpException(
