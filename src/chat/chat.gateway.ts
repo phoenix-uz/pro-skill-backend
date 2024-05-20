@@ -18,7 +18,8 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     private jwtService: JwtService,
   ) {}
 
-  private connectedUsers: Map<string, { socket: Socket; userId: number }> = new Map(); // Map для хранения подключенных клиентов
+  private connectedUsers: Map<string, { socket: Socket; userId: number }> =
+    new Map(); // Map для хранения подключенных клиентов
   private mentorClient: Socket; // Хранение сокета ментора
   private activeUser: Socket; // Хранение текущего активного пользователя для чата с ментором
 
@@ -91,7 +92,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @SubscribeMessage('selectUser')
   async handleSelectUser(
     @ConnectedSocket() client: Socket,
-    @MessageBody() { userId }: { userId: number }
+    @MessageBody() { userId }: { userId: number },
   ) {
     if (client !== this.mentorClient) {
       return;
@@ -119,11 +120,20 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     if (isMentor) {
       if (this.activeUser) {
         this.activeUser.emit('message', { message, fromMentor: true });
-        this.mentorClient.emit('message', { message, toUser: this.activeUser.id });
+        this.mentorClient.emit('message', {
+          message,
+          toUser: this.activeUser.id,
+        });
       }
     } else {
-      if (client === this.connectedUsers.get(client.id)?.socket && this.mentorClient) {
-        this.mentorClient.emit('message', { message, fromUser: this.connectedUsers.get(client.id)?.userId });
+      if (
+        client === this.connectedUsers.get(client.id)?.socket &&
+        this.mentorClient
+      ) {
+        this.mentorClient.emit('message', {
+          message,
+          fromUser: this.connectedUsers.get(client.id)?.userId,
+        });
       }
     }
   }

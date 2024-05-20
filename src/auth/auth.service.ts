@@ -74,6 +74,34 @@ export class AuthService {
     if (!user) {
       throw new HttpException('User not found', HttpStatus.NOT_FOUND);
     }
+    if (user.isLessonPaid) {
+      const courses = await this.prisma.courses.findFirst({
+        include: {
+          modules: {
+            include: {
+              lessons: {
+                take: 1,
+              },
+            },
+            take: 1,
+          },
+        },
+      });
+      user.courses = courses;
+    }
+    if (user.isModulePaid) {
+      const courses = await this.prisma.courses.findFirst({
+        include: {
+          modules: {
+            include: {
+              lessons: true,
+            },
+            take: 1,
+          },
+        },
+      });
+      user.courses = courses;
+    }
     if (user.isCoursePaid) {
       //include courses and modules and lessons
       const courses = await this.prisma.courses.findFirst({
@@ -87,14 +115,7 @@ export class AuthService {
       });
       user.courses = courses;
     }
-    if (user.isModulePaid) {
-      const modules = await this.prisma.modules.findFirst();
-      user.modules = modules;
-    }
-    if (user.isLessonPaid) {
-      const lessons = await this.prisma.lessons.findFirst();
-      user.lessons = lessons;
-    }
+
     return user;
   }
   async update(body: UpdateAuthDto, user_id: number) {
