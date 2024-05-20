@@ -1,7 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateLessonDto } from './dto/create-lesson.dto';
 import { UpdateLessonDto } from './dto/update-lesson.dto';
-import { promises as fsPromises } from 'fs';
 import { PrismaService } from 'src/prisma.service';
 import saveFile from 'src/functions';
 
@@ -55,7 +54,6 @@ export class LessonsService {
     const deleteLesson = await this.prisma.lessons.delete({
       where: { id: id },
     });
-    await fsPromises.unlink(deleteLesson.videoUrl);
     return deleteLesson;
   }
 
