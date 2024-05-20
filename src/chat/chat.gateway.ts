@@ -17,12 +17,16 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     private readonly prisma: PrismaService,
     private jwtService: JwtService,
   ) {}
-  private connectedUsers: Map<string, Socket> = new Map(); // Map to store connected clients
-  private mentorClient: Socket; // Store mentor client
+
+  private connectedUsers: Map<string, { socket: Socket; userId: number }> = new Map(); // Map для хранения подключенных клиентов
+  private mentorClient: Socket; // Хранение сокета ментора
+  private activeUser: Socket; // Хранение текущего активного пользователя для чата с ментором
+
   splitToken(token) {
     const [type, splitedToken] = token.split(' ');
     return type === 'Bearer' ? splitedToken : undefined;
   }
+
   async checkIsMentor(token) {
     const splitedToken = this.splitToken(token);
     const payload = await this.jwtService.verifyAsync(splitedToken, {
@@ -38,6 +42,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
       return false;
     }
   }
+
   async getUserId(token) {
     const splitedToken = this.splitToken(token);
     const payload = await this.jwtService.verifyAsync(splitedToken, {
@@ -45,6 +50,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     });
     return payload.sub;
   }
+
   async handleConnection(client: Socket) {
     const token = client.handshake.headers.authorization;
     const isMentor = await this.checkIsMentor(token);
@@ -56,7 +62,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         data: { online: true },
       });
       console.log(`User connected: ${userId}`);
-      this.connectedUsers.set(client.id, client); // Store client in map
+      this.connectedUsers.set(client.id, { socket: client, userId }); // Сохранение клиента в карте
     } else {
       this.mentorClient = client;
       console.log('Mentor connected');
@@ -66,55 +72,59 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   async handleDisconnect(client: Socket) {
     const token = client.handshake.headers.authorization;
     const isMentor = await this.checkIsMentor(token);
+
     if (!isMentor) {
       const userId = await this.getUserId(token);
       await this.prisma.user.update({
         where: { id: userId },
         data: { online: false },
       });
-      this.connectedUsers.delete(userId);
+      this.connectedUsers.delete(client.id);
       console.log(`User disconnected: ${userId}`);
     } else {
       this.mentorClient = null;
+      this.activeUser = null;
       console.log('Mentor disconnected');
+    }
+  }
+
+  @SubscribeMessage('selectUser')
+  async handleSelectUser(
+    @ConnectedSocket() client: Socket,
+    @MessageBody() { userId }: { userId: number }
+  ) {
+    if (client !== this.mentorClient) {
+      return;
+    }
+
+    const selectedUser = [...this.connectedUsers.values()].find(
+      (user) => user.userId === userId,
+    );
+
+    if (selectedUser) {
+      this.activeUser = selectedUser.socket;
+      console.log(`Mentor selected user: ${userId}`);
+      this.mentorClient.emit('userSelected', userId);
     }
   }
 
   @SubscribeMessage('message')
   async handleMessage(
     @ConnectedSocket() client: Socket,
-    @MessageBody()
-    { message, userId }: { message: string; userId: number | null | undefined },
+    @MessageBody() { message }: { message: string },
   ) {
     const token = client.handshake.headers.authorization;
     const isMentor = await this.checkIsMentor(token);
 
-    console.log('isMentor', isMentor);
-
-    // const isMentor = await checkIsMentor(token);
-
-    // await this.prisma.chat.create({
-    //   data: {
-    //     message,
-    //     userId,
-    //     fromMentor: false,
-    //   },
-    // });
-    // console.log(`Received message from ${client.id}: ${message}`);
-    // client.emit('message', message); // Send message back to sender
-
-    // Broadcast message to all other connected clients
-    this.broadcastMessage(client, message);
-  }
-
-  private broadcastMessage(sender: Socket, message: string) {
-    // Iterate over all connected clients
-    this.connectedUsers.forEach((client: Socket) => {
-      // Check if client is not the message sender
-      if (client.id !== sender.id) {
-        // Emit the message to the client
-        client.emit('message', message);
+    if (isMentor) {
+      if (this.activeUser) {
+        this.activeUser.emit('message', { message, fromMentor: true });
+        this.mentorClient.emit('message', { message, toUser: this.activeUser.id });
       }
-    });
+    } else {
+      if (client === this.connectedUsers.get(client.id)?.socket && this.mentorClient) {
+        this.mentorClient.emit('message', { message, fromUser: this.connectedUsers.get(client.id)?.userId });
+      }
+    }
   }
 }
