@@ -111,5 +111,4 @@ export class CoursesController {
   findOne(@Param('id') id: string) {
     return this.coursesService.findOne(+id);
   }
-
 }

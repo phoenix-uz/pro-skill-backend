@@ -10,7 +10,8 @@ async function bootstrap() {
     .setDescription('The Pro-Skill API description')
     .setVersion('0.4')
     .addBearerAuth({
-      description: 'Default JWT Authorization',
+      description:
+        'Admin: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsIm5hbWUiOiJhZG1pbiIsImlhdCI6MTcxNjM3MDg0NywiZXhwIjoxNzE4OTYyODQ3fQ.P9pY301MTP0YJYY06bfjbJIVRr-4_SeunXc_GcBcr-M ',
       type: 'http',
       scheme: 'bearer',
       bearerFormat: 'JWT',

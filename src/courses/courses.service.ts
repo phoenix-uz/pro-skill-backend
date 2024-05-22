@@ -92,6 +92,33 @@ export class CoursesServiceAdmin extends CoursesService {
 
   async remove(id: number) {
     try {
+      const modules = await this.prisma.modules.findMany({
+        where: { courseId: id },
+      });
+      for (let i = 0; i < modules.length; i++) {
+        const lessons = await this.prisma.lessons.findMany({
+          where: { moduleId: modules[i].id },
+        });
+        for (let j = 0; j < lessons.length; j++) {
+          const questions = await this.prisma.questions.findMany({
+            where: { lessonId: lessons[j].id },
+          });
+          for (let k = 0; k < questions.length; k++) {
+            await this.prisma.answers.deleteMany({
+              where: { questionId: questions[k].id },
+            });
+          }
+          await this.prisma.questions.deleteMany({
+            where: { lessonId: lessons[j].id },
+          });
+        }
+        await this.prisma.lessons.deleteMany({
+          where: { moduleId: modules[i].id },
+        });
+      }
+      await this.prisma.modules.deleteMany({
+        where: { courseId: id },
+      });
       const deletedCourse = await this.prisma.courses.delete({
         where: { id: id },
       });

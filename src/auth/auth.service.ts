@@ -80,10 +80,19 @@ export class AuthService {
           modules: {
             include: {
               lessons: {
-                include: {
-                  items: true,
-                },
                 take: 1,
+                include: {
+                  questions: {
+                    include: {
+                      answers: {
+                        select: {
+                          id: true,
+                          title: true,
+                        },
+                      },
+                    },
+                  },
+                },
               },
             },
             take: 1,
@@ -99,7 +108,16 @@ export class AuthService {
             include: {
               lessons: {
                 include: {
-                  items: true,
+                  questions: {
+                    include: {
+                      answers: {
+                        select: {
+                          id: true,
+                          title: true,
+                        },
+                      },
+                    },
+                  },
                 },
               },
             },
@@ -117,7 +135,16 @@ export class AuthService {
             include: {
               lessons: {
                 include: {
-                  items: true,
+                  questions: {
+                    include: {
+                      answers: {
+                        select: {
+                          id: true,
+                          title: true,
+                        },
+                      },
+                    },
+                  },
                 },
               },
             },
@@ -155,7 +182,7 @@ export class AuthService {
 
   async sendPhoneCode(phoneNumber: string) {
     const code = await this.getRandomSixDigitNumber();
-    const message = `Your code is ${code}`;
+    const message = `${process.env.SMS_TEXT} ${code}`;
     await this.prisma.phoneCode.upsert({
       where: { phoneNumber: phoneNumber },
       update: { code: code },
@@ -254,6 +281,7 @@ export class AuthService {
         }),
       });
       if (response.status !== 200) {
+        console.log(response);
         throw new HttpException('SMS not sent', HttpStatus.BAD_REQUEST);
       }
     }

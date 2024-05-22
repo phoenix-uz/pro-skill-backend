@@ -5,7 +5,7 @@ import { PrismaService } from 'src/prisma.service';
 export class CheckService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async check(questions: number[], answers: number[]) {
+  async check(questions: number[], answers: number[], userId: number) {
     if (questions.length !== answers.length) {
       throw new HttpException(
         'Questions and answers should be equal in length',
@@ -15,6 +15,10 @@ export class CheckService {
 
     let balls = 0;
     const checked = [];
+    const question = await this.prisma.questions.findFirst({
+      where: { id: questions[0] },
+    });
+    const lessonId = question.lessonId;
 
     for (let index = 0; index < questions.length; index++) {
       const questionId = questions[index];
@@ -52,6 +56,20 @@ export class CheckService {
         checked.push(false); // Assuming failed questions are marked as incorrect
       }
     }
+
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+    });
+    // add into the user completed lessons lesson id
+    await this.prisma.user.update({
+      where: { id: userId },
+      data: {
+        completedLessons: {
+          push: lessonId,
+        },
+        balls: user.balls + balls,
+      },
+    });
 
     return checked;
   }

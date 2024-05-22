@@ -8,24 +8,25 @@ generator client {
 }
 
 model User {
-  id           Int         @id @default(autoincrement())
-  fullName     String
-  email        String      @unique
-  phoneNumber  String      @unique
-  gender       String?
-  city         String?
-  birthday     String?
-  password     String
-  balls        Int         @default(100)
-  authorized   Boolean     @default(false)
-  notes        Notes[]
-  online       Boolean     @default(false)
-  role         String      @default("user")
-  isLessonPaid Boolean     @default(false)
-  isCoursePaid Boolean     @default(false)
-  isModulePaid Boolean     @default(false)
-  createdAt    DateTime    @default(now())
-  purchases    Purchases[]
+  id               Int         @id @default(autoincrement())
+  fullName         String
+  email            String      @unique
+  phoneNumber      String      @unique
+  gender           String?
+  city             String?
+  birthday         String?
+  password         String
+  balls            Int         @default(100)
+  authorized       Boolean     @default(false)
+  notes            Notes[]
+  online           Boolean     @default(false)
+  role             String      @default("user")
+  isLessonPaid     Boolean     @default(false)
+  isCoursePaid     Boolean     @default(false)
+  isModulePaid     Boolean     @default(false)
+  completedLessons Int[]
+  createdAt        DateTime    @default(now())
+  purchases        Purchases[]
 }
 
 model PhoneCode {
@@ -73,7 +74,6 @@ model Item {
   createdAt DateTime    @default(now())
   Library   Library     @relation(fields: [libraryId], references: [id])
   Purchases Purchases[]
-  Lessons   Lessons[]
 }
 
 model News {
@@ -104,7 +104,7 @@ model Message {
 
 model Courses {
   id          Int       @id @default(autoincrement())
-  title       String    @unique
+  title       String
   description String
   author      String
   time        String
@@ -130,9 +130,9 @@ model Lessons {
   time      String
   moduleId  Int
   Modules   Modules     @relation(fields: [moduleId], references: [id])
-  items     Item[]
   createdAt DateTime    @default(now())
   questions Questions[]
+  items     String[]
 }
 
 model Questions {

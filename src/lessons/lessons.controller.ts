@@ -6,9 +6,9 @@ import {
   Patch,
   Param,
   Delete,
-  UploadedFile,
   UseInterceptors,
   UseGuards,
+  UploadedFiles,
 } from '@nestjs/common';
 import { LessonsService } from './lessons.service';
 import { CreateLessonDto } from './dto/create-lesson.dto';
@@ -20,7 +20,7 @@ import {
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
-import { FileInterceptor } from '@nestjs/platform-express';
+import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { AdminGuard } from 'src/admin/admin.guard';
 
 @ApiTags('Lessons', 'Admin')
@@ -35,22 +35,24 @@ export class LessonsController {
     schema: {
       type: 'object',
       properties: {
-        file: {
-          type: 'string',
-          format: 'binary',
+        files: {
+          type: 'array',
+          items: {
+            type: 'string',
+            format: 'binary',
+          },
         },
         title: { type: 'string' },
         time: { type: 'string' },
         moduleId: { type: 'number' },
-        items: { type: 'array', items: { type: 'number' }, example: [1, 2, 3] },
       },
     },
   })
   @Post()
   @ApiOperation({ summary: 'Create new lesson' })
-  @UseInterceptors(FileInterceptor('file'))
-  addLesson(
-    @UploadedFile() file: Express.Multer.File,
+  @UseInterceptors(FilesInterceptor('files'))
+  async addLesson(
+    @UploadedFiles() files: Express.Multer.File[],
     @Body() body: CreateLessonDto,
   ) {
     body.moduleId = +body.moduleId;
@@ -58,22 +60,24 @@ export class LessonsController {
     //split(',') - first convert string to array
     //map(Number) - convert string to number
     body.items = body.items.split(',').map(Number);
-    return this.lessonsService.create(file, body);
+    return this.lessonsService.create(files, body);
   }
   @ApiConsumes('multipart/form-data')
   @ApiBody({
     schema: {
       type: 'object',
       properties: {
-        file: {
-          type: 'string',
-          format: 'binary',
+        files: {
+          type: 'array',
+          items: {
+            type: 'string',
+            format: 'binary',
+          },
         },
         id: { type: 'number' },
         title: { type: 'string' },
         time: { type: 'string' },
         moduleId: { type: 'number' },
-        items: { type: 'array', items: { type: 'number' }, example: [1, 2, 3] },
       },
     },
   })
@@ -81,7 +85,7 @@ export class LessonsController {
   @ApiOperation({ summary: 'Update lesson' })
   @UseInterceptors(FileInterceptor('file'))
   updateLesson(
-    @UploadedFile() file: Express.Multer.File,
+    @UploadedFiles() files: Express.Multer.File[],
     @Body() body: UpdateLessonDto,
   ) {
     body.id = +body.id;
@@ -90,8 +94,9 @@ export class LessonsController {
     //split(',') - first convert string to array
     //map(Number) - convert string to number
     body.items = body.items.split(',').map(Number);
-    return this.lessonsService.update(file, body);
+    return this.lessonsService.update(files, body);
   }
+
   @Delete(':id')
   @ApiOperation({ summary: 'Delete lesson by id' })
   remove(@Param('id') id: string) {

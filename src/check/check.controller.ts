@@ -1,9 +1,11 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import { Controller, Post, Body, UseGuards, Request } from '@nestjs/common';
 import { CheckService } from './check.service';
-import { ApiBody, ApiTags } from '@nestjs/swagger';
-
+import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
+import { AuthGuard } from 'src/auth/auth.guard';
 @ApiTags('Check')
 @Controller('check')
+@UseGuards(AuthGuard)
+@ApiBearerAuth()
 export class CheckController {
   constructor(private readonly checkService: CheckService) {}
   @ApiBody({
@@ -16,7 +18,10 @@ export class CheckController {
     },
   })
   @Post()
-  create(@Body() body: { questions: number[]; answers: number[] }) {
-    return this.checkService.check(body.questions, body.answers);
+  create(
+    @Request() req: any,
+    @Body() body: { questions: number[]; answers: number[] },
+  ) {
+    return this.checkService.check(body.questions, body.answers, req.userId);
   }
 }

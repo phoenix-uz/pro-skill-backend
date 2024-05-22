@@ -22,6 +22,8 @@ export class QuestionsService {
         },
       });
     });
+
+    setTimeout(() => {}, 1000);
     return await this.prisma.questions.findUnique({
       where: { id: question.id },
       include: { answers: true },
@@ -45,6 +47,7 @@ export class QuestionsService {
         },
       });
     });
+    setTimeout(() => {}, 1000);
     return await this.prisma.questions.findUnique({
       where: { id: body.id },
       include: { answers: true },
@@ -67,5 +70,12 @@ export class QuestionsService {
       where: { questionId: id },
     });
     return await this.prisma.questions.delete({ where: { id: id } });
+  }
+
+  async findByLessonId(id: number) {
+    return await this.prisma.questions.findMany({
+      where: { lessonId: id },
+      include: { answers: true },
+    });
   }
 }

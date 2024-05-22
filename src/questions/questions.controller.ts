@@ -55,18 +55,24 @@ export class QuestionsController {
   update(@Body() body: UpdateQuestionDto) {
     return this.questionsService.update(body);
   }
+
   @Get()
   @ApiOperation({ summary: 'Get all questions' })
   findAll() {
     return this.questionsService.findAll();
   }
 
-  @Get(':id')
+  @Get('byQuestionId/:id')
   @ApiOperation({ summary: 'Get question by id' })
   findOne(@Param('id') id: string) {
     return this.questionsService.findOne(+id);
   }
 
+  @Get('byLessonId/:id')
+  @ApiOperation({ summary: 'Get question by id' })
+  findByLessonId(@Param('id') id: string) {
+    return this.questionsService.findByLessonId(+id);
+  }
   @Delete(':id')
   @ApiOperation({ summary: 'Delete question by id' })
   remove(@Param('id') id: string) {
