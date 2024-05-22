@@ -8,20 +8,32 @@ import saveFile from 'src/functions';
 export class LessonsService {
   constructor(public readonly prisma: PrismaService) {}
   async create(file: Express.Multer.File, body: CreateLessonDto) {
-    try {
-      const filePath = await saveFile(file);
-      return await this.prisma.lessons.create({
-        data: {
-          videoUrl: filePath,
-          ...body,
+    // try {
+    const filePath = await saveFile(file);
+    const lesson = await this.prisma.lessons.create({
+      data: {
+        title: body.title,
+        time: body.time,
+        moduleId: body.moduleId,
+        videoUrl: filePath,
+        items: {
+          connect: body.items.map((id) => {
+            return { id };
+          }),
         },
-      });
-    } catch (error) {
-      throw new HttpException(error, HttpStatus.FORBIDDEN);
-    }
+      },
+    });
+    return lesson;
+    // } catch (error) {
+    //   throw new HttpException(error, HttpStatus.FORBIDDEN);
+    // }
   }
   async findAll() {
-    return await this.prisma.lessons.findMany();
+    return await this.prisma.lessons.findMany({
+      include: {
+        items: true,
+      },
+    });
   }
 
   async update(file: Express.Multer.File, body: UpdateLessonDto) {
@@ -32,6 +44,11 @@ export class LessonsService {
           where: { id: +body.id },
           data: {
             ...body,
+            items: {
+              connect: body.items.map((id) => {
+                return { id };
+              }),
+            },
           },
         });
         return updateLesson;
@@ -62,12 +79,18 @@ export class LessonsService {
       where: {
         moduleId: id,
       },
+      include: {
+        items: true,
+      },
     });
   }
 
   async findOne(id: number) {
     return await this.prisma.lessons.findUnique({
       where: { id: id },
+      include: {
+        items: true,
+      },
     });
   }
 }

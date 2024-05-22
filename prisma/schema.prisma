@@ -73,6 +73,7 @@ model Item {
   createdAt DateTime    @default(now())
   Library   Library     @relation(fields: [libraryId], references: [id])
   Purchases Purchases[]
+  Lessons   Lessons[]
 }
 
 model News {
@@ -129,6 +130,7 @@ model Lessons {
   time      String
   moduleId  Int
   Modules   Modules     @relation(fields: [moduleId], references: [id])
+  items     Item[]
   createdAt DateTime    @default(now())
   questions Questions[]
 }
@@ -169,6 +171,16 @@ model Chat {
 }
 
 model ClickCardTokens {
+  id          Int      @id @default(autoincrement())
+  userId      Int
+  cardNumber  String
+  cardToken   String
+  expireDate  String
+  phoneNumber String
+  createdAt   DateTime @default(now())
+}
+
+model PaymeCardTokens {
   id          Int      @id @default(autoincrement())
   userId      Int
   cardNumber  String

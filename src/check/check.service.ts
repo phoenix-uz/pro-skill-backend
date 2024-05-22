@@ -48,9 +48,7 @@ export class CheckService {
         }
       } catch (error) {
         // Handle any errors here
-        console.error(
-          `Error processing question ${questionId}: ${error.message}`,
-        );
+
         checked.push(false); // Assuming failed questions are marked as incorrect
       }
     }

@@ -42,6 +42,7 @@ export class LessonsController {
         title: { type: 'string' },
         time: { type: 'string' },
         moduleId: { type: 'number' },
+        items: { type: 'array', items: { type: 'number' }, example: [1, 2, 3] },
       },
     },
   })
@@ -53,6 +54,10 @@ export class LessonsController {
     @Body() body: CreateLessonDto,
   ) {
     body.moduleId = +body.moduleId;
+    // from string to number type '1,2,3` to [1,2,3]
+    //split(',') - first convert string to array
+    //map(Number) - convert string to number
+    body.items = body.items.split(',').map(Number);
     return this.lessonsService.create(file, body);
   }
   @ApiConsumes('multipart/form-data')
@@ -68,6 +73,7 @@ export class LessonsController {
         title: { type: 'string' },
         time: { type: 'string' },
         moduleId: { type: 'number' },
+        items: { type: 'array', items: { type: 'number' }, example: [1, 2, 3] },
       },
     },
   })
@@ -80,6 +86,10 @@ export class LessonsController {
   ) {
     body.id = +body.id;
     body.moduleId = +body.moduleId;
+    // from string to number type '1,2,3` to [1,2,3]
+    //split(',') - first convert string to array
+    //map(Number) - convert string to number
+    body.items = body.items.split(',').map(Number);
     return this.lessonsService.update(file, body);
   }
   @Delete(':id')

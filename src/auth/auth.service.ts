@@ -80,6 +80,9 @@ export class AuthService {
           modules: {
             include: {
               lessons: {
+                include: {
+                  items: true,
+                },
                 take: 1,
               },
             },
@@ -94,7 +97,11 @@ export class AuthService {
         include: {
           modules: {
             include: {
-              lessons: true,
+              lessons: {
+                include: {
+                  items: true,
+                },
+              },
             },
             take: 1,
           },
@@ -108,7 +115,11 @@ export class AuthService {
         include: {
           modules: {
             include: {
-              lessons: true,
+              lessons: {
+                include: {
+                  items: true,
+                },
+              },
             },
           },
         },

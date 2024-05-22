@@ -77,14 +77,14 @@ export class ClickController {
       body.card_number,
       +body.sms_code,
     );
-    console.log(confirmCard);
+
     if (body.name === 'Dars') {
       const payment = await this.clickService.payWithCardToken(
         body.card_number,
         1000,
-        req.userId + '_dars',
+        // req.userId + '_dars',
       );
-      console.log(payment);
+
       const user = await this.prisma.user.update({
         where: { id: req.userId },
         data: { isLessonPaid: true },
@@ -94,7 +94,7 @@ export class ClickController {
       await this.clickService.payWithCardToken(
         body.card_number,
         2000,
-        req.userId + '_modul',
+        // req.userId + '_modul',
       );
       const user = await this.prisma.user.update({
         where: { id: req.userId },
@@ -105,7 +105,7 @@ export class ClickController {
       await this.clickService.payWithCardToken(
         body.card_number,
         3000,
-        req.userId + '_kurs',
+        // req.userId + '_kurs',
       );
       const user = await this.prisma.user.update({
         where: { id: req.userId },

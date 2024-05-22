@@ -28,11 +28,14 @@ export class CoursesServiceAdmin extends CoursesService {
       const photoUrls = [];
 
       // Use map to create an array of promises for each file upload operation
-      files.map(async (file) => {
+      const uploadPromises = files.map(async (file) => {
         const filePath = await saveFile(file);
         // Push the file path into the photoUrls array
-        photoUrls.push(filePath);
+        return photoUrls.push(filePath);
       });
+      // Wait for all file upload promises to resolve
+      await Promise.all(uploadPromises);
+
       const course = await this.prisma.courses.create({
         data: {
           photoUrls: photoUrls,

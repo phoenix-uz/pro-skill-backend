@@ -14,7 +14,7 @@ export class ClickService {
     merchant_trans_id: string,
   ) {
     const response = await fetch(
-      'https://api.click.uz/v2/merchant/invoice/create',
+      `${process.env.CLICK_MERCHANT_URL}invoice/create`,
       {
         method: 'POST',
         headers: getClickHeader(),
@@ -34,7 +34,7 @@ export class ClickService {
   }
   async checkInvoiceStatus(invoice_id: bigint) {
     const response = await fetch(
-      `https://api.click.uz/v2/merchant/invoice/status/${process.env.CLICK_SERVICE_ID}/${invoice_id}`,
+      `${process.env.CLICK_MERCHANT_URL}invoice/status/${process.env.CLICK_SERVICE_ID}/${invoice_id}`,
       {
         method: 'GET',
         headers: getClickHeader(),
@@ -48,7 +48,7 @@ export class ClickService {
 
   async checkPaymentStatus(payment_id: bigint) {
     const response = await fetch(
-      ` https://api.click.uz/v2/merchant/payment/status/${process.env.CLICK_SERVICE_ID}/${payment_id}`,
+      ` ${process.env.CLICK_MERCHANT_URL}payment/status/${process.env.CLICK_SERVICE_ID}/${payment_id}`,
       {
         method: 'GET',
         headers: getClickHeader(),
@@ -68,7 +68,7 @@ export class ClickService {
     const date = new Date(payment_date);
     const formatted_date = date.toISOString().slice(0, 10);
     const response = await fetch(
-      `https://api.click.uz/v2/merchant/payment/status_by_mti/${process.env.CLICK_SERVICE_ID}/${merchant_trans_id}/${formatted_date}`,
+      `${process.env.CLICK_MERCHANT_URL}payment/status_by_mti/${process.env.CLICK_SERVICE_ID}/${merchant_trans_id}/${formatted_date}`,
       {
         method: 'GET',
         headers: getClickHeader(),
@@ -82,7 +82,7 @@ export class ClickService {
 
   async cancelPayment(payment_id: bigint) {
     const response = await fetch(
-      `https://api.click.uz/v2/merchant/payment/reversal/${process.env.CLICK_SERVICE_ID}/${payment_id}`,
+      `${process.env.CLICK_MERCHANT_URL}payment/reversal/${process.env.CLICK_SERVICE_ID}/${payment_id}`,
       {
         method: 'DELETE',
         headers: getClickHeader(),
@@ -100,7 +100,7 @@ export class ClickService {
     userId: number,
   ) {
     const response = await fetch(
-      'https://api.click.uz/v2/merchant/card_token/request',
+      '${process.env.CLICK_MERCHANT_URL}card_token/request',
       {
         method: 'POST',
         headers: getClickHeader(),
@@ -137,12 +137,8 @@ export class ClickService {
         createdAt: 'desc',
       },
     });
-    console.log(card_token.cardToken);
-    console.log(sms_code);
-    console.log(process.env.CLICK_SERVICE_ID);
-    console.log(getClickHeader());
     const response = await fetch(
-      'https://api.click.uz/v2/merchant/card_token/verify',
+      '${process.env.CLICK_MERCHANT_URL}card_token/verify',
       {
         method: 'POST',
         headers: getClickHeader(),
@@ -163,7 +159,7 @@ export class ClickService {
   async payWithCardToken(
     card_number: string,
     amount: number,
-    merchant_trans_id: string,
+    // merchant_trans_id: string,
   ) {
     const card_token = await this.prisma.clickCardTokens.findFirst({
       where: {
@@ -180,7 +176,7 @@ export class ClickService {
     const formattedNum: string = numStr.replace('.', ',');
     console.log(formattedNum);
     const response = await fetch(
-      'https://api.click.uz/v2/merchant/card_token/payment',
+      '${process.env.CLICK_MERCHANT_URL}card_token/payment',
       {
         method: 'POST',
         headers: getClickHeader(),
@@ -188,7 +184,7 @@ export class ClickService {
           service_id: process.env.CLICK_SERVICE_ID,
           card_token: card_token.cardToken,
           amount: 1000.0,
-          transaction_parameter: "686",
+          transaction_parameter: '686',
         }),
       },
     ).catch((error) => {
@@ -208,7 +204,7 @@ export class ClickService {
 
   async deleteCardToken(card_token: string) {
     const response = await fetch(
-      `https://api.click.uz/v2/merchant/card_token/${process.env.CLICK_SERVICE_ID}/${card_token}`,
+      `${process.env.CLICK_MERCHANT_URL}card_token/${process.env.CLICK_SERVICE_ID}/${card_token}`,
       {
         method: 'DELETE',
         headers: getClickHeader(),
