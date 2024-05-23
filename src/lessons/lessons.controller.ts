@@ -59,7 +59,6 @@ export class LessonsController {
     // from string to number type '1,2,3` to [1,2,3]
     //split(',') - first convert string to array
     //map(Number) - convert string to number
-    body.items = body.items.split(',').map(Number);
     return this.lessonsService.create(files, body);
   }
   @ApiConsumes('multipart/form-data')
@@ -83,7 +82,7 @@ export class LessonsController {
   })
   @Patch()
   @ApiOperation({ summary: 'Update lesson' })
-  @UseInterceptors(FileInterceptor('file'))
+  @UseInterceptors(FilesInterceptor('file'))
   updateLesson(
     @UploadedFiles() files: Express.Multer.File[],
     @Body() body: UpdateLessonDto,
@@ -93,7 +92,6 @@ export class LessonsController {
     // from string to number type '1,2,3` to [1,2,3]
     //split(',') - first convert string to array
     //map(Number) - convert string to number
-    body.items = body.items.split(',').map(Number);
     return this.lessonsService.update(files, body);
   }
 
