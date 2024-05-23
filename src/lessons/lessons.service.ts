@@ -76,7 +76,7 @@ export class LessonsService {
           itemsUrls.push(filePath);
         });
         // Wait for all file upload promises to resolve
-        await Promise.all(uploadPromises);
+        // await Promise.all(uploadPromises);
         const updateLesson = await this.prisma.lessons.update({
           where: { id: +body.id },
           data: {
