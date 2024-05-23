@@ -48,11 +48,13 @@ export class LessonsService {
 
   async update(files: Express.Multer.File[], body: UpdateLessonDto) {
     try {
-      if (!files) {
+      if (files.length === 0) {
         const updateLesson = await this.prisma.lessons.update({
           where: { id: +body.id },
           data: {
-            ...body,
+            title: body.title,
+            time: body.time,
+            moduleId: body.moduleId,
           },
         });
         return updateLesson;
