@@ -10,7 +10,6 @@ export function getClickHeader() {
   // Function to generate SHA-1 hash of (timestamp + secret_key)
   function generateSHA1(timestamp, secretKey) {
     const inputString = timestamp + secretKey;
-    console.log('inputString', inputString);
     const compute = computeSHA1(inputString);
     return compute;
   }

@@ -170,22 +170,22 @@ model Chat {
   createdAt  DateTime @default(now())
 }
 
-model ClickCardTokens {
+model CLickCards {
   id          Int      @id @default(autoincrement())
   userId      Int
-  cardNumber  String
-  cardToken   String
+  cardNumber  String   @unique
   expireDate  String
-  phoneNumber String
+  cardToken   String?
+  phoneNumber String?
   createdAt   DateTime @default(now())
 }
 
-model PaymeCardTokens {
+model PaymeCards {
   id          Int      @id @default(autoincrement())
   userId      Int
-  cardNumber  String
-  cardToken   String
+  cardNumber  String   @unique
   expireDate  String
-  phoneNumber String
+  cardToken   String?
+  phoneNumber String?
   createdAt   DateTime @default(now())
 }
