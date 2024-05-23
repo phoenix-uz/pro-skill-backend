@@ -82,7 +82,7 @@ export class LessonsController {
   })
   @Patch()
   @ApiOperation({ summary: 'Update lesson' })
-  @UseInterceptors(FilesInterceptor('file'))
+  @UseInterceptors(FilesInterceptor('files'))
   updateLesson(
     @UploadedFiles() files: Express.Multer.File[],
     @Body() body: UpdateLessonDto,
