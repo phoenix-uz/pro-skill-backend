@@ -65,7 +65,10 @@ export class CheckService {
       where: { id: userId },
       data: {
         completedLessons: {
-          push: lessonId,
+          push: {
+            lessonId: lessonId,
+            answers: checked,
+          },
         },
         balls: user.balls + balls,
       },

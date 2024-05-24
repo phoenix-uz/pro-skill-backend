@@ -24,7 +24,7 @@ model User {
   isLessonPaid     Boolean     @default(false)
   isCoursePaid     Boolean     @default(false)
   isModulePaid     Boolean     @default(false)
-  completedLessons Int[]
+  completedLessons Json[]
   createdAt        DateTime    @default(now())
   purchases        Purchases[]
 }
