@@ -25,15 +25,18 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     private jwtService: JwtService,
   ) {}
 
-  private connectedUsers: Map<any, any> = new Map(); // Map для хранения подключенных клиентов
-  private mentorClient: Socket; // Хранение сокета ментора
+  private connectedUsers: Map<any, any> = new Map(); // Map for storing connected clients
+  private mentorClient: Socket; // Storing the mentor's socket
 
-  splitToken(token) {
+  splitToken(token: string) {
+    if (!token) {
+      throw new HttpException('Token not found', 401);
+    }
     const [type, splitedToken] = token.split(' ');
     return type === 'Bearer' ? splitedToken : undefined;
   }
 
-  async checkIsMentor(token) {
+  async checkIsMentor(token: string) {
     const splitedToken = this.splitToken(token);
     if (!splitedToken) {
       return false;
@@ -41,18 +44,13 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     const payload = await this.jwtService.verifyAsync(splitedToken, {
       secret: process.env.JWT_SECRET,
     });
-    try {
-      if (payload.name === process.env.MENTOR_NAME) {
-        return true;
-      } else {
-        return false;
-      }
-    } catch {
-      return false;
-    }
+    return payload.name === process.env.MENTOR_NAME;
   }
 
-  async getUserId(token) {
+  async getUserId(token: string) {
+    if (!token) {
+      throw new HttpException('Token not found', 401);
+    }
     const splitedToken = this.splitToken(token);
     const payload = await this.jwtService.verifyAsync(splitedToken, {
       secret: process.env.JWT_SECRET,
@@ -61,23 +59,30 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   async handleConnection(client: Socket) {
-    if (!client.handshake.headers.authorization) {
-      throw new HttpException('Token not found', 401);
-    }
     const token = client.handshake.headers.authorization;
-    const isMentor = await this.checkIsMentor(token);
+    if (!token) {
+      client.disconnect(true);
+      return;
+    }
 
-    if (!isMentor) {
-      const userId = await this.getUserId(token);
-      await this.prisma.user.update({
-        where: { id: userId },
-        data: { online: true },
-      });
-      console.log(`User connected: ${userId}`);
-      this.connectedUsers.set(userId.toString(), { socket: client }); // Сохранение клиента в карте
-    } else {
-      this.mentorClient = client;
-      console.log('Mentor connected');
+    try {
+      const isMentor = await this.checkIsMentor(token);
+
+      if (!isMentor) {
+        const userId = await this.getUserId(token);
+        await this.prisma.user.update({
+          where: { id: userId },
+          data: { online: true },
+        });
+        console.log(`User connected: ${userId}`);
+        this.connectedUsers.set(userId.toString(), { socket: client }); // Save the client in the map
+      } else {
+        this.mentorClient = client;
+        console.log('Mentor connected');
+      }
+    } catch (error) {
+      client.disconnect(true);
+      console.error('Invalid token:', error.message);
     }
   }
 
@@ -91,7 +96,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         where: { id: userId },
         data: { online: false },
       });
-      this.connectedUsers.delete(userId.toString()); // Удаление клиента из карты
+      this.connectedUsers.delete(userId.toString()); // Remove the client from the map
       console.log(`User disconnected: ${userId}`);
     } else {
       this.mentorClient = null;
