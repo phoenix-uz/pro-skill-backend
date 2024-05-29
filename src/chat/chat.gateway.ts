@@ -48,9 +48,6 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   async getUserId(token: string) {
-    if (!token) {
-      throw new HttpException('Token not found', 401);
-    }
     const splitedToken = this.splitToken(token);
     const payload = await this.jwtService.verifyAsync(splitedToken, {
       secret: process.env.JWT_SECRET,
@@ -82,7 +79,6 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
       }
     } catch (error) {
       client.disconnect(true);
-      console.error('Invalid token:', error.message);
     }
   }
 
@@ -118,9 +114,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     if (isMentor) {
       console.log('Mentor sent message to user ' + message.userId);
       console.log('Message: ' + message.text);
-      if (!message.userId) {
-        throw new HttpException('User not found', 404);
-      }
+
       const user = await this.prisma.user.findUnique({
         where: { id: +message.userId },
       });
