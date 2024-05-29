@@ -83,6 +83,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   async handleDisconnect(client: Socket) {
+    client.disconnect(true);
     const token = client.handshake.headers.authorization;
     const isMentor = await this.checkIsMentor(token);
 
