@@ -116,15 +116,27 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
       if (!user) {
         throw new HttpException('User not found', 404);
       }
+      await this.prisma.chat.create({
+        data: {
+          userId: +message.userId,
+          message: message.text,
+          fromMentor: true,
+        },
+      });
       this.connectedUsers.get(message.userId)?.socket.emit('message', {
         text: message.text,
         userId: message.userId,
       });
     } else {
-      const userId = await this.getUserId(token);
       console.log('User sent message to mentor');
-      console.log('Message: ' + message.text);
-      console.log('User id: ' + userId);
+      const userId = await this.getUserId(token);
+      await this.prisma.chat.create({
+        data: {
+          userId: userId,
+          message: message.text,
+          fromMentor: false,
+        },
+      });
       this.mentorClient.emit('message', {
         text: message.text,
         userId: userId,
