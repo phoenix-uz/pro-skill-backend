@@ -11,7 +11,14 @@ import {
 import { Socket } from 'socket.io';
 import { PrismaService } from 'src/prisma.service';
 
-@WebSocketGateway()
+@WebSocketGateway({
+  cors: {
+    origin: 'http://localhost:3000',
+    methods: ['GET', 'POST'],
+    allowedHeaders: ['Authorization'],
+    credentials: true,
+  },
+})
 export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   constructor(
     private readonly prisma: PrismaService,
@@ -115,6 +122,9 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
       });
     } else {
       const userId = await this.getUserId(token);
+      console.log('User sent message to mentor');
+      console.log('Message: ' + message.text);
+      console.log('User id: ' + userId);
       this.mentorClient.emit('message', {
         text: message.text,
         userId: userId,
