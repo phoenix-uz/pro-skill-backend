@@ -6,7 +6,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   const config = new DocumentBuilder()
-
+    .addServer('/api')
     .setTitle('Pro-Skill')
     .setDescription('The Pro-Skill API description')
     .setVersion('0.4')
@@ -20,6 +20,7 @@ async function bootstrap() {
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document, {
+    
     swaggerOptions: {
       filter: true,
       showRequestDuration: true,

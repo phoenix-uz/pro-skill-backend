@@ -62,6 +62,9 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   async handleConnection(client: Socket) {
     const token = client.handshake.headers.authorization;
+    if (!token) {
+      throw new HttpException('Token not found', 401);
+    }
     const isMentor = await this.checkIsMentor(token);
 
     if (!isMentor) {
