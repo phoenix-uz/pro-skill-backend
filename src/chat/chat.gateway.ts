@@ -118,6 +118,9 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     if (isMentor) {
       console.log('Mentor sent message to user ' + message.userId);
       console.log('Message: ' + message.text);
+      if (!message.userId) {
+        throw new HttpException('User not found', 404);
+      }
       const user = await this.prisma.user.findUnique({
         where: { id: +message.userId },
       });
