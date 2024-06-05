@@ -4,5 +4,5 @@ export class CreateItemDto {
   author: string;
   price: number;
   libraryId: number;
-  length: number;
+  length: string;
 }

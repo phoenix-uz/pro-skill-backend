@@ -66,7 +66,7 @@ model Item {
   subtitle  String
   author    String
   price     Int // for balls
-  length    Int
+  length    String
   type      String
   fileUrl   String
   libraryId Int

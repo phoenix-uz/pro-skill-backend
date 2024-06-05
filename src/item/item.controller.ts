@@ -52,7 +52,7 @@ export class ItemControllerAdmin {
         author: { type: 'string' },
         price: { type: 'number' },
         libraryId: { type: 'number' },
-        length: { type: 'number' },
+        length: { type: 'string' },
       },
     },
   })
@@ -62,7 +62,7 @@ export class ItemControllerAdmin {
     @Body() body: CreateItemDto,
   ) {
     body.price = body.price ? +body.price : 0;
-    body.length = body.length ? +body.length : 0;
+    //body.length = body.length ? +body.length : 0;
     body.libraryId = +body.libraryId;
 
     return this.itemServiceAdmin.createItem(files, body);
@@ -89,7 +89,7 @@ export class ItemControllerAdmin {
         author: { type: 'string' },
         price: { type: 'number' },
         libraryId: { type: 'number' },
-        length: { type: 'number' },
+        length: { type: 'string' },
       },
     },
   })
@@ -99,7 +99,7 @@ export class ItemControllerAdmin {
     @Body() body: UpdateItemDto,
   ) {
     body.price = body.price ? +body.price : 0;
-    body.length = body.length ? +body.length : 0;
+    //body.length = body.length ? +body.length : 0;
     body.libraryId = +body.libraryId;
     return this.itemServiceAdmin.update(files, body);
   }

@@ -67,6 +67,7 @@ export class LibraryControllerAdmin {
     @UploadedFile() file: Express.Multer.File,
     @Body() body: UpdateLibraryDto,
   ) {
+    body.id = +body.id;
     return this.libraryServiceAdmin.update(file, body);
   }
 

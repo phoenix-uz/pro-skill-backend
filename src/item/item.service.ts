@@ -133,16 +133,16 @@ export class ItemServiceAdmin extends ItemService {
         const pdfBytes = await fsPromises.readFile(filePath);
         const pdfDoc = await PDFDocument.load(pdfBytes);
         const numPages = pdfDoc.getPageCount();
-        body.length = numPages;
+        body.length = `${numPages} страниц`;
       } else if (type === 'mp3') {
         const metadata = await mm.parseFile(filePath);
         const durationInSeconds = metadata.format.duration;
-        body.length = durationInSeconds;
+        body.length = `${durationInSeconds} cекунд`;
       } else if (type === 'MP4') {
         const duration = await videoDuration(filePath);
-        body.length = duration.seconds;
+        body.length = `${duration.seconds} cекунд`;
       } else {
-        body.length = 0;
+        body.length = '0';
       }
       return await this.prisma.item.create({
         data: {
@@ -158,7 +158,7 @@ export class ItemServiceAdmin extends ItemService {
   async update(files: Express.Multer.File[], body: UpdateItemDto) {
     if (files.length === 0) {
       return await this.prisma.item.update({
-        where: { id: body.id },
+        where: { id: +body.id },
         data: body,
       });
     } else if (files.length === 1) {
@@ -190,19 +190,19 @@ export class ItemServiceAdmin extends ItemService {
         const pdfBytes = await fsPromises.readFile(filePath);
         const pdfDoc = await PDFDocument.load(pdfBytes);
         const numPages = pdfDoc.getPageCount();
-        body.length = numPages;
+        body.length = `${numPages} страниц`;
       } else if (type === 'mp3') {
         const metadata = await mm.parseFile(filePath);
         const durationInSeconds = metadata.format.duration;
-        body.length = durationInSeconds;
+        body.length = `${durationInSeconds} cекунд`;
       } else if (type === 'MP4') {
         const duration = await videoDuration(filePath);
-        body.length = duration.seconds;
+        body.length = `${duration.seconds} cекунд`;
       } else {
-        body.length = 0;
+        body.length = `0`;
       }
       return await this.prisma.item.update({
-        where: { id: body.id },
+        where: { id: +body.id },
         data: {
           photoUrl: imagePath,
           fileUrl: filePath,

@@ -6,7 +6,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   const config = new DocumentBuilder()
-    .addServer('/api')
+   // .addServer('/api')
     .setTitle('Pro-Skill')
     .setDescription('The Pro-Skill API description')
     .setVersion('0.4')
@@ -27,6 +27,6 @@ async function bootstrap() {
     },
   });
   app.enableCors();
-  await app.listen(5000);
+  await app.listen(5001);
 }
 bootstrap();

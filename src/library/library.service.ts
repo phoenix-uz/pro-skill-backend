@@ -74,7 +74,7 @@ export class LibraryServiceAdmin extends LibraryService {
   async update(file: Express.Multer.File, body: UpdateLibraryDto) {
     if (!file) {
       const library = await this.prisma.library.update({
-        where: { id: body.id },
+        where: { id: +body.id },
         data: {
           name: body.name,
         },
@@ -83,7 +83,7 @@ export class LibraryServiceAdmin extends LibraryService {
     } else {
       const filePath = await saveFile(file);
       const library = await this.prisma.library.update({
-        where: { id: body.id },
+        where: { id: +body.id },
         data: {
           name: body.name,
           photoUrl: filePath,
@@ -97,7 +97,7 @@ export class LibraryServiceAdmin extends LibraryService {
   async remove(id: number) {
     // delete file
     const library = await this.prisma.library.delete({
-      where: { id: id },
+      where: { id: +id },
     });
     try {
     } catch (error) {
