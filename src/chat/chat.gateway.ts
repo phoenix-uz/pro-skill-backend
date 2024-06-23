@@ -29,11 +29,16 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   private mentorClient: Socket; // Storing the mentor's socket
 
   splitToken(token: string) {
-    if (!token) {
-      throw new HttpException('Token not found', 401);
+    try {
+      if (!token) {
+        throw new HttpException('Token not found', 401);
+      }
+      const [type, splitedToken] = token.split(' ');
+      return type === 'Bearer' ? splitedToken : '';
+    } catch {
+      console.log('errrrror');
+      return;
     }
-    const [type, splitedToken] = token.split(' ');
-    return type === 'Bearer' ? splitedToken : undefined;
   }
 
   async checkIsMentor(token: string) {
@@ -41,38 +46,54 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     if (!splitedToken) {
       return false;
     }
-    const payload = await this.jwtService.verifyAsync(splitedToken, {
-      secret: process.env.JWT_SECRET,
-    });
-    return payload.name === process.env.MENTOR_NAME;
+    try {
+      const payload = await this.jwtService.verifyAsync(splitedToken, {
+        secret: process.env.JWT_SECRET,
+      });
+      return payload.name === process.env.MENTOR_NAME;
+    } catch {
+      return;
+    }
   }
 
   async getUserId(token: string) {
-    const splitedToken = this.splitToken(token);
-    const payload = await this.jwtService.verifyAsync(splitedToken, {
-      secret: process.env.JWT_SECRET,
-    });
-    return payload.sub;
+    try {
+      const splitedToken = this.splitToken(token);
+      const payload = await this.jwtService.verifyAsync(splitedToken, {
+        secret: process.env.JWT_SECRET,
+      });
+      return payload.sub;
+    } catch {
+      console.log('eerer');
+    }
   }
 
   async handleConnection(client: Socket) {
     const token = client.handshake.headers.authorization;
     if (!token) {
-      client.disconnect(true);
-      return;
+      try {
+        client.disconnect(true);
+        return;
+      } catch {
+        console.log('error');
+      }
     }
 
     try {
       const isMentor = await this.checkIsMentor(token);
 
       if (!isMentor) {
-        const userId = await this.getUserId(token);
-        await this.prisma.user.update({
-          where: { id: userId },
-          data: { online: true },
-        });
-        console.log(`User connected: ${userId}`);
-        this.connectedUsers.set(userId.toString(), { socket: client }); // Save the client in the map
+        try {
+          const userId = await this.getUserId(token);
+          await this.prisma.user.update({
+            where: { id: userId },
+            data: { online: true },
+          });
+          console.log(`User connected: ${userId}`);
+          this.connectedUsers.set(userId.toString(), { socket: client }); // Save the client in the map
+        } catch {
+          client.disconnect(true);
+        }
       } else {
         this.mentorClient = client;
         console.log('Mentor connected');
@@ -83,18 +104,21 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   async handleDisconnect(client: Socket) {
-    client.disconnect(true);
     const token = client.handshake.headers.authorization;
     const isMentor = await this.checkIsMentor(token);
 
     if (!isMentor) {
-      const userId = await this.getUserId(token);
-      await this.prisma.user.update({
-        where: { id: userId },
-        data: { online: false },
-      });
-      this.connectedUsers.delete(userId.toString()); // Remove the client from the map
-      console.log(`User disconnected: ${userId}`);
+      try {
+        const userId = await this.getUserId(token);
+        await this.prisma.user.update({
+          where: { id: userId },
+          data: { online: false },
+        });
+        this.connectedUsers.delete(userId.toString()); // Remove the client from the map
+        console.log(`User disconnected: ${userId}`);
+      } catch {
+        console.log('ssa');
+      }
     } else {
       this.mentorClient = null;
       console.log('Mentor disconnected');
