@@ -1,12 +1,20 @@
 import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
-
+import * as fs from 'fs';
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const httpsOptions = {
+    key: fs.readFileSync(
+      '/etc/letsencrypt/live/proskill-academy.com/privkey.pem',
+    ),
+    cert: fs.readFileSync(
+      '/etc/letsencrypt/live/proskill-academy.com/fullchain.pem',
+    ),
+  };
+  const app = await NestFactory.create(AppModule, { httpsOptions });
 
   const config = new DocumentBuilder()
-   // .addServer('/api')
+    //    .addServer('/api')
     .setTitle('Pro-Skill')
     .setDescription('The Pro-Skill API description')
     .setVersion('0.4')
@@ -20,13 +28,12 @@ async function bootstrap() {
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document, {
-    
     swaggerOptions: {
       filter: true,
       showRequestDuration: true,
     },
   });
   app.enableCors();
-  await app.listen(5001);
+  await app.listen(5000);
 }
 bootstrap();

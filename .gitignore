@@ -3,6 +3,7 @@
 /node_modules
 /build
 
+# packeg
 # Logs
 logs
 *.log
