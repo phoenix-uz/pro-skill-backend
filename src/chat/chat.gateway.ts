@@ -13,7 +13,7 @@ import { PrismaService } from 'src/prisma.service';
 
 @WebSocketGateway({
   cors: {
-    origin: 'http://localhost:3000',
+    origin: 'https://proskill-academy.net',
     methods: ['GET', 'POST'],
     allowedHeaders: ['Authorization'],
     credentials: true,
