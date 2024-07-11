@@ -27,6 +27,7 @@ model User {
   completedLessons Json[]
   createdAt        DateTime    @default(now())
   purchases        Purchases[]
+  payments         Payments[]
 }
 
 model PhoneCode {
@@ -189,3 +190,12 @@ model PaymeCards {
   phoneNumber String?
   createdAt   DateTime @default(now())
 }
+
+model Payments {
+  id           Int      @id @default(autoincrement())
+  userId       Int
+  productId   Int
+  productType String
+  User         User   @relation(fields: [userId], references: [id])  
+  createdAt    DateTime @default(now())
+  }

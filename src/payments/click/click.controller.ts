@@ -48,50 +48,62 @@ export class ClickController {
     },
   })
   @Post('cardOTP')
-  async buyWithCardOTP(
-    @Body() body: { sms_code: string; card_number: string; name: string },
-    @Request() req: any,
-  ) {
-    await this.clickService.confirmCardToken(body.card_number, +body.sms_code);
+async buyWithCardOTP(
+  @Body() body: { sms_code: string; card_number: string; productTipe: string; productId: number },
+  @Request() req: any,
+) {
+  await this.clickService.confirmCardToken(body.card_number, +body.sms_code);
 
-    if (body.name === 'Dars') {
-      await this.clickService.payWithCardToken(
-        body.card_number,
-        1000,
-        req.userId,
-        // req.userId + '_dars',
-      );
-
-      const user = await this.prisma.user.update({
-        where: { id: req.userId },
-        data: { isLessonPaid: true },
-      });
-      return user;
-    } else if (body.name === 'Modul') {
-      await this.clickService.payWithCardToken(
-        body.card_number,
-        2000,
-        req.userId,
-        // req.userId + '_modul',
-      );
-      const user = await this.prisma.user.update({
-        where: { id: req.userId },
-        data: { isModulePaid: true },
-      });
-      return user;
-    } else if (body.name === 'Kurs') {
-      await this.clickService.payWithCardToken(
-        body.card_number,
-        3000,
-        req.userId,
-
-        // req.userId + '_kurs',
-      );
-      const user = await this.prisma.user.update({
-        where: { id: req.userId },
-        data: { isCoursePaid: true },
-      });
-      return user;
-    }
+  let amount: number;
+  switch (body.productTipe) {
+    case 'Dars':
+      amount = 1000;
+      break;
+    case 'Modul':
+      amount = 2000;
+      break;
+    case 'Kurs':
+      amount = 3000;
+      break;
+    default:
+      throw new Error('Invalid product name');
   }
+
+  await this.clickService.payWithCardToken(
+    body.card_number,
+    amount,
+    req.userId,
+  );
+
+  // Update user payment status
+  let updateData: any;
+  switch (body.productTipe) {
+    case 'Dars':
+      updateData = { isLessonPaid: true };
+      break;
+    case 'Modul':
+      updateData = { isModulePaid: true };
+      break;
+    case 'Kurs':
+      updateData = { isCoursePaid: true };
+      break;
+  }
+
+  const user = await this.prisma.user.update({
+    where: { id: req.userId },
+    data: updateData,
+  });
+
+  // Create purchase record
+  await this.prisma.payments.create({
+    data: {
+      userId: req.userId,
+      productId: body.productId,
+      productType: body.productTipe,
+    },
+  });
+
+  return user;
+}
+
 }

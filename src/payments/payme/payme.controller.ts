@@ -58,71 +58,75 @@ export class PaymeController {
     },
   })
   @Post('cardOTP')
-  async verifyCard(
-    @Body() body: { sms_code: string; card_number: string; name: string },
-    @Request() req: any,
-  ) {
-    await this.paymeService.cardVerify(body.card_number, body.sms_code);
-    let receipt;
-    let pay;
-    if (body.name === 'Dars') {
-      const user = await this.prisma.user.findUnique({
-        where: { id: req.userId },
-      });
-      if (user.isLessonPaid) {
-        throw new HttpException(
-          'Вы уже купили урок',
-          HttpStatus.NOT_ACCEPTABLE,
-        );
-      }
-      receipt = await this.paymeService.recieptsCreate(100000, req.userId);
-      pay = await this.paymeService.receiptsPay(
-        body.card_number,
-        receipt.result.receipt._id,
-      );
-      await this.prisma.user.update({
-        where: { id: req.userId },
-        data: { isLessonPaid: true },
-      });
-    } else if (body.name === 'Modul') {
-      const user = await this.prisma.user.findUnique({
-        where: { id: req.userId },
-      });
-      if (user.isModulePaid) {
-        throw new HttpException(
-          'Вы уже купили модуль',
-          HttpStatus.NOT_ACCEPTABLE,
-        );
-      }
-      receipt = await this.paymeService.recieptsCreate(200000, req.userId);
-      pay = await this.paymeService.receiptsPay(
-        body.card_number,
-        receipt.result.receipt._id,
-      );
-      await this.prisma.user.update({
-        where: { id: req.userId },
-        data: { isModulePaid: true },
-      });
-    } else if (body.name === 'Kurs') {
-      const user = await this.prisma.user.findUnique({
-        where: { id: req.userId },
-      });
-      if (user.isCoursePaid) {
-        throw new HttpException(
-          'Вы уже купили курс',
-          HttpStatus.NOT_ACCEPTABLE,
-        );
-      }
-      receipt = await this.paymeService.recieptsCreate(300000, req.userId);
-      pay = await this.paymeService.receiptsPay(
-        body.card_number,
-        receipt.result.receipt._id,
-      );
-      await this.prisma.user.update({
-        where: { id: req.userId },
-        data: { isCoursePaid: true },
-      });
+async verifyCard(
+  @Body() body: { sms_code: string; card_number: string; productId: number; productType: string },
+  @Request() req: any,
+) {
+  await this.paymeService.cardVerify(body.card_number, body.sms_code);
+
+  let product;
+  let amount;
+
+  // Определяем стоимость и проверяем наличие покупки в зависимости от типа продукта
+  if (body.productType === 'Lesson') {
+    product = await this.prisma.lessons.findUnique({
+      where: { id: body.productId },
+    });
+    if (!product) {
+      throw new HttpException('Урок не найден', HttpStatus.NOT_FOUND);
     }
-    return pay;
+    amount = 100000;
+  } else if (body.productType === 'Module') {
+    product = await this.prisma.modules.findUnique({
+      where: { id: body.productId },
+    });
+    if (!product) {
+      throw new HttpException('Модуль не найден', HttpStatus.NOT_FOUND);
+    }
+    amount = 200000;
+  } else if (body.productType === 'Course') {
+    product = await this.prisma.courses.findUnique({
+      where: { id: body.productId },
+    });
+    if (!product) {
+      throw new HttpException('Курс не найден', HttpStatus.NOT_FOUND);
+    }
+    amount = 300000;
+  } else {
+    throw new HttpException('Неверный тип продукта', HttpStatus.BAD_REQUEST);
   }
+
+  // const existingPurchase = await this.prisma.payments.findFirst({
+  //   where: {
+  //     userId: req.userId,
+  //     productId: body.productId,
+  //     productType: body.productType,
+  //   },
+  // });
+
+  // if (existingPurchase) {
+  //   throw new HttpException(
+  //     `Вы уже купили этот ${body.productType}`,
+  //     HttpStatus.NOT_ACCEPTABLE,
+  //   );
+  // }
+
+  const receipt = await this.paymeService.recieptsCreate(amount, req.userId);
+  const pay = await this.paymeService.receiptsPay(
+    body.card_number,
+    receipt.result.receipt._id,
+  );
+
+  await this.prisma.payments.create({
+    data: {
+      userId: req.userId,
+      productId: body.productId,
+      productType: body.productType,
+    },
+  });
+
+  return pay;
+}
+
+
 }
