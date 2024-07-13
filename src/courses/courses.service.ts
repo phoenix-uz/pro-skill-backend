@@ -8,8 +8,31 @@ import saveFile from 'src/functions';
 export class CoursesService {
   constructor(public readonly prisma: PrismaService) {}
   async findAll() {
-    const courses = await this.prisma.courses.findMany();
+    const courses = await this.prisma.courses.findMany({
+      select: {
+        id: true,
+        title: true,
+        description: true,
+        photoUrls: true,
+        modules: {
+          select: {
+            id: true,
+            title: true,
+            time: true,
+            lessons: {
+              select: {
+                id: true,
+                title: true,
+                time: true,
+              }
+            }
+          }
+        }
+      }
+    });
     return courses;
+    
+    
   }
   async findOne(id: number) {
     const course = await this.prisma.courses.findUnique({

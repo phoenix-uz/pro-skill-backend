@@ -21,9 +21,6 @@ model User {
   notes            Notes[]
   online           Boolean     @default(false)
   role             String      @default("user")
-  isLessonPaid     Boolean     @default(false)
-  isCoursePaid     Boolean     @default(false)
-  isModulePaid     Boolean     @default(false)
   completedLessons Json[]
   createdAt        DateTime    @default(now())
   purchases        Purchases[]
@@ -112,6 +109,7 @@ model Courses {
   photoUrls   String[]
   modules     Modules[]
   createdAt   DateTime  @default(now())
+  payments    Payments[] 
 }
 
 model Modules {
@@ -198,4 +196,5 @@ model Payments {
   productType String
   User         User   @relation(fields: [userId], references: [id])  
   createdAt    DateTime @default(now())
+  courses      Courses @relation(fields: [productId], references: [id])
   }

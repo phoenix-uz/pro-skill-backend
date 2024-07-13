@@ -96,20 +96,20 @@ async verifyCard(
     throw new HttpException('Неверный тип продукта', HttpStatus.BAD_REQUEST);
   }
 
-  // const existingPurchase = await this.prisma.payments.findFirst({
-  //   where: {
-  //     userId: req.userId,
-  //     productId: body.productId,
-  //     productType: body.productType,
-  //   },
-  // });
+  const existingPurchase = await this.prisma.payments.findFirst({
+    where: {
+      userId: req.userId,
+      productId: body.productId,
+      productType: body.productType,
+    },
+  });
 
-  // if (existingPurchase) {
-  //   throw new HttpException(
-  //     `Вы уже купили этот ${body.productType}`,
-  //     HttpStatus.NOT_ACCEPTABLE,
-  //   );
-  // }
+  if (existingPurchase) {
+    throw new HttpException(
+      `Вы уже купили этот ${body.productType}`,
+      HttpStatus.NOT_ACCEPTABLE,
+    );
+  }
 
   const receipt = await this.paymeService.recieptsCreate(amount, req.userId);
   const pay = await this.paymeService.receiptsPay(

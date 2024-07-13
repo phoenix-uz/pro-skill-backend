@@ -132,4 +132,12 @@ export class AuthController {
   update(@Body() body: UpdateAuthDto, @Request() req: any) {
     return this.authService.update(body, req.userId);
   }
+
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Get paid courses or moduls or lessons' })
+  @Get('paid')
+  getPaid(@Request() req: any) {
+    return this.authService.getPaid(req.userId);
+  }
 }

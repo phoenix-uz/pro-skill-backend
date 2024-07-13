@@ -74,88 +74,54 @@ export class AuthService {
     if (!user) {
       throw new HttpException('User not found', HttpStatus.NOT_FOUND);
     }
-    if (user.isLessonPaid) {
-      const courses = await this.prisma.courses.findFirst({
-        include: {
-          modules: {
-            include: {
-              lessons: {
-                take: 1,
-                include: {
-                  questions: {
-                    include: {
-                      answers: {
-                        select: {
-                          id: true,
-                          title: true,
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-            take: 1,
-          },
-        },
-      });
-      user.courses = courses;
-    }
-    if (user.isModulePaid) {
-      const courses = await this.prisma.courses.findFirst({
-        include: {
-          modules: {
-            include: {
-              lessons: {
-                include: {
-                  questions: {
-                    include: {
-                      answers: {
-                        select: {
-                          id: true,
-                          title: true,
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-            take: 1,
-          },
-        },
-      });
-      user.courses = courses;
-    }
-    if (user.isCoursePaid) {
-      //include courses and modules and lessons
-      const courses = await this.prisma.courses.findFirst({
-        include: {
-          modules: {
-            include: {
-              lessons: {
-                include: {
-                  questions: {
-                    include: {
-                      answers: {
-                        select: {
-                          id: true,
-                          title: true,
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-          },
-        },
-      });
-      user.courses = courses;
-    }
 
     return user;
   }
+
+  async getPaid(user_id: number) {
+    // включить платежи и курсы
+    const user: any = await this.prisma.user.findUnique({
+      where: { id: user_id },
+      include: {
+        payments: {
+          select: {
+            productType: true,
+            productId: true,
+            courses: { // Предполагается, что поле course существует и связано с моделью Payments
+              select: {
+                id: true,
+                title: true,
+                description: true,
+                photoUrls: true,
+                modules: {
+                  select: {
+                    id: true,
+                    title: true,
+                    time: true,
+                    lessons: {
+                      select: {
+                        id: true,
+                        title: true,
+                        time: true,
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  
+    if (!user) {
+      throw new HttpException('Пользователь не найден', HttpStatus.NOT_FOUND);
+    }
+  
+    return user;
+  }
+  
+
   async update(body: UpdateAuthDto, user_id: number) {
     try {
       // update except password
