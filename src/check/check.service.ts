@@ -15,6 +15,7 @@ export class CheckService {
 
     let balls = 0;
     const checked = [];
+    const correctAnswers = [];
     const question = await this.prisma.questions.findFirst({
       where: { id: questions[0] },
     });
@@ -36,7 +37,7 @@ export class CheckService {
         const correctAnswer = await this.prisma.answers.findFirst({
           where: { questionId, isCorrect: true },
         });
-
+        correctAnswers.push(correctAnswer);
         if (!correctAnswer) {
           throw new HttpException(
             'Correct answer not found',
@@ -68,6 +69,8 @@ export class CheckService {
           push: {
             lessonId: lessonId,
             answers: checked,
+            answersId: answers,
+            correctAnswers: correctAnswers,
           },
         },
         balls: user.balls + balls,
