@@ -13,11 +13,14 @@ RUN npm install
 # Копируем остальные файлы
 COPY . .
 
+# Генерируем Prisma Client
+RUN npx prisma generate
+
 # Собираем приложение
 RUN npm run build
 
 # Указываем порт
-EXPOSE 3000
+EXPOSE 5001
 
 # Выполняем миграции и запускаем приложение
 CMD ["sh", "-c", "npx prisma migrate deploy && node dist/src/main"]
