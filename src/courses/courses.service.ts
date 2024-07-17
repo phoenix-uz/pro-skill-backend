@@ -14,6 +14,29 @@ export class CoursesService {
         title: true,
         description: true,
         photoUrls: true,
+        time: true,
+        author: true,
+        modules: {
+          select: {
+            _count: true
+          }
+        }
+      }
+    });
+    return courses;
+    
+    
+  }
+  async findOne(id: number) {
+    const course = await this.prisma.courses.findUnique({
+      where: { id: id },
+      select: {
+        id: true,
+        title: true,
+        description: true,
+        photoUrls: true,
+        time: true,
+        author: true,
         modules: {
           select: {
             id: true,
@@ -29,14 +52,7 @@ export class CoursesService {
           }
         }
       }
-    });
-    return courses;
-    
-    
-  }
-  async findOne(id: number) {
-    const course = await this.prisma.courses.findUnique({
-      where: { id: id },
+      
     });
     if (!course) {
       throw new HttpException('Course not found', HttpStatus.NOT_FOUND);
