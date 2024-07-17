@@ -18,11 +18,10 @@ export class CoursesService {
         author: true,
         _count: {
           select: { modules: true },
+          
         },
       },
     });
-    // @ts-ignore
-    courses.modules_count =  courses._count.select 
     return courses;
     
     
