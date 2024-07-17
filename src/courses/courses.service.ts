@@ -16,12 +16,10 @@ export class CoursesService {
         photoUrls: true,
         time: true,
         author: true,
-        modules: {
-          select: {
-            _count: true
-          }
-        }
-      }
+        _count: {
+          select: { modules: true },
+        },
+      },
     });
     return courses;
     
