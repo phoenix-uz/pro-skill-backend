@@ -21,6 +21,8 @@ export class CoursesService {
         },
       },
     });
+    // @ts-ignore
+    courses.modules_count =  courses._count.select 
     return courses;
     
     
