@@ -127,6 +127,38 @@ export class ClickService {
     return data;
   }
 
+  // Method to calculate price based on product type and ID
+  async calculatePrice(productType: string, productId: number): Promise<number> {
+    switch (productType) {
+      case 'Dars':
+        const lesson = await this.prisma.lessons.findUnique({
+          where: { id: productId },
+        });
+        return lesson.price;
+
+      case 'Modul':
+        const module = await this.prisma.modules.findUnique({
+          where: { id: productId },
+          include: { lessons: true },
+        });
+        // Example logic: summing up prices of all lessons in the module
+        return module.lessons.reduce((total, lesson) => total + lesson.price, 0);
+
+      case 'Kurs':
+        const course = await this.prisma.courses.findUnique({
+          where: { id: productId },
+          include: { modules: { include: { lessons: true } } },
+        });
+        // Example logic: summing up prices of all modules and lessons in the course
+        return course.modules.reduce((total, module) => {
+          return total + module.lessons.reduce((sum, lesson) => sum + lesson.price, 0);
+        }, 0);
+
+      default:
+        throw new Error('Invalid product type');
+    }
+  }
+
   // extra functions
   async createInvoice(
     amount: number,

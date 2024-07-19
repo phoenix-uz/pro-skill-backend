@@ -27,6 +27,7 @@ export class ModulesController {
       properties: {
         title: { type: 'string' },
         time: { type: 'string' },
+        price: { type: 'number' },
         courseId: { type: 'number' },
       },
     },
@@ -43,6 +44,7 @@ export class ModulesController {
       properties: {
         title: { type: 'string' },
         time: { type: 'string' },
+        price: { type: 'number' },
         courseId: { type: 'number' },
       },
     },

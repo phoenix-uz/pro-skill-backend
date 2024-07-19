@@ -3,4 +3,5 @@ export class CreateLessonDto {
   time: string;
   moduleId: number;
   items: any;
+  price: number;
 }

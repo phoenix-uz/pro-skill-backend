@@ -15,6 +15,7 @@ export class CoursesService {
         description: true,
         photoUrls: true,
         time: true,
+        price: true,
         author: true,
         _count: {
           select: { modules: true },
@@ -35,6 +36,7 @@ export class CoursesService {
         description: true,
         photoUrls: true,
         time: true,
+        price: true,
         author: true,
         modules: {
           select: {
@@ -107,6 +109,7 @@ export class CoursesServiceAdmin extends CoursesService {
             description: body.description,
             author: body.author,
             time: body.time,
+            price: body.price,
           },
         });
         return course;

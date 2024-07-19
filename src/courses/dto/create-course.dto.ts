@@ -3,4 +3,5 @@ export class CreateCourseDto {
   description: string;
   author: string;
   time: string;
+  price: number;
 }

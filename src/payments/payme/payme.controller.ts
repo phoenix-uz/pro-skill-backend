@@ -53,80 +53,58 @@ export class PaymeController {
       properties: {
         sms_code: { type: 'string' },
         card_number: { type: 'string' },
-        name: { type: 'string' },
+        productId: { type: 'number' },
+        productType: { type: 'string' },
       },
     },
   })
   @Post('cardOTP')
-async verifyCard(
-  @Body() body: { sms_code: string; card_number: string; productId: number; productType: string },
-  @Request() req: any,
-) {
-  await this.paymeService.cardVerify(body.card_number, body.sms_code);
+  async verifyCard(
+    @Body() body: { sms_code: string; card_number: string; productId: number; productType: string },
+    @Request() req: any,
+  ) {
+    await this.paymeService.cardVerify(body.card_number, body.sms_code);
 
-  let product;
-  let amount;
-
-  // Определяем стоимость и проверяем наличие покупки в зависимости от типа продукта
-  if (body.productType === 'Lesson') {
-    product = await this.prisma.lessons.findUnique({
-      where: { id: body.productId },
-    });
-    if (!product) {
-      throw new HttpException('Урок не найден', HttpStatus.NOT_FOUND);
+    let amount;
+    if (body.productType === 'Lesson') {
+      amount = await this.paymeService.calculateLessonPrice(body.productId);
+    } else if (body.productType === 'Module') {
+      amount = await this.paymeService.calculateModulePrice(body.productId);
+    } else if (body.productType === 'Course') {
+      amount = await this.paymeService.calculateCoursePrice(body.productId);
+    } else {
+      throw new HttpException('Неверный тип продукта', HttpStatus.BAD_REQUEST);
     }
-    amount = 100000;
-  } else if (body.productType === 'Module') {
-    product = await this.prisma.modules.findUnique({
-      where: { id: body.productId },
-    });
-    if (!product) {
-      throw new HttpException('Модуль не найден', HttpStatus.NOT_FOUND);
-    }
-    amount = 200000;
-  } else if (body.productType === 'Course') {
-    product = await this.prisma.courses.findUnique({
-      where: { id: body.productId },
-    });
-    if (!product) {
-      throw new HttpException('Курс не найден', HttpStatus.NOT_FOUND);
-    }
-    amount = 300000;
-  } else {
-    throw new HttpException('Неверный тип продукта', HttpStatus.BAD_REQUEST);
-  }
 
-  const existingPurchase = await this.prisma.payments.findFirst({
-    where: {
-      userId: req.userId,
-      productId: body.productId,
-      productType: body.productType,
-    },
-  });
+    const existingPurchase = await this.prisma.payments.findFirst({
+      where: {
+        userId: req.userId,
+        productId: body.productId,
+        productType: body.productType,
+      },
+    });
 
-  if (existingPurchase) {
-    throw new HttpException(
-      `Вы уже купили этот ${body.productType}`,
-      HttpStatus.NOT_ACCEPTABLE,
+    if (existingPurchase) {
+      throw new HttpException(
+        `Вы уже купили этот ${body.productType}`,
+        HttpStatus.NOT_ACCEPTABLE,
+      );
+    }
+
+    const receipt = await this.paymeService.recieptsCreate(amount, req.userId);
+    const pay = await this.paymeService.receiptsPay(
+      body.card_number,
+      receipt.result.receipt._id,
     );
+
+    await this.prisma.payments.create({
+      data: {
+        userId: req.userId,
+        productId: body.productId,
+        productType: body.productType,
+      },
+    });
+
+    return pay;
   }
-
-  const receipt = await this.paymeService.recieptsCreate(amount, req.userId);
-  const pay = await this.paymeService.receiptsPay(
-    body.card_number,
-    receipt.result.receipt._id,
-  );
-
-  await this.prisma.payments.create({
-    data: {
-      userId: req.userId,
-      productId: body.productId,
-      productType: body.productType,
-    },
-  });
-
-  return pay;
-}
-
-
 }

@@ -35,6 +35,7 @@ export class LessonsService {
       data: {
         title: body.title,
         time: body.time,
+        price: body.price,
         moduleId: body.moduleId,
         videoUrl: filePath,
         items: itemsUrls,
@@ -54,6 +55,7 @@ export class LessonsService {
           data: {
             title: body.title,
             time: body.time,
+            price: body.price,
             moduleId: body.moduleId,
           },
         });

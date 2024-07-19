@@ -105,6 +105,7 @@ model Courses {
   title       String
   description String
   author      String
+  price       Int
   time        String
   photoUrls   String[]
   modules     Modules[]
@@ -117,6 +118,7 @@ model Modules {
   Course    Courses   @relation(fields: [courseId], references: [id])
   title     String
   time      String
+  price     Int 
   courseId  Int
   lessons   Lessons[]
   createdAt DateTime  @default(now())
@@ -128,6 +130,7 @@ model Lessons {
   videoUrl  String
   time      String
   moduleId  Int
+  price     Int
   Modules   Modules     @relation(fields: [moduleId], references: [id])
   createdAt DateTime    @default(now())
   questions Questions[]

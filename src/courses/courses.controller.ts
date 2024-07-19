@@ -48,6 +48,7 @@ export class CoursesControllerAdmin {
         description: { type: 'string' },
         author: { type: 'string' },
         time: { type: 'string' },
+        price: { type: 'number'}
       },
     },
   })
@@ -78,6 +79,7 @@ export class CoursesControllerAdmin {
         description: { type: 'string' },
         author: { type: 'string' },
         time: { type: 'string' },
+        price: { type: 'number'}
       },
     },
   })
