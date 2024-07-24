@@ -9,7 +9,13 @@ import {
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateAuthDto } from './dto/create-auth.dto';
-import { ApiBody, ApiTags, ApiBearerAuth, ApiConsumes, ApiOperation } from '@nestjs/swagger';
+import {
+  ApiBody,
+  ApiTags,
+  ApiBearerAuth,
+  ApiConsumes,
+  ApiOperation,
+} from '@nestjs/swagger';
 import { AuthGuard } from './auth.guard';
 import { UpdateAuthDto } from './dto/update-auth.dto';
 
@@ -133,11 +139,11 @@ export class AuthController {
     return this.authService.update(body, req.userId);
   }
 
-  @UseGuards(AuthGuard)
-  @ApiBearerAuth()
-  @ApiOperation({ summary: 'Get paid courses or moduls or lessons' })
-  @Get('paid')
-  getPaid(@Request() req: any) {
-    return this.authService.getPaid(req.userId);
-  }
+  // @UseGuards(AuthGuard)
+  // @ApiBearerAuth()
+  // @ApiOperation({ summary: 'Get paid courses or moduls or lessons' })
+  // @Get('paid')
+  // getPaid(@Request() req: any) {
+  //   return this.authService.getPaid(req.userId);
+  // }
 }

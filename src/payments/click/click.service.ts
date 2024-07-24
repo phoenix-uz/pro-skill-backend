@@ -1,6 +1,11 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { getClickHeader } from './functions';
+import { getClickHeader } from './click.functions';
 import { PrismaService } from 'src/prisma.service';
+enum ProductType {
+  lesson,
+  module,
+  course,
+}
 
 @Injectable()
 export class ClickService {
@@ -30,7 +35,7 @@ export class ClickService {
     const data = await response.json();
     console.log(data);
     // Save card token to the database or update if it exists
-    await this.prisma.cLickCards.upsert({
+    await this.prisma.clickCards.upsert({
       where: {
         cardNumber: card_number,
       },
@@ -50,7 +55,7 @@ export class ClickService {
   }
 
   async confirmCardToken(card_number: string, sms_code: number) {
-    const card_token = await this.prisma.cLickCards.findUnique({
+    const card_token = await this.prisma.clickCards.findUnique({
       where: {
         cardNumber: card_number,
       },
@@ -80,7 +85,7 @@ export class ClickService {
     userId: number,
     // merchant_trans_id: string,
   ) {
-    const card_token = await this.prisma.cLickCards.findUnique({
+    const card_token = await this.prisma.clickCards.findUnique({
       where: {
         cardNumber: card_number,
       },
@@ -106,9 +111,7 @@ export class ClickService {
     ).catch((error) => {
       throw new HttpException(error, HttpStatus.BAD_REQUEST);
     });
-
     const data = await response.json();
-
     return data;
   }
 
@@ -128,35 +131,72 @@ export class ClickService {
   }
 
   // Method to calculate price based on product type and ID
-  async calculatePrice(productType: string, productId: number): Promise<number> {
-    switch (productType) {
-      case 'Dars':
-        const lesson = await this.prisma.lessons.findUnique({
-          where: { id: productId },
-        });
-        return lesson.price;
-
-      case 'Modul':
-        const module = await this.prisma.modules.findUnique({
-          where: { id: productId },
-          include: { lessons: true },
-        });
-        // Example logic: summing up prices of all lessons in the module
-        return module.lessons.reduce((total, lesson) => total + lesson.price, 0);
-
-      case 'Kurs':
-        const course = await this.prisma.courses.findUnique({
-          where: { id: productId },
-          include: { modules: { include: { lessons: true } } },
-        });
-        // Example logic: summing up prices of all modules and lessons in the course
-        return course.modules.reduce((total, module) => {
-          return total + module.lessons.reduce((sum, lesson) => sum + lesson.price, 0);
-        }, 0);
-
-      default:
-        throw new Error('Invalid product type');
+  async calculateAmount(
+    products: { productType: ProductType; productId: number }[],
+  ) {
+    let amount = 0;
+    for (const product of products) {
+      switch (product.productType) {
+        case ProductType.lesson:
+          await this.prisma.lessons
+            .findUnique({
+              where: {
+                id: product.productId,
+              },
+            })
+            .then((lesson) => {
+              amount += lesson.price;
+            });
+          break;
+        case ProductType.module:
+          await this.prisma.modules
+            .findUnique({
+              where: {
+                id: product.productId,
+              },
+            })
+            .then((module) => {
+              amount += module.price;
+            });
+          break;
+        case ProductType.course:
+          await this.prisma.courses
+            .findUnique({
+              where: {
+                id: product.productId,
+              },
+            })
+            .then((course) => {
+              amount += course.price;
+            });
+          break;
+      }
     }
+    return amount;
+  }
+
+  async createPayments(
+    userId: number,
+    amount: number,
+    products: { productType: ProductType; productId: number }[],
+  ) {
+    const data = products.map((product) => {
+      const productType = product.productType;
+      return {
+        userId,
+        productType: productType,
+        productId: product.productId,
+      };
+    });
+
+    await this.prisma.payments.create({
+      data: {
+        userId: userId,
+        amount: amount,
+        products: data,
+        paymentType: 'click',
+      },
+    });
   }
 
   // extra functions

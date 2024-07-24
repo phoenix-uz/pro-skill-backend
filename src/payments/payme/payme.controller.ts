@@ -60,7 +60,13 @@ export class PaymeController {
   })
   @Post('cardOTP')
   async verifyCard(
-    @Body() body: { sms_code: string; card_number: string; productId: number; productType: string },
+    @Body()
+    body: {
+      sms_code: string;
+      card_number: string;
+      productId: number;
+      productType: string;
+    },
     @Request() req: any,
   ) {
     await this.paymeService.cardVerify(body.card_number, body.sms_code);
@@ -76,20 +82,20 @@ export class PaymeController {
       throw new HttpException('Неверный тип продукта', HttpStatus.BAD_REQUEST);
     }
 
-    const existingPurchase = await this.prisma.payments.findFirst({
-      where: {
-        userId: req.userId,
-        productId: body.productId,
-        productType: body.productType,
-      },
-    });
+    // const existingPurchase = await this.prisma.payments.findFirst({
+    //   where: {
+    //     userId: req.userId,
+    //     productId: body.productId,
+    //     productType: body.productType,
+    //   },
+    // });
 
-    if (existingPurchase) {
-      throw new HttpException(
-        `Вы уже купили этот ${body.productType}`,
-        HttpStatus.NOT_ACCEPTABLE,
-      );
-    }
+    // if (existingPurchase) {
+    //   throw new HttpException(
+    //     `Вы уже купили этот ${body.productType}`,
+    //     HttpStatus.NOT_ACCEPTABLE,
+    //   );
+    // }
 
     const receipt = await this.paymeService.recieptsCreate(amount, req.userId);
     const pay = await this.paymeService.receiptsPay(
@@ -97,13 +103,13 @@ export class PaymeController {
       receipt.result.receipt._id,
     );
 
-    await this.prisma.payments.create({
-      data: {
-        userId: req.userId,
-        productId: body.productId,
-        productType: body.productType,
-      },
-    });
+    // await this.prisma.payments.create({
+    //   data: {
+    //     userId: req.userId,
+    //     productId: body.productId,
+    //     productType: body.productType,
+    //   },
+    // });
 
     return pay;
   }

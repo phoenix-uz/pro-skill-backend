@@ -13,10 +13,9 @@ async function main() {
       birthday: '1990-01-01',
       password: 'password123',
     },
-  })
+  });
 
-
-  // Courses 
+  // Courses
   const course1 = await prisma.courses.create({
     data: {
       title: 'Course1: Business Administration',
@@ -40,9 +39,9 @@ async function main() {
                   title: 'Lesson2: Business Administration Basics',
                   videoUrl: 'video_url_2',
                   time: '1h',
-                }
-              ]
-            }
+                },
+              ],
+            },
           },
           {
             title: 'Module2: Business Administration Advanced',
@@ -58,13 +57,13 @@ async function main() {
                   title: 'Lesson4: Business Administration Advanced 2',
                   videoUrl: 'video_url_4',
                   time: '4h',
-                }
-              ]
-            }
-          }
-        ]
-      }
-    }
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
   });
 
   console.log({ course1 });

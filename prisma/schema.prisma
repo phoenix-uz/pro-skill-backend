@@ -24,6 +24,7 @@ model User {
   completedLessons Json[]
   createdAt        DateTime    @default(now())
   purchases        Purchases[]
+  paid             Paid[]
   payments         Payments[]
 }
 
@@ -105,12 +106,11 @@ model Courses {
   title       String
   description String
   author      String
-  price       Int
+  price       Int       @default(0)
   time        String
   photoUrls   String[]
   modules     Modules[]
   createdAt   DateTime  @default(now())
-  payments    Payments[] 
 }
 
 model Modules {
@@ -118,7 +118,7 @@ model Modules {
   Course    Courses   @relation(fields: [courseId], references: [id])
   title     String
   time      String
-  price     Int 
+  price     Int       @default(0)
   courseId  Int
   lessons   Lessons[]
   createdAt DateTime  @default(now())
@@ -130,7 +130,7 @@ model Lessons {
   videoUrl  String
   time      String
   moduleId  Int
-  price     Int
+  price     Int         @default(0)
   Modules   Modules     @relation(fields: [moduleId], references: [id])
   createdAt DateTime    @default(now())
   questions Questions[]
@@ -172,7 +172,7 @@ model Chat {
   createdAt  DateTime @default(now())
 }
 
-model CLickCards {
+model ClickCards {
   id          Int      @id @default(autoincrement())
   userId      Int
   cardNumber  String   @unique
@@ -192,12 +192,36 @@ model PaymeCards {
   createdAt   DateTime @default(now())
 }
 
-model Payments {
-  id           Int      @id @default(autoincrement())
-  userId       Int
+model Paid {
+  id          Int         @id @default(autoincrement())
+  userId      Int
+  User        User        @relation(fields: [userId], references: [id])
+  amount      Int
+  productType ProductType
   productId   Int
-  productType String
-  User         User   @relation(fields: [userId], references: [id])  
-  createdAt    DateTime @default(now())
-  courses      Courses @relation(fields: [productId], references: [id])
-  }
+  PaymentsId  Int
+  Payments    Payments    @relation(fields: [PaymentsId], references: [id])
+  createdAt   DateTime    @default(now())
+}
+
+model Payments {
+  id          Int         @id @default(autoincrement())
+  userId      Int
+  amount      Int
+  products    Json[]
+  paymentType PaymentType
+  createdAt   DateTime    @default(now())
+  User        User        @relation(fields: [userId], references: [id])
+  Paid        Paid[]
+}
+
+enum PaymentType {
+  payme
+  click
+}
+
+enum ProductType {
+  lesson
+  module
+  course
+}

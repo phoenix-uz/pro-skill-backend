@@ -4,6 +4,12 @@ import { PrismaService } from 'src/prisma.service';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { ClickService } from './click.service';
 
+enum ProductType {
+  lesson,
+  module,
+  course,
+}
+
 @UseGuards(AuthGuard)
 @ApiBearerAuth()
 @ApiTags('Click')
@@ -43,54 +49,39 @@ export class ClickController {
       properties: {
         sms_code: { type: 'string' },
         card_number: { type: 'string' },
-        productTipe: { type: 'string' },
-        productId: { type: 'number' },
+        products: {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              productType: { type: 'string' },
+              productId: { type: 'number' },
+            },
+          },
+        },
       },
     },
   })
   @Post('cardOTP')
   async buyWithCardOTP(
-    @Body() body: { sms_code: string; card_number: string; productTipe: string; productId: number },
+    @Body()
+    body: {
+      sms_code: string;
+      card_number: string;
+      products: { productType: ProductType; productId: number }[];
+    },
     @Request() req: any,
   ) {
     await this.clickService.confirmCardToken(body.card_number, +body.sms_code);
-
-    const amount = await this.clickService.calculatePrice(body.productTipe, body.productId);
-
+    const amount = await this.clickService.calculateAmount(body.products);
     await this.clickService.payWithCardToken(
       body.card_number,
       amount,
       req.userId,
     );
 
-    // Update user payment status
-    let updateData: any;
-    switch (body.productTipe) {
-      case 'Dars':
-        updateData = { isLessonPaid: true };
-        break;
-      case 'Modul':
-        updateData = { isModulePaid: true };
-        break;
-      case 'Kurs':
-        updateData = { isCoursePaid: true };
-        break;
-    }
+    await this.clickService.createPayments(req.userId, amount, body.products);
 
-    const user = await this.prisma.user.update({
-      where: { id: req.userId },
-      data: updateData,
-    });
-
-    // Create purchase record
-    await this.prisma.payments.create({
-      data: {
-        userId: req.userId,
-        productId: body.productId,
-        productType: body.productTipe,
-      },
-    });
-
-    return user;
+    return 'user';
   }
 }

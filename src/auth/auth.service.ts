@@ -78,49 +78,48 @@ export class AuthService {
     return user;
   }
 
-  async getPaid(user_id: number) {
-    // включить платежи и курсы
-    const user: any = await this.prisma.user.findUnique({
-      where: { id: user_id },
-      include: {
-        payments: {
-          select: {
-            productType: true,
-            productId: true,
-            courses: { // Предполагается, что поле course существует и связано с моделью Payments
-              select: {
-                id: true,
-                title: true,
-                description: true,
-                photoUrls: true,
-                modules: {
-                  select: {
-                    id: true,
-                    title: true,
-                    time: true,
-                    lessons: {
-                      select: {
-                        id: true,
-                        title: true,
-                        time: true,
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    });
-  
-    if (!user) {
-      throw new HttpException('Пользователь не найден', HttpStatus.NOT_FOUND);
-    }
-  
-    return user;
-  }
-  
+  // async getPaid(user_id: number) {
+  //   // включить платежи и курсы
+  //   const user: any = await this.prisma.user.findUnique({
+  //     where: { id: user_id },
+  //     include: {
+  //       payments: {
+  //         select: {
+  //           productType: true,
+  //           productId: true,
+  //           courses: { // Предполагается, что поле course существует и связано с моделью Payments
+  //             select: {
+  //               id: true,
+  //               title: true,
+  //               description: true,
+  //               photoUrls: true,
+  //               modules: {
+  //                 select: {
+  //                   id: true,
+  //                   title: true,
+  //                   time: true,
+  //                   lessons: {
+  //                     select: {
+  //                       id: true,
+  //                       title: true,
+  //                       time: true,
+  //                     }
+  //                   }
+  //                 }
+  //               }
+  //             }
+  //           }
+  //         }
+  //       }
+  //     }
+  //   });
+
+  //   if (!user) {
+  //     throw new HttpException('Пользователь не найден', HttpStatus.NOT_FOUND);
+  //   }
+
+  //   return user;
+  // }
 
   async update(body: UpdateAuthDto, user_id: number) {
     try {

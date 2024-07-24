@@ -1,4 +1,5 @@
 import * as crypto from 'crypto';
+
 export function getClickHeader() {
   const timestamp = Date.now().toString().slice(0, 10);
   // Function to compute SHA-1 hash of a string
