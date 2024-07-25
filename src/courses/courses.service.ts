@@ -19,13 +19,10 @@ export class CoursesService {
         author: true,
         _count: {
           select: { modules: true },
-          
         },
       },
     });
     return courses;
-    
-    
   }
   async findOne(id: number) {
     const course = await this.prisma.courses.findUnique({
@@ -43,17 +40,18 @@ export class CoursesService {
             id: true,
             title: true,
             time: true,
+            price: true,
             lessons: {
               select: {
                 id: true,
                 title: true,
                 time: true,
-              }
-            }
-          }
-        }
-      }
-      
+                price: true,
+              },
+            },
+          },
+        },
+      },
     });
     if (!course) {
       throw new HttpException('Course not found', HttpStatus.NOT_FOUND);
