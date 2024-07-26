@@ -1,3 +1,9 @@
+-- CreateEnum
+CREATE TYPE "PaymentType" AS ENUM ('payme', 'click');
+
+-- CreateEnum
+CREATE TYPE "ProductType" AS ENUM ('lesson', 'module', 'course');
+
 -- CreateTable
 CREATE TABLE "User" (
     "id" SERIAL NOT NULL,
@@ -117,6 +123,7 @@ CREATE TABLE "Courses" (
     "title" TEXT NOT NULL,
     "description" TEXT NOT NULL,
     "author" TEXT NOT NULL,
+    "price" INTEGER NOT NULL DEFAULT 0,
     "time" TEXT NOT NULL,
     "photoUrls" TEXT[],
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -129,6 +136,7 @@ CREATE TABLE "Modules" (
     "id" SERIAL NOT NULL,
     "title" TEXT NOT NULL,
     "time" TEXT NOT NULL,
+    "price" INTEGER NOT NULL DEFAULT 0,
     "courseId" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
@@ -142,6 +150,7 @@ CREATE TABLE "Lessons" (
     "videoUrl" TEXT NOT NULL,
     "time" TEXT NOT NULL,
     "moduleId" INTEGER NOT NULL,
+    "price" INTEGER NOT NULL DEFAULT 0,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "items" TEXT[],
 
@@ -191,7 +200,7 @@ CREATE TABLE "Chat" (
 );
 
 -- CreateTable
-CREATE TABLE "CLickCards" (
+CREATE TABLE "ClickCards" (
     "id" SERIAL NOT NULL,
     "userId" INTEGER NOT NULL,
     "cardNumber" TEXT NOT NULL,
@@ -200,7 +209,7 @@ CREATE TABLE "CLickCards" (
     "phoneNumber" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-    CONSTRAINT "CLickCards_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "ClickCards_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -217,11 +226,25 @@ CREATE TABLE "PaymeCards" (
 );
 
 -- CreateTable
+CREATE TABLE "Paid" (
+    "id" SERIAL NOT NULL,
+    "userId" INTEGER NOT NULL,
+    "amount" INTEGER NOT NULL,
+    "productType" "ProductType" NOT NULL,
+    "productId" INTEGER NOT NULL,
+    "PaymentsId" INTEGER NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "Paid_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "Payments" (
     "id" SERIAL NOT NULL,
     "userId" INTEGER NOT NULL,
-    "productId" INTEGER NOT NULL,
-    "productType" TEXT NOT NULL,
+    "amount" INTEGER NOT NULL,
+    "products" JSONB[],
+    "paymentType" "PaymentType" NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "Payments_pkey" PRIMARY KEY ("id")
@@ -240,7 +263,7 @@ CREATE UNIQUE INDEX "PhoneCode_phoneNumber_key" ON "PhoneCode"("phoneNumber");
 CREATE UNIQUE INDEX "Library_name_key" ON "Library"("name");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "CLickCards_cardNumber_key" ON "CLickCards"("cardNumber");
+CREATE UNIQUE INDEX "ClickCards_cardNumber_key" ON "ClickCards"("cardNumber");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "PaymeCards_cardNumber_key" ON "PaymeCards"("cardNumber");
@@ -270,7 +293,10 @@ ALTER TABLE "Purchases" ADD CONSTRAINT "Purchases_userId_fkey" FOREIGN KEY ("use
 ALTER TABLE "Purchases" ADD CONSTRAINT "Purchases_itemId_fkey" FOREIGN KEY ("itemId") REFERENCES "Item"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Payments" ADD CONSTRAINT "Payments_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Paid" ADD CONSTRAINT "Paid_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Payments" ADD CONSTRAINT "Payments_productId_fkey" FOREIGN KEY ("productId") REFERENCES "Courses"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Paid" ADD CONSTRAINT "Paid_PaymentsId_fkey" FOREIGN KEY ("PaymentsId") REFERENCES "Payments"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Payments" ADD CONSTRAINT "Payments_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
