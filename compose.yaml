@@ -6,9 +6,9 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "5001:5001"
+      - '5001:5001'
     environment:
-      DATABASE_URL: postgres://postgres:secret@db:5432/pro-skill-backend
+      DATABASE_URL: postgres://postgres:secret@localhost:5432/proskill
       NODE_ENV: development
     depends_on:
       - db
@@ -21,7 +21,7 @@ services:
       POSTGRES_PASSWORD: secret
       POSTGRES_DB: pro-skill-backend
     ports:
-      - "5432:5432"
+      - '5432:5432'
     volumes:
       - pgdata:/var/lib/postgresql/data
 
