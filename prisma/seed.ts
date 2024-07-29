@@ -62,7 +62,15 @@ async function main() {
     },
   });
 
-  console.log({ course1 });
+  const user = await prisma.user.create({
+    data: {
+      fullName: 'Rediska Kolobkovna',
+      email: 'rediskakolobkovna@gmail.com',
+      phoneNumber: '+998901234567',
+      password: '$2a$10$UfYmSCVDFovTdfKwWjJjxenQpXVfYjfI0W7hDOcNqTKDV7kO8xRZu',
+      authorized: true,
+    },
+  });
 }
 
 main()
