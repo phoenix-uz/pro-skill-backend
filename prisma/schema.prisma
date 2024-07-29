@@ -111,6 +111,7 @@ model Courses {
   photoUrls   String[]
   modules     Modules[]
   createdAt   DateTime  @default(now())
+  Paid        Paid[]
 }
 
 model Modules {
@@ -122,6 +123,7 @@ model Modules {
   courseId  Int
   lessons   Lessons[]
   createdAt DateTime  @default(now())
+  Paid      Paid[]
 }
 
 model Lessons {
@@ -135,6 +137,7 @@ model Lessons {
   createdAt DateTime    @default(now())
   questions Questions[]
   items     String[]
+  Paid      Paid[]
 }
 
 model Questions {
@@ -198,7 +201,12 @@ model Paid {
   User        User        @relation(fields: [userId], references: [id])
   amount      Int
   productType ProductType
-  productId   Int
+  lessonId    Int?
+  Lesson      Lessons?    @relation(fields: [lessonId], references: [id])
+  moduleId    Int?
+  Module      Modules?    @relation(fields: [moduleId], references: [id])
+  CourseId    Int?
+  Course      Courses?    @relation(fields: [CourseId], references: [id])
   PaymentsId  Int
   Payments    Payments    @relation(fields: [PaymentsId], references: [id])
   createdAt   DateTime    @default(now())
@@ -206,13 +214,12 @@ model Paid {
 
 model Payments {
   id          Int         @id @default(autoincrement())
-  userId      Int
   amount      Int
-  products    Json[]
   paymentType PaymentType
-  createdAt   DateTime    @default(now())
+  userId      Int
   User        User        @relation(fields: [userId], references: [id])
   Paid        Paid[]
+  createdAt   DateTime    @default(now())
 }
 
 enum PaymentType {

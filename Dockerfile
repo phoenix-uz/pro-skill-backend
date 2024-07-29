@@ -19,8 +19,10 @@ RUN npx prisma generate
 # Собираем приложение
 RUN npm run build
 
+
+
 # Указываем порт
 EXPOSE 5001
 
 # Выполняем миграции и запускаем приложение
-CMD ["sh", "-c", "npx prisma migrate deploy && node dist/src/main"]
+CMD ["sh", "-c", "npx prisma migrate deploy && npm run seed && node dist/src/main"]

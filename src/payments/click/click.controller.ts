@@ -73,14 +73,6 @@ export class ClickController {
     @Request() req: any,
   ) {
     await this.clickService.confirmCardToken(body.card_number, +body.sms_code);
-    const amount = await this.clickService.calculateAmount(body.products);
-    await this.clickService.payWithCardToken(
-      body.card_number,
-      amount,
-      req.userId,
-    );
-
-    await this.clickService.createPayments(req.userId, amount, body.products);
 
     return 'user';
   }

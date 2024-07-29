@@ -24,6 +24,74 @@ export class CoursesService {
     });
     return courses;
   }
+
+  async findAllUnique(userId: number) {
+    // Fetch all courses with selected fields
+    let courses: any = await this.prisma.courses.findMany({
+      select: {
+        id: true,
+        title: true,
+        description: true,
+        photoUrls: true,
+        time: true,
+        price: true,
+        Paid: {
+          where: { userId: userId },
+          select: { id: true },
+        },
+        modules: {
+          select: { id: true },
+        },
+      },
+    });
+
+    // Mark courses as paid or not based on the Paid field
+    courses = courses.map((course) => {
+      course.paid = course.Paid.length > 0;
+      delete course.Paid;
+      return course;
+    });
+
+    // Fetch all paid modules for the user
+    const paidModules = await this.prisma.modules.findMany({
+      where: { Paid: { some: { userId: userId } } },
+      select: { courseId: true },
+    });
+
+    // Create a map of courseId to the count of paid modules
+    const paidModulesCountMap = paidModules.reduce((acc, module) => {
+      if (!acc[module.courseId]) {
+        acc[module.courseId] = 0;
+      }
+      acc[module.courseId]++;
+      return acc;
+    }, {});
+
+    // Adjust course price based on the proportion of purchased modules
+    courses = courses.map((course) => {
+      if (course.paid) {
+        return course;
+      }
+      const totalModules = course.modules.length;
+      const paidModulesCount = paidModulesCountMap[course.id] || 0;
+      const proportionPaid = paidModulesCount / totalModules || 0;
+
+      // Check if all modules are paid
+      if (paidModulesCount === totalModules && totalModules > 0) {
+        course.paid = true;
+      } else {
+        // Adjust price and round to the nearest hundred
+        course.price =
+          Math.round((course.price * (1 - proportionPaid)) / 1000) * 1000;
+      }
+
+      delete course.modules;
+      return course;
+    });
+
+    return courses;
+  }
+
   async findOne(id: number) {
     const course = await this.prisma.courses.findUnique({
       where: { id: id },

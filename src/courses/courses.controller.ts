@@ -9,6 +9,7 @@ import {
   UseInterceptors,
   UploadedFiles,
   UseGuards,
+  Request,
 } from '@nestjs/common';
 import { CoursesService, CoursesServiceAdmin } from './courses.service';
 import { CreateCourseDto } from './dto/create-course.dto';
@@ -22,6 +23,7 @@ import {
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { UpdateCourseDto } from './dto/update-course.dto';
 import { AdminGuard } from 'src/admin/admin.guard';
+import { AuthGuard } from 'src/auth/auth.guard';
 
 @UseGuards(AdminGuard)
 @ApiBearerAuth()
@@ -48,7 +50,7 @@ export class CoursesControllerAdmin {
         description: { type: 'string' },
         author: { type: 'string' },
         time: { type: 'string' },
-        price: { type: 'number'}
+        price: { type: 'number' },
       },
     },
   })
@@ -79,7 +81,7 @@ export class CoursesControllerAdmin {
         description: { type: 'string' },
         author: { type: 'string' },
         time: { type: 'string' },
-        price: { type: 'number'}
+        price: { type: 'number' },
       },
     },
   })
@@ -108,6 +110,15 @@ export class CoursesController {
   findAll() {
     return this.coursesService.findAll();
   }
+
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth()
+  @Get('/forUser')
+  @ApiOperation({ summary: 'Get all courses for user' })
+  findAllUnique(@Request() req: any) {
+    return this.coursesService.findAllUnique(req.userId);
+  }
+
   @Get(':id')
   @ApiOperation({ summary: 'Get course by id' })
   findOne(@Param('id') id: string) {
