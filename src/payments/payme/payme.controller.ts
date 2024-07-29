@@ -11,6 +11,7 @@ import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
 import { PaymeService } from './payme.service';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { PrismaService } from 'src/prisma.service';
+import { ProductType } from '@prisma/client';
 
 @UseGuards(AuthGuard)
 @ApiBearerAuth()
@@ -53,8 +54,16 @@ export class PaymeController {
       properties: {
         sms_code: { type: 'string' },
         card_number: { type: 'string' },
-        productId: { type: 'number' },
-        productType: { type: 'string' },
+        products: {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              productType: { type: 'string' },
+              productId: { type: 'number' },
+            },
+          },
+        },
       },
     },
   })
@@ -64,11 +73,11 @@ export class PaymeController {
     body: {
       sms_code: string;
       card_number: string;
-      productId: number;
-      productType: string;
+      products: { productType: ProductType; productId: number }[];
     },
     @Request() req: any,
   ) {
+    return 'test';
     await this.paymeService.cardVerify(body.card_number, body.sms_code);
 
     let amount;
