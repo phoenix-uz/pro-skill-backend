@@ -127,7 +127,7 @@ export class CoursesController {
     return this.coursesService.findOneUnique(+id, req.userId);
   }
 
-  @Get(':id')
+  @Get('one/:id')
   @ApiOperation({ summary: 'Get course by id' })
   findOne(@Param('id') id: string) {
     return this.coursesService.findOne(+id);
