@@ -60,29 +60,23 @@ export class CoursesService {
 
     // Create a map of courseId to the count of paid modules
     const paidModulesCountMap = paidModules.reduce((acc, module) => {
-      if (!acc[module.courseId]) {
-        acc[module.courseId] = 0;
-      }
-      acc[module.courseId]++;
+      acc[module.courseId] = (acc[module.courseId] || 0) + 1;
       return acc;
     }, {});
 
     // Adjust course price based on the proportion of purchased modules
     courses = courses.map((course) => {
-      if (course.paid) {
-        return course;
-      }
-      const totalModules = course.modules.length;
-      const paidModulesCount = paidModulesCountMap[course.id] || 0;
-      const proportionPaid = paidModulesCount / totalModules || 0;
+      if (!course.paid) {
+        const totalModules = course.modules.length;
+        const paidModulesCount = paidModulesCountMap[course.id] || 0;
 
-      // Check if all modules are paid
-      if (paidModulesCount === totalModules && totalModules > 0) {
-        course.paid = true;
-      } else {
-        // Adjust price and round to the nearest hundred
-        course.price =
-          Math.round((course.price * (1 - proportionPaid)) / 1000) * 1000;
+        if (paidModulesCount === totalModules && totalModules > 0) {
+          course.paid = true;
+        } else {
+          const proportionPaid = paidModulesCount / totalModules || 0;
+          course.price =
+            Math.round((course.price * (1 - proportionPaid)) / 1000) * 1000;
+        }
       }
 
       delete course.modules;
@@ -93,6 +87,41 @@ export class CoursesService {
   }
 
   async findOne(id: number) {
+    const course = await this.prisma.courses.findUnique({
+      where: { id: id },
+      select: {
+        id: true,
+        title: true,
+        description: true,
+        photoUrls: true,
+        time: true,
+        price: true,
+        author: true,
+        modules: {
+          select: {
+            id: true,
+            title: true,
+            time: true,
+            price: true,
+            lessons: {
+              select: {
+                id: true,
+                title: true,
+                time: true,
+                price: true,
+              },
+            },
+          },
+        },
+      },
+    });
+    if (!course) {
+      throw new HttpException('Course not found', HttpStatus.NOT_FOUND);
+    }
+    return course;
+  }
+
+  async findOneUnique(id: number) {
     const course = await this.prisma.courses.findUnique({
       where: { id: id },
       select: {

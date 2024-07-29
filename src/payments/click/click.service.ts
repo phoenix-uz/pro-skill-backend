@@ -1,11 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { getClickHeader } from './click.functions';
 import { PrismaService } from 'src/prisma.service';
-enum ProductType {
-  lesson,
-  module,
-  course,
-}
 
 @Injectable()
 export class ClickService {

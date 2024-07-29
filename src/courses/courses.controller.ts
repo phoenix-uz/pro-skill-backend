@@ -119,6 +119,14 @@ export class CoursesController {
     return this.coursesService.findAllUnique(req.userId);
   }
 
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth()
+  @Get('forUser/:id')
+  @ApiOperation({ summary: 'Get course by id' })
+  findOneUnique(@Param('id') id: string, @Request() req: any) {
+    return this.coursesService.findOneUnique(+id, req.userId);
+  }
+
   @Get(':id')
   @ApiOperation({ summary: 'Get course by id' })
   findOne(@Param('id') id: string) {
