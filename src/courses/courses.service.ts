@@ -121,7 +121,7 @@ export class CoursesService {
     return course;
   }
 
-  async findOneUnique(id: number) {
+  async findOneUnique(id: number, userId: number) {
     const course = await this.prisma.courses.findUnique({
       where: { id: id },
       select: {
