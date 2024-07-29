@@ -122,6 +122,8 @@ export class CoursesService {
   }
 
   async findOneUnique(id: number, userId: number) {
+    // TODO: Implement this method
+   //*
     const course = await this.prisma.courses.findUnique({
       where: { id: id },
       select: {

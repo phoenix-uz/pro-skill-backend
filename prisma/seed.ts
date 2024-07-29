@@ -1,11 +1,14 @@
-const { PrismaClient } = require('@prisma/client');
+import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 async function main() {
-  // Users
-
+  await prisma.user.deleteMany();
+  await prisma.lessons.deleteMany();
+  await prisma.modules.deleteMany();
+  await prisma.courses.deleteMany();
   // Courses
-  const course1 = await prisma.courses.create({
+
+  await prisma.courses.create({
     data: {
       title: 'Course1: Business Administration',
       description: 'Business Administration course description',
@@ -62,7 +65,8 @@ async function main() {
     },
   });
 
-  const user = await prisma.user.create({
+  // Users
+  await prisma.user.create({
     data: {
       fullName: 'Rediska Kolobkovna',
       email: 'rediskakolobkovna@gmail.com',
