@@ -78,48 +78,5 @@ export class PaymeController {
     @Request() req: any,
   ) {
     return 'test';
-    await this.paymeService.cardVerify(body.card_number, body.sms_code);
-
-    let amount;
-    if (body.productType === 'Lesson') {
-      amount = await this.paymeService.calculateLessonPrice(body.productId);
-    } else if (body.productType === 'Module') {
-      amount = await this.paymeService.calculateModulePrice(body.productId);
-    } else if (body.productType === 'Course') {
-      amount = await this.paymeService.calculateCoursePrice(body.productId);
-    } else {
-      throw new HttpException('Неверный тип продукта', HttpStatus.BAD_REQUEST);
-    }
-
-    // const existingPurchase = await this.prisma.payments.findFirst({
-    //   where: {
-    //     userId: req.userId,
-    //     productId: body.productId,
-    //     productType: body.productType,
-    //   },
-    // });
-
-    // if (existingPurchase) {
-    //   throw new HttpException(
-    //     `Вы уже купили этот ${body.productType}`,
-    //     HttpStatus.NOT_ACCEPTABLE,
-    //   );
-    // }
-
-    const receipt = await this.paymeService.recieptsCreate(amount, req.userId);
-    const pay = await this.paymeService.receiptsPay(
-      body.card_number,
-      receipt.result.receipt._id,
-    );
-
-    // await this.prisma.payments.create({
-    //   data: {
-    //     userId: req.userId,
-    //     productId: body.productId,
-    //     productType: body.productType,
-    //   },
-    // });
-
-    return pay;
   }
 }
