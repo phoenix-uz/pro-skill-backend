@@ -25,7 +25,26 @@ export class CoursesService {
     return courses;
   }
 
-  async findAllUnique(userId: number) {
+  async findAllUnique() {
+    const courses = await this.prisma.courses.findMany({
+      select: {
+        id: true,
+        title: true,
+        description: true,
+        photoUrls: true,
+        time: true,
+        price: true,
+        author: true,
+        _count: {
+          select: { modules: true },
+        },
+      },
+    });
+    return courses;
+  }
+
+  // TODO change
+  async findAllUniqueLast(userId: number) {
     // Fetch all courses with selected fields
     let courses: any = await this.prisma.courses.findMany({
       select: {
@@ -123,7 +142,7 @@ export class CoursesService {
 
   async findOneUnique(id: number, userId: number) {
     // TODO: Implement this method
-   //*
+    //*
     const course = await this.prisma.courses.findUnique({
       where: { id: id },
       select: {
