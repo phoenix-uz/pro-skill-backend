@@ -116,7 +116,7 @@ export class CoursesController {
   @Get('/forUser')
   @ApiOperation({ summary: 'Get all courses for user' })
   findAllUnique(@Request() req: any) {
-    return this.coursesService.findAllUnique(req.userId);
+    return this.coursesService.findAllUnique();
   }
 
   @UseGuards(AuthGuard)
