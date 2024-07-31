@@ -195,6 +195,16 @@ model PaymeCards {
   createdAt   DateTime @default(now())
 }
 
+model UzumCards {
+  id          Int      @id @default(autoincrement())
+  userId      Int
+  cardNumber  String   @unique
+  expireDate  String
+  cardToken   String?
+  phoneNumber String?
+  createdAt   DateTime @default(now())
+}
+
 model Paid {
   id          Int         @id @default(autoincrement())
   userId      Int
@@ -225,6 +235,7 @@ model Payments {
 enum PaymentType {
   payme
   click
+  uzum
 }
 
 enum ProductType {
