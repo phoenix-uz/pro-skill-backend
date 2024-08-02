@@ -28,7 +28,7 @@ async function main() {
                   title: 'Lesson1: Create a Business Plan',
                   videoUrl: 'video_url_1',
                   time: '1h',
-                  price: 20,
+                  price: 0,
                 },
                 {
                   title: 'Lesson2: Business Administration Basics',
