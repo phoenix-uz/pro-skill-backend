@@ -1,5 +1,5 @@
 -- CreateEnum
-CREATE TYPE "PaymentType" AS ENUM ('payme', 'click');
+CREATE TYPE "PaymentType" AS ENUM ('payme', 'click', 'uzum');
 
 -- CreateEnum
 CREATE TYPE "ProductType" AS ENUM ('lesson', 'module', 'course');
@@ -226,12 +226,27 @@ CREATE TABLE "PaymeCards" (
 );
 
 -- CreateTable
+CREATE TABLE "UzumCards" (
+    "id" SERIAL NOT NULL,
+    "userId" INTEGER NOT NULL,
+    "cardNumber" TEXT NOT NULL,
+    "expireDate" TEXT NOT NULL,
+    "cardToken" TEXT,
+    "phoneNumber" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "UzumCards_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "Paid" (
     "id" SERIAL NOT NULL,
     "userId" INTEGER NOT NULL,
     "amount" INTEGER NOT NULL,
     "productType" "ProductType" NOT NULL,
-    "productId" INTEGER NOT NULL,
+    "lessonId" INTEGER,
+    "moduleId" INTEGER,
+    "courseId" INTEGER,
     "PaymentsId" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
@@ -241,10 +256,9 @@ CREATE TABLE "Paid" (
 -- CreateTable
 CREATE TABLE "Payments" (
     "id" SERIAL NOT NULL,
-    "userId" INTEGER NOT NULL,
     "amount" INTEGER NOT NULL,
-    "products" JSONB[],
     "paymentType" "PaymentType" NOT NULL,
+    "userId" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "Payments_pkey" PRIMARY KEY ("id")
@@ -267,6 +281,9 @@ CREATE UNIQUE INDEX "ClickCards_cardNumber_key" ON "ClickCards"("cardNumber");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "PaymeCards_cardNumber_key" ON "PaymeCards"("cardNumber");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "UzumCards_cardNumber_key" ON "UzumCards"("cardNumber");
 
 -- AddForeignKey
 ALTER TABLE "Item" ADD CONSTRAINT "Item_libraryId_fkey" FOREIGN KEY ("libraryId") REFERENCES "Library"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -294,6 +311,15 @@ ALTER TABLE "Purchases" ADD CONSTRAINT "Purchases_itemId_fkey" FOREIGN KEY ("ite
 
 -- AddForeignKey
 ALTER TABLE "Paid" ADD CONSTRAINT "Paid_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Paid" ADD CONSTRAINT "Paid_lessonId_fkey" FOREIGN KEY ("lessonId") REFERENCES "Lessons"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Paid" ADD CONSTRAINT "Paid_moduleId_fkey" FOREIGN KEY ("moduleId") REFERENCES "Modules"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Paid" ADD CONSTRAINT "Paid_courseId_fkey" FOREIGN KEY ("courseId") REFERENCES "Courses"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Paid" ADD CONSTRAINT "Paid_PaymentsId_fkey" FOREIGN KEY ("PaymentsId") REFERENCES "Payments"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

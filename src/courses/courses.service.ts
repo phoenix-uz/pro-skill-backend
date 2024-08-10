@@ -25,26 +25,26 @@ export class CoursesService {
     return courses;
   }
 
-  async findAllUnique() {
-    const courses = await this.prisma.courses.findMany({
-      select: {
-        id: true,
-        title: true,
-        description: true,
-        photoUrls: true,
-        time: true,
-        price: true,
-        author: true,
-        _count: {
-          select: { modules: true },
-        },
-      },
-    });
-    return courses;
-  }
+  // async findAllUnique() {
+  //   const courses = await this.prisma.courses.findMany({
+  //     select: {
+  //       id: true,
+  //       title: true,
+  //       description: true,
+  //       photoUrls: true,
+  //       time: true,
+  //       price: true,
+  //       author: true,
+  //       _count: {
+  //         select: { modules: true },
+  //       },
+  //     },
+  //   });
+  //   return courses;
+  // }
 
   // TODO change
-  async findAllUniqueLast(userId: number) {
+  async findAllUnique(userId: number) {
     // Fetch all courses with selected fields
     let courses: any = await this.prisma.courses.findMany({
       select: {
@@ -57,6 +57,9 @@ export class CoursesService {
         Paid: {
           where: { userId: userId },
           select: { id: true },
+        },
+        _count: {
+          select: { modules: true },
         },
         modules: {
           select: { id: true },
@@ -91,11 +94,14 @@ export class CoursesService {
 
         if (paidModulesCount === totalModules && totalModules > 0) {
           course.paid = true;
+          course.price = 0;
         } else {
           const proportionPaid = paidModulesCount / totalModules || 0;
           course.price =
             Math.round((course.price * (1 - proportionPaid)) / 1000) * 1000;
         }
+      } else {
+        course.price = 0;
       }
 
       delete course.modules;
@@ -141,9 +147,8 @@ export class CoursesService {
   }
 
   async findOneUnique(id: number, userId: number) {
-    // TODO: Implement this method
-    //*
-    const course = await this.prisma.courses.findUnique({
+    // Fetch the course by its ID
+    const course: any = await this.prisma.courses.findUnique({
       where: { id: id },
       select: {
         id: true,
@@ -153,6 +158,10 @@ export class CoursesService {
         time: true,
         price: true,
         author: true,
+        Paid: {
+          where: { userId: userId },
+          select: { id: true },
+        },
         modules: {
           select: {
             id: true,
@@ -165,15 +174,319 @@ export class CoursesService {
                 title: true,
                 time: true,
                 price: true,
+                Paid: {
+                  where: { userId: userId },
+                  select: { id: true },
+                },
               },
             },
           },
         },
       },
     });
+
     if (!course) {
       throw new HttpException('Course not found', HttpStatus.NOT_FOUND);
     }
+
+    // Mark the course as paid or not based on the Paid field
+    course.paid = course.Paid.length > 0;
+    delete course.Paid;
+
+    // Fetch all paid modules and lessons for the user in this course
+    const paidModules = await this.prisma.modules.findMany({
+      where: {
+        courseId: id,
+        Paid: { some: { userId: userId } },
+      },
+      select: { id: true },
+    });
+
+    const totalModules = course.modules.length;
+    const paidModulesCount = paidModules.length;
+
+    // Adjust the course price based on the proportion of purchased modules
+    if (!course.paid) {
+      if (paidModulesCount === totalModules && totalModules > 0) {
+        course.paid = true;
+        course.price = 0;
+      } else {
+        const proportionPaid = paidModulesCount / totalModules || 0;
+        course.price =
+          Math.round((course.price * (1 - proportionPaid)) / 1000) * 1000;
+      }
+    } else {
+      course.price = 0;
+    }
+
+    // Process each module
+    course.modules = course.modules.map((module) => {
+      // Fetch all paid lessons for this module
+      const paidLessons = module.lessons.filter(
+        (lesson) => lesson.Paid.length > 0,
+      );
+
+      const totalLessons = module.lessons.length;
+      const paidLessonsCount = paidLessons.length;
+
+      // Adjust module price based on the proportion of purchased lessons
+      if (!module.paid) {
+        if (paidLessonsCount === totalLessons && totalLessons > 0) {
+          module.paid = true;
+          module.price = 0;
+        } else {
+          const proportionPaid = paidLessonsCount / totalLessons || 0;
+          module.price =
+            Math.round((module.price * (1 - proportionPaid)) / 1000) * 1000;
+        }
+      } else {
+        module.price = 0;
+      }
+
+      // Mark each lesson as paid and set its price to 0 if fully paid
+      module.lessons = module.lessons.map((lesson) => {
+        const isLessonPaid = lesson.Paid.length > 0;
+
+        if (isLessonPaid || module.paid) {
+          lesson.price = 0;
+          lesson.paid = true;
+        } else {
+          lesson.paid = false;
+        }
+
+        delete lesson.Paid;
+        return lesson;
+      });
+
+      return module;
+    });
+
+    return course;
+  }
+
+  async findBought(userId: number) {
+    const paid = await this.prisma.paid.findMany({
+      where: { userId: userId },
+      select: {
+        Lesson: {
+          select: {
+            Modules: {
+              select: {
+                courseId: true,
+              },
+            },
+          },
+        },
+
+        Module: {
+          select: {
+            courseId: true,
+          },
+        },
+        courseId: true,
+      },
+    });
+
+    // Extract the courseId from the returned data
+    const courseIds = paid.map((item) => {
+      // Check for courseId in Lesson -> Modules
+      if (item.Lesson?.Modules?.courseId) {
+        return item.Lesson.Modules.courseId;
+      }
+      // Check for courseId in Module
+      if (item.Module?.courseId) {
+        return item.Module.courseId;
+      }
+      // Check for direct courseId
+      if (item.courseId) {
+        return item.courseId;
+      }
+    });
+    // Filter out null values and remove duplicates using a Set
+    const uniqueCourseIds = [...new Set(courseIds.filter((id) => id !== null))];
+
+    // Fetch the courses with the unique course IDs
+    const courses = await this.prisma.courses.findMany({
+      where: { id: { in: uniqueCourseIds } },
+    });
+
+    return courses;
+  }
+
+  async findOneBought(id: number, userId: number) {
+    // Fetch the course by its ID
+    const course: any = await this.prisma.courses.findUnique({
+      where: { id: id },
+      select: {
+        id: true,
+        title: true,
+        description: true,
+        photoUrls: true,
+        time: true,
+        price: true,
+        author: true,
+        Paid: {
+          where: { userId: userId },
+          select: { id: true },
+        },
+        modules: {
+          select: {
+            id: true,
+            title: true,
+            time: true,
+            price: true,
+            lessons: {
+              select: {
+                id: true,
+                title: true,
+                videoUrl: true,
+                questions: {
+                  include: {
+                    answers: {
+                      select: { id: true, title: true },
+                    },
+                  },
+                },
+                time: true,
+                price: true,
+                Paid: {
+                  where: { userId: userId },
+                  select: { id: true },
+                },
+              },
+            },
+          },
+        },
+      },
+    });
+    const paid = await this.prisma.paid.findMany({
+      where: { userId: userId },
+      select: {
+        Lesson: {
+          select: {
+            Modules: {
+              select: {
+                courseId: true,
+              },
+            },
+          },
+        },
+
+        Module: {
+          select: {
+            courseId: true,
+          },
+        },
+        courseId: true,
+      },
+    });
+
+    // Extract the courseId from the returned data
+    const courseIds = paid.map((item) => {
+      // Check for courseId in Lesson -> Modules
+      if (item.Lesson?.Modules?.courseId) {
+        return item.Lesson.Modules.courseId;
+      }
+      // Check for courseId in Module
+      if (item.Module?.courseId) {
+        return item.Module.courseId;
+      }
+      // Check for direct courseId
+      if (item.courseId) {
+        return item.courseId;
+      }
+    });
+    // Filter out null values and remove duplicates using a Set
+    const uniqueCourseIds = [...new Set(courseIds.filter((id) => id !== null))];
+
+    // Fetch the courses with the unique course IDs
+    const paidCourses = await this.prisma.courses.findMany({
+      where: { id: { in: uniqueCourseIds } },
+    });
+
+    // course should be in paidCourses
+    if (!paidCourses.find((c) => c.id === course.id)) {
+      throw new HttpException('Вы не купили этот курс', HttpStatus.NOT_FOUND);
+    }
+    if (!course) {
+      throw new HttpException('Course not found', HttpStatus.NOT_FOUND);
+    }
+
+    // Mark the course as paid or not based on the Paid field
+    course.paid = course.Paid.length > 0;
+    delete course.Paid;
+
+    // Fetch all paid modules and lessons for the user in this course
+    const paidModules = await this.prisma.modules.findMany({
+      where: {
+        courseId: id,
+        Paid: { some: { userId: userId } },
+      },
+      select: { id: true },
+    });
+
+    const totalModules = course.modules.length;
+    const paidModulesCount = paidModules.length;
+
+    // Adjust the course price based on the proportion of purchased modules
+    if (!course.paid) {
+      if (paidModulesCount === totalModules && totalModules > 0) {
+        course.paid = true;
+        course.price = 0;
+      } else {
+        const proportionPaid = paidModulesCount / totalModules || 0;
+        course.price =
+          Math.round((course.price * (1 - proportionPaid)) / 1000) * 1000;
+      }
+    } else {
+      course.price = 0;
+    }
+
+    // Process each module
+    course.modules = course.modules.map((module) => {
+      // Fetch all paid lessons for this module
+      const paidLessons = module.lessons.filter(
+        (lesson) => lesson.Paid.length > 0,
+      );
+
+      const totalLessons = module.lessons.length;
+      const paidLessonsCount = paidLessons.length;
+
+      // Adjust module price based on the proportion of purchased lessons
+      if (!module.paid) {
+        if (paidLessonsCount === totalLessons && totalLessons > 0) {
+          module.paid = true;
+          module.price = 0;
+        } else {
+          const proportionPaid = paidLessonsCount / totalLessons || 0;
+          module.price =
+            Math.round((module.price * (1 - proportionPaid)) / 1000) * 1000;
+        }
+      } else {
+        module.price = 0;
+      }
+
+      // Mark each lesson as paid and set its price to 0 if fully paid
+      module.lessons = module.lessons.map((lesson) => {
+        const isLessonPaid = lesson.Paid.length > 0;
+
+        if (isLessonPaid || module.paid) {
+          lesson.price = 0;
+          lesson.paid = true;
+        } else {
+          delete lesson.videoUrl;
+          delete lesson.questions;
+
+          lesson.paid = false;
+        }
+
+        delete lesson.Paid;
+        return lesson;
+      });
+
+      return module;
+    });
+
     return course;
   }
 }

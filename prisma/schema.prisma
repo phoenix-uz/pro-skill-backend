@@ -215,8 +215,8 @@ model Paid {
   Lesson      Lessons?    @relation(fields: [lessonId], references: [id])
   moduleId    Int?
   Module      Modules?    @relation(fields: [moduleId], references: [id])
-  CourseId    Int?
-  Course      Courses?    @relation(fields: [CourseId], references: [id])
+  courseId    Int?
+  Course      Courses?    @relation(fields: [courseId], references: [id])
   PaymentsId  Int
   Payments    Payments    @relation(fields: [PaymentsId], references: [id])
   createdAt   DateTime    @default(now())
