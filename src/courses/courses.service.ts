@@ -189,24 +189,95 @@ export class CoursesService {
       throw new HttpException('Course not found', HttpStatus.NOT_FOUND);
     }
 
-    // Mark the course as paid or not based on the Paid field
+    // Check if the course is paid
     course.paid = course.Paid.length > 0;
     delete course.Paid;
 
-    // Fetch all paid modules and lessons for the user in this course
-    const paidModules = await this.prisma.modules.findMany({
-      where: {
-        courseId: id,
-        Paid: { some: { userId: userId } },
-      },
-      select: { id: true },
-    });
+    // If the course is paid, set all modules and lessons to paid
+    if (course.paid) {
+      course.price = 0;
+      course.modules = course.modules.map((module) => {
+        module.paid = true;
+        module.price = 0;
+        module.lessons = module.lessons.map((lesson) => {
+          lesson.paid = true;
+          lesson.price = 0;
+          delete lesson.Paid;
+          return lesson;
+        });
+        delete module.Paid;
+        return module;
+      });
+    } else {
+      // Fetch all paid modules for the course
+      const paidModules = await this.prisma.modules.findMany({
+        where: {
+          courseId: id,
+          Paid: { some: { userId: userId } },
+        },
+        select: { id: true },
+      });
 
-    const totalModules = course.modules.length;
-    const paidModulesCount = paidModules.length;
+      // Update the modules based on their paid status
+      course.modules = await Promise.all(
+        course.modules.map(async (module) => {
+          const isModulePaid = paidModules.some((m) => m.id === module.id);
 
-    // Adjust the course price based on the proportion of purchased modules
-    if (!course.paid) {
+          if (isModulePaid) {
+            module.paid = true;
+            module.price = 0;
+            module.lessons = module.lessons.map((lesson) => {
+              lesson.paid = true;
+              lesson.price = 0;
+              delete lesson.Paid;
+              return lesson;
+            });
+          } else {
+            // Fetch paid lessons for the module
+            const paidLessons = await this.prisma.lessons.findMany({
+              where: {
+                moduleId: module.id,
+                Paid: { some: { userId: userId } },
+              },
+              select: { id: true },
+            });
+
+            module.lessons = module.lessons.map((lesson) => {
+              const isLessonPaid = paidLessons.some((l) => l.id === lesson.id);
+
+              if (isLessonPaid) {
+                lesson.paid = true;
+                lesson.price = 0;
+              } else {
+                lesson.paid = false;
+              }
+
+              delete lesson.Paid;
+              return lesson;
+            });
+
+            // Adjust module price based on the proportion of paid lessons
+            const totalLessons = module.lessons.length;
+            const paidLessonsCount = paidLessons.length;
+
+            if (paidLessonsCount === totalLessons && totalLessons > 0) {
+              module.paid = true;
+              module.price = 0;
+            } else {
+              const proportionPaid = paidLessonsCount / totalLessons || 0;
+              module.price =
+                Math.round((module.price * (1 - proportionPaid)) / 1000) * 1000;
+            }
+          }
+
+          return module;
+        }),
+      );
+
+      // Adjust course price based on the proportion of paid modules
+      const totalModules = course.modules.length;
+      const paidModulesCount = paidModules.length;
+
       if (paidModulesCount === totalModules && totalModules > 0) {
         course.paid = true;
         course.price = 0;
@@ -215,51 +286,7 @@ export class CoursesService {
         course.price =
           Math.round((course.price * (1 - proportionPaid)) / 1000) * 1000;
       }
-    } else {
-      course.price = 0;
     }
-
-    // Process each module
-    course.modules = course.modules.map((module) => {
-      // Fetch all paid lessons for this module
-      const paidLessons = module.lessons.filter(
-        (lesson) => lesson.Paid.length > 0,
-      );
-
-      const totalLessons = module.lessons.length;
-      const paidLessonsCount = paidLessons.length;
-
-      // Adjust module price based on the proportion of purchased lessons
-      if (!module.paid) {
-        if (paidLessonsCount === totalLessons && totalLessons > 0) {
-          module.paid = true;
-          module.price = 0;
-        } else {
-          const proportionPaid = paidLessonsCount / totalLessons || 0;
-          module.price =
-            Math.round((module.price * (1 - proportionPaid)) / 1000) * 1000;
-        }
-      } else {
-        module.price = 0;
-      }
-
-      // Mark each lesson as paid and set its price to 0 if fully paid
-      module.lessons = module.lessons.map((lesson) => {
-        const isLessonPaid = lesson.Paid.length > 0;
-
-        if (isLessonPaid || module.paid) {
-          lesson.price = 0;
-          lesson.paid = true;
-        } else {
-          lesson.paid = false;
-        }
-
-        delete lesson.Paid;
-        return lesson;
-      });
-
-      return module;
-    });
 
     return course;
   }
@@ -339,6 +366,8 @@ export class CoursesService {
               select: {
                 id: true,
                 title: true,
+                time: true,
+                price: true,
                 videoUrl: true,
                 questions: {
                   include: {
@@ -347,8 +376,6 @@ export class CoursesService {
                     },
                   },
                 },
-                time: true,
-                price: true,
                 Paid: {
                   where: { userId: userId },
                   select: { id: true },
@@ -359,77 +386,102 @@ export class CoursesService {
         },
       },
     });
-    const paid = await this.prisma.paid.findMany({
-      where: { userId: userId },
-      select: {
-        Lesson: {
-          select: {
-            Modules: {
-              select: {
-                courseId: true,
-              },
-            },
-          },
-        },
 
-        Module: {
-          select: {
-            courseId: true,
-          },
-        },
-        courseId: true,
-      },
-    });
-
-    // Extract the courseId from the returned data
-    const courseIds = paid.map((item) => {
-      // Check for courseId in Lesson -> Modules
-      if (item.Lesson?.Modules?.courseId) {
-        return item.Lesson.Modules.courseId;
-      }
-      // Check for courseId in Module
-      if (item.Module?.courseId) {
-        return item.Module.courseId;
-      }
-      // Check for direct courseId
-      if (item.courseId) {
-        return item.courseId;
-      }
-    });
-    // Filter out null values and remove duplicates using a Set
-    const uniqueCourseIds = [...new Set(courseIds.filter((id) => id !== null))];
-
-    // Fetch the courses with the unique course IDs
-    const paidCourses = await this.prisma.courses.findMany({
-      where: { id: { in: uniqueCourseIds } },
-    });
-
-    // course should be in paidCourses
-    if (!paidCourses.find((c) => c.id === course.id)) {
-      throw new HttpException('Вы не купили этот курс', HttpStatus.NOT_FOUND);
-    }
     if (!course) {
       throw new HttpException('Course not found', HttpStatus.NOT_FOUND);
     }
 
-    // Mark the course as paid or not based on the Paid field
+    // Check if the course is paid
     course.paid = course.Paid.length > 0;
     delete course.Paid;
 
-    // Fetch all paid modules and lessons for the user in this course
-    const paidModules = await this.prisma.modules.findMany({
-      where: {
-        courseId: id,
-        Paid: { some: { userId: userId } },
-      },
-      select: { id: true },
-    });
+    // If the course is paid, set all modules and lessons to paid
+    if (course.paid) {
+      course.price = 0;
+      course.modules = course.modules.map((module) => {
+        module.paid = true;
+        module.price = 0;
+        module.lessons = module.lessons.map((lesson) => {
+          lesson.paid = true;
+          lesson.price = 0;
+          delete lesson.Paid;
+          return lesson;
+        });
+        delete module.Paid;
+        return module;
+      });
+    } else {
+      // Fetch all paid modules for the course
+      const paidModules = await this.prisma.modules.findMany({
+        where: {
+          courseId: id,
+          Paid: { some: { userId: userId } },
+        },
+        select: { id: true },
+      });
 
-    const totalModules = course.modules.length;
-    const paidModulesCount = paidModules.length;
+      // Update the modules based on their paid status
+      course.modules = await Promise.all(
+        course.modules.map(async (module) => {
+          const isModulePaid = paidModules.some((m) => m.id === module.id);
 
-    // Adjust the course price based on the proportion of purchased modules
-    if (!course.paid) {
+          if (isModulePaid) {
+            module.paid = true;
+            module.price = 0;
+            module.lessons = module.lessons.map((lesson) => {
+              lesson.paid = true;
+              lesson.price = 0;
+              delete lesson.Paid;
+              return lesson;
+            });
+          } else {
+            // Fetch paid lessons for the module
+            const paidLessons = await this.prisma.lessons.findMany({
+              where: {
+                moduleId: module.id,
+                Paid: { some: { userId: userId } },
+              },
+              select: { id: true },
+            });
+
+            module.lessons = module.lessons.map((lesson) => {
+              const isLessonPaid = paidLessons.some((l) => l.id === lesson.id);
+
+              if (isLessonPaid) {
+                lesson.paid = true;
+                lesson.price = 0;
+              } else {
+                lesson.paid = false;
+                delete lesson.videoUrl;
+                delete lesson.questions;
+              }
+
+              delete lesson.Paid;
+              return lesson;
+            });
+
+            // Adjust module price based on the proportion of paid lessons
+            const totalLessons = module.lessons.length;
+            const paidLessonsCount = paidLessons.length;
+
+            if (paidLessonsCount === totalLessons && totalLessons > 0) {
+              module.paid = true;
+              module.price = 0;
+            } else {
+              const proportionPaid = paidLessonsCount / totalLessons || 0;
+              module.price =
+                Math.round((module.price * (1 - proportionPaid)) / 1000) * 1000;
+            }
+          }
+
+          return module;
+        }),
+      );
+
+      // Adjust course price based on the proportion of paid modules
+      const totalModules = course.modules.length;
+      const paidModulesCount = paidModules.length;
+
       if (paidModulesCount === totalModules && totalModules > 0) {
         course.paid = true;
         course.price = 0;
@@ -438,54 +490,7 @@ export class CoursesService {
         course.price =
           Math.round((course.price * (1 - proportionPaid)) / 1000) * 1000;
       }
-    } else {
-      course.price = 0;
     }
-
-    // Process each module
-    course.modules = course.modules.map((module) => {
-      // Fetch all paid lessons for this module
-      const paidLessons = module.lessons.filter(
-        (lesson) => lesson.Paid.length > 0,
-      );
-
-      const totalLessons = module.lessons.length;
-      const paidLessonsCount = paidLessons.length;
-
-      // Adjust module price based on the proportion of purchased lessons
-      if (!module.paid) {
-        if (paidLessonsCount === totalLessons && totalLessons > 0) {
-          module.paid = true;
-          module.price = 0;
-        } else {
-          const proportionPaid = paidLessonsCount / totalLessons || 0;
-          module.price =
-            Math.round((module.price * (1 - proportionPaid)) / 1000) * 1000;
-        }
-      } else {
-        module.price = 0;
-      }
-
-      // Mark each lesson as paid and set its price to 0 if fully paid
-      module.lessons = module.lessons.map((lesson) => {
-        const isLessonPaid = lesson.Paid.length > 0;
-
-        if (isLessonPaid || module.paid) {
-          lesson.price = 0;
-          lesson.paid = true;
-        } else {
-          delete lesson.videoUrl;
-          delete lesson.questions;
-
-          lesson.paid = false;
-        }
-
-        delete lesson.Paid;
-        return lesson;
-      });
-
-      return module;
-    });
 
     return course;
   }
