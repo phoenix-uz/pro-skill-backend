@@ -58,8 +58,8 @@ export class LessonsController {
   ) {
     body.price = +body.price;
 
-    body.moduleId = +body.moduleId
-    console.log(body)
+    body.moduleId = +body.moduleId;
+    console.log(body);
     // from string to number type '1,2,3` to [1,2,3]
     //split(',') - first convert string to array
     //map(Number) - convert string to number
