@@ -36,10 +36,10 @@ export class LessonsService {
         title: body.title,
         time: body.time,
         price: +body.price,
-        moduleId: body.moduleId,
+        moduleId: +body.moduleId,
         videoUrl: filePath,
         items: itemsUrls,
-        Modules: { connect: { id: body.moduleId },
+        Modules: { connect: { id: +body.moduleId } },
       },
     });
     return lesson;
