@@ -3,6 +3,13 @@ const prisma = new PrismaClient();
 
 async function main() {
   // Clear all data
+  await prisma.notes.deleteMany();
+  await prisma.paid.deleteMany();
+  await prisma.payments.deleteMany();
+  await prisma.user.deleteMany();
+  await prisma.lessons.deleteMany();
+  await prisma.modules.deleteMany();
+  await prisma.courses.deleteMany();
 
   // Courses
 
