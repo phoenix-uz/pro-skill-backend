@@ -35,6 +35,8 @@ export class ModulesController {
   @Post()
   @ApiOperation({ summary: 'Create new module' })
   create(@Body() createModuleDto: CreateModuleDto) {
+    createModuleDto.price = +createModuleDto.price;
+
     return this.modulesService.create(createModuleDto);
   }
 
@@ -52,6 +54,8 @@ export class ModulesController {
   @Patch(':id')
   @ApiOperation({ summary: 'Update module' })
   update(@Param('id') id: string, @Body() body: UpdateModuleDto) {
+    body.price = +body.price;
+
     return this.modulesService.update(+id, body);
   }
 

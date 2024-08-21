@@ -59,6 +59,7 @@ export class CoursesControllerAdmin {
     @UploadedFiles() files: Express.Multer.File[],
     @Body() body: CreateCourseDto,
   ) {
+    body.price = +body.price;
     return this.coursesServiceAdmin.create(files, body);
   }
   @Patch()
@@ -91,6 +92,7 @@ export class CoursesControllerAdmin {
     @Body() body: UpdateCourseDto,
   ) {
     body.id = +body.id;
+    body.price = +body.price;
     return this.coursesServiceAdmin.update(files, body);
   }
 

@@ -56,6 +56,8 @@ export class LessonsController {
     @UploadedFiles() files: Express.Multer.File[],
     @Body() body: CreateLessonDto,
   ) {
+    body.price = +body.price;
+
     body.moduleId = +body.moduleId;
     // from string to number type '1,2,3` to [1,2,3]
     //split(',') - first convert string to array
@@ -89,6 +91,8 @@ export class LessonsController {
     @UploadedFiles() files: Express.Multer.File[],
     @Body() body: UpdateLessonDto,
   ) {
+    body.price = +body.price;
+
     body.id = +body.id;
     body.moduleId = +body.moduleId;
     // from string to number type '1,2,3` to [1,2,3]
