@@ -10,7 +10,7 @@ services:
     ports:
       - '5001:5001'
     environment:
-      DATABASE_URL: postgres://postgres:secret@db:5432/proskill
+      DATABASE_URL: postgres://postgres:secret@db:5433/proskill
       NODE_ENV: development
 
   db:
@@ -21,7 +21,7 @@ services:
       POSTGRES_PASSWORD: secret
       POSTGRES_DB: proskill
     ports:
-      - '5432:5432'
+      - '5432:5433'
     volumes:
       - pgdata:/var/lib/postgresql/data
 
