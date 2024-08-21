@@ -22,7 +22,7 @@ RUN npm run build
 
 
 # Указываем порт
-EXPOSE 5001
+EXPOSE 5000
 
 # Выполняем миграции и запускаем приложение
 CMD ["sh", "-c", "npx prisma migrate deploy && npm run seed && node dist/src/main"]
