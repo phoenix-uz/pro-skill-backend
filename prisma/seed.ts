@@ -2,12 +2,7 @@ import { PaymentType, PrismaClient, ProductType } from '@prisma/client';
 const prisma = new PrismaClient();
 
 async function main() {
-  await prisma.paid.deleteMany();
-  await prisma.payments.deleteMany();
-  await prisma.user.deleteMany();
-  await prisma.lessons.deleteMany();
-  await prisma.modules.deleteMany();
-  await prisma.courses.deleteMany();
+  // Clear all data
 
   // Courses
 

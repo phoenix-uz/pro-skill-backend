@@ -25,4 +25,4 @@ RUN npm run build
 EXPOSE 5000
 
 # Выполняем миграции и запускаем приложение
-CMD ["sh", "-c", "npx prisma migrate deploy && npm run seed && node dist/src/main"]
+CMD ["sh", "-c", "npx prisma migrate reset --force && npx prisma migrate deploy && npm run seed && node dist/src/main"]
