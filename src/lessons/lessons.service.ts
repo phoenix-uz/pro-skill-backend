@@ -39,7 +39,6 @@ export class LessonsService {
         moduleId: +body.moduleId,
         videoUrl: filePath,
         items: itemsUrls,
-        Modules: { connect: { id: +body.moduleId } },
       },
     });
     return lesson;
