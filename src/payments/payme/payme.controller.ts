@@ -77,6 +77,10 @@ export class PaymeController {
     },
     @Request() req: any,
   ) {
-    return 'test';
+    body.products.forEach((product) => {
+      if (!Object.values(ProductType).includes(product.productType)) {
+        throw new HttpException('Invalid product type', HttpStatus.BAD_REQUEST);
+      }
+    });
   }
 }
