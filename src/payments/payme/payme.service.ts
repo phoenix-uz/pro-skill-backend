@@ -229,6 +229,7 @@ export class PaymeService {
   ) {
     let amount = 0;
     for (const product of products) {
+      console.log(product);
       switch (product.productType) {
         case ProductType.lesson:
           amount += await this.calculateLessonPrice(product.productId);
