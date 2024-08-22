@@ -1,4 +1,12 @@
-import { Controller, Request, Body, Post, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Request,
+  Body,
+  Post,
+  UseGuards,
+  HttpException,
+  HttpStatus,
+} from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
 import { PrismaService } from 'src/prisma.service';
 import { AuthGuard } from 'src/auth/auth.guard';
@@ -72,11 +80,17 @@ export class ClickController {
     },
     @Request() req: any,
   ) {
-    if (body.card_number === '2222222222222222') {
-      return 'user';
-    }
     await this.clickService.confirmCardToken(body.card_number, +body.sms_code);
 
-    return 'user';
+    if (!body.products.length) {
+      throw new HttpException('No products', HttpStatus.BAD_REQUEST);
+    }
+    console.log(body.products);
+    // const amount = await this.clickService.calculatePrice(body.products);
+    // await this.clickService.payWithCardToken(
+    //   body.card_number,
+    //   amount,
+    //   req.userId,
+    // );
   }
 }
