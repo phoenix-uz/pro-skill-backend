@@ -1,6 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
 import getPaymeHeaders from './functions';
+import { ProductType } from '@prisma/client';
 
 @Injectable()
 export class PaymeService {
@@ -188,27 +189,63 @@ export class PaymeService {
 
   // Методы для расчета цен
   async calculateLessonPrice(lessonId: number): Promise<number> {
-    const lesson = await this.prisma.lessons.findUnique({ where: { id: lessonId } });
-    if (!lesson) throw new HttpException('Урок не найден', HttpStatus.NOT_FOUND);
+    const lesson = await this.prisma.lessons.findUnique({
+      where: { id: lessonId },
+    });
+    if (!lesson)
+      throw new HttpException('Урок не найден', HttpStatus.NOT_FOUND);
     // Пример логики расчета цены
     return lesson.price; // Или расчет на основе содержания
   }
 
   async calculateModulePrice(moduleId: number): Promise<number> {
-    const module = await this.prisma.modules.findUnique({ where: { id: moduleId }, include: { lessons: true } });
-    if (!module) throw new HttpException('Модуль не найден', HttpStatus.NOT_FOUND);
+    const module = await this.prisma.modules.findUnique({
+      where: { id: moduleId },
+      include: { lessons: true },
+    });
+    if (!module)
+      throw new HttpException('Модуль не найден', HttpStatus.NOT_FOUND);
     // Пример логики расчета цены на основе количества уроков
     return module.lessons.length * 10000; // Пример: 10,000 за урок
   }
 
   async calculateCoursePrice(courseId: number): Promise<number> {
-    const course = await this.prisma.courses.findUnique({ where: { id: courseId }, include: { modules: { include: { lessons: true } } } });
-    if (!course) throw new HttpException('Курс не найден', HttpStatus.NOT_FOUND);
+    const course = await this.prisma.courses.findUnique({
+      where: { id: courseId },
+      include: { modules: { include: { lessons: true } } },
+    });
+    if (!course)
+      throw new HttpException('Курс не найден', HttpStatus.NOT_FOUND);
     // Пример логики расчета цены на основе модулей и уроков
     let price = 0;
     for (const module of course.modules) {
       price += module.lessons.length * 10000; // Пример: 10,000 за урок
     }
     return price;
+  }
+
+  async calculatePrice(
+    products: { productType: ProductType; productId: number }[],
+  ) {
+    let amount = 0;
+    for (const product of products) {
+      switch (product.productType) {
+        case ProductType.lesson:
+          amount += await this.calculateLessonPrice(product.productId);
+          break;
+        case ProductType.module:
+          amount += await this.calculateModulePrice(product.productId);
+          break;
+        case ProductType.course:
+          amount += await this.calculateCoursePrice(product.productId);
+          break;
+        default:
+          throw new HttpException(
+            'Неверный тип продукта',
+            HttpStatus.BAD_REQUEST,
+          );
+      }
+    }
+    return amount;
   }
 }

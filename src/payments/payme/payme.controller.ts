@@ -77,11 +77,10 @@ export class PaymeController {
     },
     @Request() req: any,
   ) {
-    body.products.forEach((product) => {
-      console.log(product.productType);
-      if (!Object.values(ProductType).includes(product.productType)) {
-        throw new HttpException('Invalid product type', HttpStatus.BAD_REQUEST);
-      }
-    });
+    await this.paymeService.cardVerify(body.card_number, body.sms_code);
+
+    const amount = await this.paymeService.calculatePrice(body.products);
+
+    console.log(amount);
   }
 }
