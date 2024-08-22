@@ -232,13 +232,25 @@ export class PaymeService {
       console.log(product);
       switch (product.productType) {
         case ProductType.lesson:
-          amount += await this.calculateLessonPrice(product.productId);
+          const lessonPrice = await this.calculateLessonPrice(
+            product.productId,
+          );
+          amount += lessonPrice;
+          console.log('lessonPrice', lessonPrice);
           break;
         case ProductType.module:
-          amount += await this.calculateModulePrice(product.productId);
+          const modulePrice = await this.calculateModulePrice(
+            product.productId,
+          );
+          amount += modulePrice;
+          console.log('modulePrice', modulePrice);
           break;
         case ProductType.course:
-          amount += await this.calculateCoursePrice(product.productId);
+          const coursePrice = await this.calculateCoursePrice(
+            product.productId,
+          );
+          amount += coursePrice;
+          console.log('coursePrice', coursePrice);
           break;
         default:
           throw new HttpException(
