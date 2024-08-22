@@ -76,10 +76,22 @@ export class ClickController {
     body: {
       sms_code: string;
       card_number: string;
-      products: { productType: ProductType; productId: number }[];
+      products: { productType: string; productId: number }[];
     },
     @Request() req: any,
   ) {
+    // enum ProductType {
+    //   lesson
+    //   module
+    //   course
+    // }
+
+    body.products.forEach((product) => {
+      if (!Object.values(ProductType).includes(product.productType)) {
+        throw new HttpException('Invalid product type', HttpStatus.BAD_REQUEST);
+      }
+    });
+
     await this.clickService.confirmCardToken(body.card_number, +body.sms_code);
 
     if (!body.products.length) {
