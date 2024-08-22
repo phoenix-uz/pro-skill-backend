@@ -203,10 +203,7 @@ export class PaymeService {
       where: { id: moduleId },
       include: { lessons: true },
     });
-    if (!module)
-      throw new HttpException('Модуль не найден', HttpStatus.NOT_FOUND);
-    // Пример логики расчета цены на основе количества уроков
-    return module.lessons.length * 10000; // Пример: 10,000 за урок
+    return module.price; // Пример: 10,000 за урок
   }
 
   async calculateCoursePrice(courseId: number): Promise<number> {
@@ -214,14 +211,8 @@ export class PaymeService {
       where: { id: courseId },
       include: { modules: { include: { lessons: true } } },
     });
-    if (!course)
-      throw new HttpException('Курс не найден', HttpStatus.NOT_FOUND);
-    // Пример логики расчета цены на основе модулей и уроков
-    let price = 0;
-    for (const module of course.modules) {
-      price += module.lessons.length * 10000; // Пример: 10,000 за урок
-    }
-    return price;
+
+    return course.price;
   }
 
   async calculatePrice(
