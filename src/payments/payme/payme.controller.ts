@@ -78,6 +78,7 @@ export class PaymeController {
     @Request() req: any,
   ) {
     body.products.forEach((product) => {
+      console.log(product.productType);
       if (!Object.values(ProductType).includes(product.productType)) {
         throw new HttpException('Invalid product type', HttpStatus.BAD_REQUEST);
       }
