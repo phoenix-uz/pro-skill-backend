@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
 import getPaymeHeaders from './functions';
-import { ProductType } from '@prisma/client';
+import { PaymentType, ProductType } from '@prisma/client';
 
 @Injectable()
 export class PaymeService {
@@ -198,25 +198,137 @@ export class PaymeService {
     return lesson.price; // Или расчет на основе содержания
   }
 
-  async calculateModulePrice(moduleId: number): Promise<number> {
+  async calculateModulePrice(
+    moduleId: number,
+    userId: number,
+  ): Promise<number> {
+    // Fetch the module details
     const module = await this.prisma.modules.findUnique({
       where: { id: moduleId },
-      include: { lessons: true },
+      select: {
+        id: true,
+        price: true,
+        lessons: {
+          select: { id: true },
+        },
+        Paid: {
+          where: { userId: userId },
+          select: { id: true },
+        },
+      },
     });
-    return module.price; // Пример: 10,000 за урок
+
+    if (!module) {
+      throw new HttpException('Модуль не найден', HttpStatus.NOT_FOUND);
+    }
+
+    // Determine if the module is paid by the user
+    const isPaid = module.Paid.length > 0;
+
+    // Fetch the paid lessons for this user in this module
+    const paidLessons = await this.prisma.lessons.findMany({
+      where: {
+        moduleId: moduleId,
+        Paid: { some: { userId: userId } },
+      },
+      select: { id: true },
+    });
+
+    // Calculate the price based on the proportion of purchased lessons
+    if (!isPaid) {
+      const totalLessons = module.lessons.length;
+      const paidLessonsCount = paidLessons.length;
+
+      if (paidLessonsCount === totalLessons && totalLessons > 0) {
+        return 0; // Module is fully paid for, so the price is 0
+      } else {
+        const proportionPaid = paidLessonsCount / totalLessons || 0;
+        return Math.round((module.price * (1 - proportionPaid)) / 1000) * 1000;
+      }
+    } else {
+      return 0; // Module is already paid for, so the price is 0
+    }
   }
 
-  async calculateCoursePrice(courseId: number): Promise<number> {
+  async calculateCoursePrice(
+    courseId: number,
+    userId: number,
+  ): Promise<number> {
+    // Fetch the course details
     const course = await this.prisma.courses.findUnique({
       where: { id: courseId },
-      include: { modules: { include: { lessons: true } } },
+      select: {
+        id: true,
+        price: true,
+        modules: {
+          select: {
+            id: true,
+            price: true,
+            lessons: {
+              select: {
+                id: true,
+                price: true,
+              },
+            },
+            Paid: {
+              where: { userId: userId },
+              select: { id: true },
+            },
+          },
+        },
+        Paid: {
+          where: { userId: userId },
+          select: { id: true },
+        },
+      },
     });
 
-    return course.price;
+    if (!course) {
+      throw new HttpException('Курс не найден', HttpStatus.NOT_FOUND);
+    }
+
+    // Determine if the course is paid by the user
+    const isPaid = course.Paid.length > 0;
+
+    if (isPaid) {
+      return 0; // Course is fully paid for, so the price is 0
+    }
+
+    // Calculate the price based on the proportion of purchased modules
+    const totalCoursePrice = course.price;
+    let totalModulesPrice = 0;
+
+    for (const module of course.modules) {
+      const isModulePaid = module.Paid.length > 0;
+
+      if (!isModulePaid) {
+        const totalLessons = module.lessons.length;
+        const paidLessons = await this.prisma.lessons.findMany({
+          where: {
+            moduleId: module.id,
+            Paid: { some: { userId: userId } },
+          },
+          select: { id: true },
+        });
+
+        const paidLessonsCount = paidLessons.length;
+        const proportionPaid = paidLessonsCount / totalLessons || 0;
+
+        totalModulesPrice +=
+          Math.round((module.price * (1 - proportionPaid)) / 1000) * 1000;
+      }
+    }
+
+    const finalCoursePrice =
+      Math.round(
+        (totalCoursePrice * (1 - totalModulesPrice / totalCoursePrice)) / 1000,
+      ) * 1000;
+    return finalCoursePrice;
   }
 
   async calculatePrice(
     products: { productType: ProductType; productId: number }[],
+    userId: number,
   ) {
     let amount = 0;
     for (const product of products) {
@@ -232,6 +344,7 @@ export class PaymeService {
         case ProductType.module:
           const modulePrice = await this.calculateModulePrice(
             product.productId,
+            userId,
           );
           amount += modulePrice;
           console.log('modulePrice', modulePrice);
@@ -239,6 +352,7 @@ export class PaymeService {
         case ProductType.course:
           const coursePrice = await this.calculateCoursePrice(
             product.productId,
+            userId,
           );
           amount += coursePrice;
           console.log('coursePrice', coursePrice);
@@ -251,5 +365,48 @@ export class PaymeService {
       }
     }
     return amount;
+  }
+
+  async buyProducts(
+    products: { productType: ProductType; productId: number }[],
+    userId: number,
+    amount: number,
+  ) {
+    // Calculate the price for each product asynchronously
+    const paidData = await Promise.all(
+      products.map(async (product) => {
+        const productAmount = await this.calculatePrice([product], userId);
+
+        return {
+          userId: userId,
+          amount: productAmount,
+          productType: product.productType,
+          lessonId:
+            product.productType === ProductType.lesson
+              ? product.productId
+              : undefined,
+          moduleId:
+            product.productType === ProductType.module
+              ? product.productId
+              : undefined,
+          courseId:
+            product.productType === ProductType.course
+              ? product.productId
+              : undefined,
+        };
+      }),
+    );
+
+    // Create the payment record and associated Paid records
+    await this.prisma.payments.create({
+      data: {
+        amount: amount,
+        userId: userId,
+        paymentType: PaymentType.payme,
+        Paid: {
+          create: paidData,
+        },
+      },
+    });
   }
 }

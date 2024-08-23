@@ -79,8 +79,23 @@ export class PaymeController {
   ) {
     await this.paymeService.cardVerify(body.card_number, body.sms_code);
 
-    const amount = await this.paymeService.calculatePrice(body.products);
+    const amount = await this.paymeService.calculatePrice(
+      body.products,
+      +req.userId,
+    );
 
-    console.log(amount);
+    const receipt = await this.paymeService.recieptsCreate(amount, req.userId);
+    const pay = await this.paymeService.receiptsPay(
+      body.card_number,
+      receipt.result.receipt._id,
+    );
+
+    if (!pay) throw new HttpException('Payment failed', HttpStatus.BAD_REQUEST);
+    const payme = await this.paymeService.buyProducts(
+      body.products,
+      +req.userId,
+      amount,
+    );
+    return payme;
   }
 }
