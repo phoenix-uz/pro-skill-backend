@@ -11,12 +11,7 @@ import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
 import { PrismaService } from 'src/prisma.service';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { ClickService } from './click.service';
-
-enum ProductType {
-  lesson,
-  module,
-  course,
-}
+import { ProductType } from '@prisma/client';
 
 @UseGuards(AuthGuard)
 @ApiBearerAuth()
@@ -76,33 +71,37 @@ export class ClickController {
     body: {
       sms_code: string;
       card_number: string;
-      products: { productType: string; productId: number }[];
+      products: { productType: ProductType; productId: number }[];
     },
     @Request() req: any,
   ) {
-    // enum ProductType {
-    //   lesson
-    //   module
-    //   course
-    // }
-
-    body.products.forEach((product) => {
-      if (!Object.values(ProductType).includes(product.productType)) {
-        throw new HttpException('Invalid product type', HttpStatus.BAD_REQUEST);
-      }
-    });
-
     await this.clickService.confirmCardToken(body.card_number, +body.sms_code);
 
-    if (!body.products.length) {
-      throw new HttpException('No products', HttpStatus.BAD_REQUEST);
+    const amount = await this.clickService.calculatePrice(
+      body.products,
+      req.userId,
+    );
+
+    const pay = await this.clickService.payWithCardToken(
+      body.card_number,
+      amount,
+      req.userId,
+    );
+
+    if (!pay) {
+      throw new HttpException('Payment failed', HttpStatus.BAD_REQUEST);
     }
-    console.log(body.products);
-    // const amount = await this.clickService.calculatePrice(body.products);
-    // await this.clickService.payWithCardToken(
-    //   body.card_number,
-    //   amount,
-    //   req.userId,
-    // );
+    if (pay.error != 200 || pay.error != 201) { 
+      throw new HttpException(pay.message, HttpStatus.BAD_REQUEST);
+    } else {
+      {
+        const payments = await this.clickService.buyProducts(
+          body.products,
+          +req.userId,
+          amount,
+        );
+        return payments;
+     
+
   }
 }

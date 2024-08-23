@@ -95,12 +95,12 @@ export class PaymeController {
     if (!pay) throw new HttpException('Payment failed', HttpStatus.BAD_REQUEST);
     if (pay.error) throw new HttpException(pay.error, HttpStatus.BAD_REQUEST);
     else {
-      const payme = await this.paymeService.buyProducts(
+      const payments = await this.paymeService.buyProducts(
         body.products,
         +req.userId,
         amount,
       );
-      return payme;
+      return payments;
     }
   }
 }
