@@ -148,7 +148,7 @@ export class PaymeService {
         id: userId,
         method: 'receipts.create',
         params: {
-          amount: amount,
+          amount: amount * 1000,
           account: {
             order_id: Math.floor(Math.random() * 10000000),
           },
