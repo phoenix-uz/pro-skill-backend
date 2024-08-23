@@ -90,12 +90,16 @@ export class PaymeController {
       receipt.result.receipt._id,
     );
 
+    console.log('pay', pay);
+
     if (!pay) throw new HttpException('Payment failed', HttpStatus.BAD_REQUEST);
     const payme = await this.paymeService.buyProducts(
       body.products,
       +req.userId,
       amount,
     );
+
+    console.log('payme', payme);
     return payme;
   }
 }
