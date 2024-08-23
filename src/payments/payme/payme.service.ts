@@ -140,6 +140,7 @@ export class PaymeService {
   }
 
   async recieptsCreate(amount: number, userId: number) {
+    console.log('recieptsCreate', amount);
     const response = await fetch(`${process.env.PAYME_MERCHANT_URL}`, {
       method: 'POST',
       headers: await getPaymeHeaders(true),
