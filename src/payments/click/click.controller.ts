@@ -91,7 +91,7 @@ export class ClickController {
     if (!pay) {
       throw new HttpException('Payment failed', HttpStatus.BAD_REQUEST);
     }
-    if (pay.error != 200 || pay.error != 201) { 
+    if (pay.error != 200 || pay.error != 201) {
       throw new HttpException(pay.message, HttpStatus.BAD_REQUEST);
     } else {
       {
@@ -101,7 +101,7 @@ export class ClickController {
           amount,
         );
         return payments;
-     
-
+      }
+    }
   }
 }
