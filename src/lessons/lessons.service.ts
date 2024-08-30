@@ -44,7 +44,11 @@ export class LessonsService {
     return lesson;
   }
   async findAll() {
-    return await this.prisma.lessons.findMany({});
+    return await this.prisma.lessons.findMany({
+      orderBy: {
+        title: 'asc',
+      },
+    });
   }
 
   async update(files: Express.Multer.File[], body: UpdateLessonDto) {
