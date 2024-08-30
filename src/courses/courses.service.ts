@@ -129,6 +129,7 @@ export class CoursesService {
             time: true,
             price: true,
             lessons: {
+              orderBy: { title: 'asc' },
               select: {
                 id: true,
                 title: true,
@@ -169,6 +170,7 @@ export class CoursesService {
             time: true,
             price: true,
             lessons: {
+              orderBy: { title: 'asc' },
               select: {
                 id: true,
                 title: true,
@@ -363,6 +365,7 @@ export class CoursesService {
             time: true,
             price: true,
             lessons: {
+              orderBy: { title: 'asc' },
               select: {
                 id: true,
                 title: true,
