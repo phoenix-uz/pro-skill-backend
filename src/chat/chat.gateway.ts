@@ -157,6 +157,12 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
           fromMentor: true,
         },
       });
+      if (this.connectedUsers.has(message.userId)) {
+        console.log('User is online');
+        console.log('Sending message to user', message.userId);
+      } else {
+        console.log('User is offline');
+      }
       this.connectedUsers.get(message.userId)?.socket.emit('message', {
         text: message.text,
         userId: message.userId,
