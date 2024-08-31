@@ -1,8 +1,7 @@
 import { Controller, Get, Param, UseGuards, Request } from '@nestjs/common';
 import { ChatGateway } from './chat.gateway';
-import { ApiBearerAuth, ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ChatService } from './chat.service';
-import { AdminGuard } from 'src/admin/admin.guard';
 import { MentorGuard } from 'src/mentor/mentor.guard';
 import { AuthGuard } from 'src/auth/auth.guard';
 
@@ -20,6 +19,14 @@ export class ChatController {
   @ApiOperation({ summary: 'Get all chats' })
   findAll() {
     return this.chatService.findAll();
+  }
+
+  @UseGuards(MentorGuard)
+  @ApiBearerAuth()
+  @Get('mentor/byUser/:id')
+  @ApiOperation({ summary: 'Get all chats' })
+  findUser(@Param('id') id: string) {
+    return this.chatService.findById(+id);
   }
 
   @UseGuards(AuthGuard)
