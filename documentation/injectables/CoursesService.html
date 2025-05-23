@@ -1,0 +1,1391 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>pro-skill documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">pro-skill documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content injectable">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Injectables</li>
+  <li class="breadcrumb-item" >CoursesService</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" 
+                class="nav-link"
+                class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" 
+                class="nav-link"
+                
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/courses/courses.service.ts</code>
+        </p>
+
+
+
+
+
+            <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Public</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#prisma" >prisma</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#findAll" >findAll</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#findAllUnique" >findAllUnique</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#findBought" >findBought</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#findOne" >findOne</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#findOneBought" >findOneBought</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#findOneUnique" >findOneUnique</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+            <section data-compodoc="block-constructor">
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(prisma: <a href="../injectables/PrismaService.html" target="_self">PrismaService</a>)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="8" class="link-to-prism">src/courses/courses.service.ts:8</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>prisma</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/PrismaService.html" target="_self" >PrismaService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+            <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="findAll"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>findAll</b></span>
+                        <a href="#findAll"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>findAll()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="10"
+                                    class="link-to-prism">src/courses/courses.service.ts:10</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>unknown</code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="findAllUnique"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>findAllUnique</b></span>
+                        <a href="#findAllUnique"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>findAllUnique(userId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="47"
+                                    class="link-to-prism">src/courses/courses.service.ts:47</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>userId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>unknown</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="findBought"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>findBought</b></span>
+                        <a href="#findBought"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>findBought(userId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="296"
+                                    class="link-to-prism">src/courses/courses.service.ts:296</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>userId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>unknown</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="findOne"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>findOne</b></span>
+                        <a href="#findOne"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>findOne(id: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="114"
+                                    class="link-to-prism">src/courses/courses.service.ts:114</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>id</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>unknown</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="findOneBought"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>findOneBought</b></span>
+                        <a href="#findOneBought"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>findOneBought(id: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, userId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="345"
+                                    class="link-to-prism">src/courses/courses.service.ts:345</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>id</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>userId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>unknown</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="findOneUnique"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>findOneUnique</b></span>
+                        <a href="#findOneUnique"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>findOneUnique(id: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, userId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="150"
+                                    class="link-to-prism">src/courses/courses.service.ts:150</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>id</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>userId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>unknown</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+            <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="prisma"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>prisma</b></span>
+                        <a href="#prisma"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../injectables/PrismaService.html" target="_self" >PrismaService</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="9" class="link-to-prism">src/courses/courses.service.ts:9</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Injectable, HttpException, HttpStatus } from &#x27;@nestjs/common&#x27;;
+import { PrismaService } from &#x27;src/prisma.service&#x27;;
+import { CreateCourseDto } from &#x27;./dto/create-course.dto&#x27;;
+import { UpdateCourseDto } from &#x27;./dto/update-course.dto&#x27;;
+import saveFile from &#x27;src/functions&#x27;;
+
+@Injectable()
+export class CoursesService {
+  constructor(public readonly prisma: PrismaService) {}
+  async findAll() {
+    const courses &#x3D; await this.prisma.courses.findMany({
+      select: {
+        id: true,
+        title: true,
+        description: true,
+        photoUrls: true,
+        time: true,
+        price: true,
+        author: true,
+        _count: {
+          select: { modules: true },
+        },
+      },
+    });
+    return courses;
+  }
+
+  // async findAllUnique() {
+  //   const courses &#x3D; await this.prisma.courses.findMany({
+  //     select: {
+  //       id: true,
+  //       title: true,
+  //       description: true,
+  //       photoUrls: true,
+  //       time: true,
+  //       price: true,
+  //       author: true,
+  //       _count: {
+  //         select: { modules: true },
+  //       },
+  //     },
+  //   });
+  //   return courses;
+  // }
+
+  // TODO change
+  async findAllUnique(userId: number) {
+    // Fetch all courses with selected fields
+    let courses: any &#x3D; await this.prisma.courses.findMany({
+      select: {
+        id: true,
+        title: true,
+        description: true,
+        photoUrls: true,
+        time: true,
+        price: true,
+        Paid: {
+          where: { userId: userId },
+          select: { id: true },
+        },
+        _count: {
+          select: { modules: true },
+        },
+        modules: {
+          select: { id: true },
+        },
+      },
+    });
+
+    // Mark courses as paid or not based on the Paid field
+    courses &#x3D; courses.map((course) &#x3D;&gt; {
+      course.paid &#x3D; course.Paid.length &gt; 0;
+      delete course.Paid;
+      return course;
+    });
+
+    // Fetch all paid modules for the user
+    const paidModules &#x3D; await this.prisma.modules.findMany({
+      where: { Paid: { some: { userId: userId } } },
+      select: { courseId: true },
+    });
+
+    // Create a map of courseId to the count of paid modules
+    const paidModulesCountMap &#x3D; paidModules.reduce((acc, module) &#x3D;&gt; {
+      acc[module.courseId] &#x3D; (acc[module.courseId] || 0) + 1;
+      return acc;
+    }, {});
+
+    // Adjust course price based on the proportion of purchased modules
+    courses &#x3D; courses.map((course) &#x3D;&gt; {
+      if (!course.paid) {
+        const totalModules &#x3D; course.modules.length;
+        const paidModulesCount &#x3D; paidModulesCountMap[course.id] || 0;
+
+        if (paidModulesCount &#x3D;&#x3D;&#x3D; totalModules &amp;&amp; totalModules &gt; 0) {
+          course.paid &#x3D; true;
+          course.price &#x3D; 0;
+        } else {
+          const proportionPaid &#x3D; paidModulesCount / totalModules || 0;
+          course.price &#x3D;
+            Math.round((course.price * (1 - proportionPaid)) / 1000) * 1000;
+        }
+      } else {
+        course.price &#x3D; 0;
+      }
+
+      delete course.modules;
+      return course;
+    });
+
+    return courses;
+  }
+
+  async findOne(id: number) {
+    const course &#x3D; await this.prisma.courses.findUnique({
+      where: { id: id },
+      select: {
+        id: true,
+        title: true,
+        description: true,
+        photoUrls: true,
+        time: true,
+        price: true,
+        author: true,
+        modules: {
+          select: {
+            id: true,
+            title: true,
+            time: true,
+            price: true,
+            lessons: {
+              orderBy: { title: &#x27;asc&#x27; },
+              select: {
+                id: true,
+                title: true,
+                time: true,
+                price: true,
+              },
+            },
+          },
+        },
+      },
+    });
+    if (!course) {
+      throw new HttpException(&#x27;Course not found&#x27;, HttpStatus.NOT_FOUND);
+    }
+    return course;
+  }
+
+  async findOneUnique(id: number, userId: number) {
+    // Fetch the course by its ID
+    const course: any &#x3D; await this.prisma.courses.findUnique({
+      where: { id: id },
+      select: {
+        id: true,
+        title: true,
+        description: true,
+        photoUrls: true,
+        time: true,
+        price: true,
+        author: true,
+        Paid: {
+          where: { userId: userId },
+          select: { id: true },
+        },
+        modules: {
+          select: {
+            id: true,
+            title: true,
+            time: true,
+            price: true,
+            lessons: {
+              orderBy: { title: &#x27;asc&#x27; },
+              select: {
+                id: true,
+                title: true,
+                time: true,
+                price: true,
+                Paid: {
+                  where: { userId: userId },
+                  select: { id: true },
+                },
+              },
+            },
+          },
+        },
+      },
+    });
+
+    if (!course) {
+      throw new HttpException(&#x27;Course not found&#x27;, HttpStatus.NOT_FOUND);
+    }
+
+    // Check if the course is paid
+    course.paid &#x3D; course.Paid.length &gt; 0;
+    delete course.Paid;
+
+    // If the course is paid, set all modules and lessons to paid
+    if (course.paid) {
+      course.price &#x3D; 0;
+      course.modules &#x3D; course.modules.map((module) &#x3D;&gt; {
+        module.paid &#x3D; true;
+        module.price &#x3D; 0;
+        module.lessons &#x3D; module.lessons.map((lesson) &#x3D;&gt; {
+          lesson.paid &#x3D; true;
+          lesson.price &#x3D; 0;
+          delete lesson.Paid;
+          return lesson;
+        });
+        delete module.Paid;
+        return module;
+      });
+    } else {
+      // Fetch all paid modules for the course
+      const paidModules &#x3D; await this.prisma.modules.findMany({
+        where: {
+          courseId: id,
+          Paid: { some: { userId: userId } },
+        },
+        select: { id: true },
+      });
+
+      // Update the modules based on their paid status
+      course.modules &#x3D; await Promise.all(
+        course.modules.map(async (module) &#x3D;&gt; {
+          const isModulePaid &#x3D; paidModules.some((m) &#x3D;&gt; m.id &#x3D;&#x3D;&#x3D; module.id);
+
+          if (isModulePaid) {
+            module.paid &#x3D; true;
+            module.price &#x3D; 0;
+            module.lessons &#x3D; module.lessons.map((lesson) &#x3D;&gt; {
+              lesson.paid &#x3D; true;
+              lesson.price &#x3D; 0;
+              delete lesson.Paid;
+              return lesson;
+            });
+          } else {
+            // Fetch paid lessons for the module
+            const paidLessons &#x3D; await this.prisma.lessons.findMany({
+              where: {
+                moduleId: module.id,
+                Paid: { some: { userId: userId } },
+              },
+              select: { id: true },
+            });
+
+            module.lessons &#x3D; module.lessons.map((lesson) &#x3D;&gt; {
+              const isLessonPaid &#x3D; paidLessons.some((l) &#x3D;&gt; l.id &#x3D;&#x3D;&#x3D; lesson.id);
+
+              if (isLessonPaid) {
+                lesson.paid &#x3D; true;
+                lesson.price &#x3D; 0;
+              } else {
+                lesson.paid &#x3D; false;
+              }
+
+              delete lesson.Paid;
+              return lesson;
+            });
+
+            // Adjust module price based on the proportion of paid lessons
+            const totalLessons &#x3D; module.lessons.length;
+            const paidLessonsCount &#x3D; paidLessons.length;
+
+            if (paidLessonsCount &#x3D;&#x3D;&#x3D; totalLessons &amp;&amp; totalLessons &gt; 0) {
+              module.paid &#x3D; true;
+              module.price &#x3D; 0;
+            } else {
+              const proportionPaid &#x3D; paidLessonsCount / totalLessons || 0;
+              module.price &#x3D;
+                Math.round((module.price * (1 - proportionPaid)) / 1000) * 1000;
+            }
+          }
+
+          return module;
+        }),
+      );
+
+      // Adjust course price based on the proportion of paid modules
+      const totalModules &#x3D; course.modules.length;
+      const paidModulesCount &#x3D; paidModules.length;
+
+      if (paidModulesCount &#x3D;&#x3D;&#x3D; totalModules &amp;&amp; totalModules &gt; 0) {
+        course.paid &#x3D; true;
+        course.price &#x3D; 0;
+      } else {
+        const proportionPaid &#x3D; paidModulesCount / totalModules || 0;
+        course.price &#x3D;
+          Math.round((course.price * (1 - proportionPaid)) / 1000) * 1000;
+      }
+    }
+
+    return course;
+  }
+
+  async findBought(userId: number) {
+    const paid &#x3D; await this.prisma.paid.findMany({
+      where: { userId: userId },
+      select: {
+        Lesson: {
+          select: {
+            Modules: {
+              select: {
+                courseId: true,
+              },
+            },
+          },
+        },
+
+        Module: {
+          select: {
+            courseId: true,
+          },
+        },
+        courseId: true,
+      },
+    });
+
+    // Extract the courseId from the returned data
+    const courseIds &#x3D; paid.map((item) &#x3D;&gt; {
+      // Check for courseId in Lesson -&gt; Modules
+      if (item.Lesson?.Modules?.courseId) {
+        return item.Lesson.Modules.courseId;
+      }
+      // Check for courseId in Module
+      if (item.Module?.courseId) {
+        return item.Module.courseId;
+      }
+      // Check for direct courseId
+      if (item.courseId) {
+        return item.courseId;
+      }
+    });
+    // Filter out null values and remove duplicates using a Set
+    const uniqueCourseIds &#x3D; [...new Set(courseIds.filter((id) &#x3D;&gt; id !&#x3D;&#x3D; null))];
+
+    // Fetch the courses with the unique course IDs
+    const courses &#x3D; await this.prisma.courses.findMany({
+      where: { id: { in: uniqueCourseIds } },
+    });
+
+    return courses;
+  }
+
+  async findOneBought(id: number, userId: number) {
+    // Fetch the course by its ID
+    const course: any &#x3D; await this.prisma.courses.findUnique({
+      where: { id: id },
+      select: {
+        id: true,
+        title: true,
+        description: true,
+        photoUrls: true,
+        time: true,
+        price: true,
+        author: true,
+        Paid: {
+          where: { userId: userId },
+          select: { id: true },
+        },
+        modules: {
+          select: {
+            id: true,
+            title: true,
+            time: true,
+            price: true,
+            lessons: {
+              orderBy: { title: &#x27;asc&#x27; },
+              select: {
+                id: true,
+                title: true,
+                time: true,
+                price: true,
+                videoUrl: true,
+                questions: {
+                  include: {
+                    answers: {
+                      select: { id: true, title: true },
+                    },
+                  },
+                },
+                Paid: {
+                  where: { userId: userId },
+                  select: { id: true },
+                },
+              },
+            },
+          },
+        },
+      },
+    });
+
+    if (!course) {
+      throw new HttpException(&#x27;Course not found&#x27;, HttpStatus.NOT_FOUND);
+    }
+
+    // Check if the course is paid
+    course.paid &#x3D; course.Paid.length &gt; 0;
+    delete course.Paid;
+
+    // If the course is paid, set all modules and lessons to paid
+    if (course.paid) {
+      course.price &#x3D; 0;
+      course.modules &#x3D; course.modules.map((module) &#x3D;&gt; {
+        module.paid &#x3D; true;
+        module.price &#x3D; 0;
+        module.lessons &#x3D; module.lessons.map((lesson) &#x3D;&gt; {
+          lesson.paid &#x3D; true;
+          lesson.price &#x3D; 0;
+          delete lesson.Paid;
+          return lesson;
+        });
+        delete module.Paid;
+        return module;
+      });
+    } else {
+      // Fetch all paid modules for the course
+      const paidModules &#x3D; await this.prisma.modules.findMany({
+        where: {
+          courseId: id,
+          Paid: { some: { userId: userId } },
+        },
+        select: { id: true },
+      });
+
+      // Update the modules based on their paid status
+      course.modules &#x3D; await Promise.all(
+        course.modules.map(async (module) &#x3D;&gt; {
+          const isModulePaid &#x3D; paidModules.some((m) &#x3D;&gt; m.id &#x3D;&#x3D;&#x3D; module.id);
+
+          if (isModulePaid) {
+            module.paid &#x3D; true;
+            module.price &#x3D; 0;
+            module.lessons &#x3D; module.lessons.map((lesson) &#x3D;&gt; {
+              lesson.paid &#x3D; true;
+              lesson.price &#x3D; 0;
+              delete lesson.Paid;
+              return lesson;
+            });
+          } else {
+            // Fetch paid lessons for the module
+            const paidLessons &#x3D; await this.prisma.lessons.findMany({
+              where: {
+                moduleId: module.id,
+                Paid: { some: { userId: userId } },
+              },
+              select: { id: true },
+            });
+
+            module.lessons &#x3D; module.lessons.map((lesson) &#x3D;&gt; {
+              const isLessonPaid &#x3D; paidLessons.some((l) &#x3D;&gt; l.id &#x3D;&#x3D;&#x3D; lesson.id);
+
+              if (isLessonPaid) {
+                lesson.paid &#x3D; true;
+                lesson.price &#x3D; 0;
+              } else {
+                lesson.paid &#x3D; false;
+                delete lesson.videoUrl;
+                delete lesson.questions;
+              }
+
+              delete lesson.Paid;
+              return lesson;
+            });
+
+            // Adjust module price based on the proportion of paid lessons
+            const totalLessons &#x3D; module.lessons.length;
+            const paidLessonsCount &#x3D; paidLessons.length;
+
+            if (paidLessonsCount &#x3D;&#x3D;&#x3D; totalLessons &amp;&amp; totalLessons &gt; 0) {
+              module.paid &#x3D; true;
+              module.price &#x3D; 0;
+            } else {
+              const proportionPaid &#x3D; paidLessonsCount / totalLessons || 0;
+              module.price &#x3D;
+                Math.round((module.price * (1 - proportionPaid)) / 1000) * 1000;
+            }
+          }
+
+          return module;
+        }),
+      );
+
+      // Adjust course price based on the proportion of paid modules
+      const totalModules &#x3D; course.modules.length;
+      const paidModulesCount &#x3D; paidModules.length;
+
+      if (paidModulesCount &#x3D;&#x3D;&#x3D; totalModules &amp;&amp; totalModules &gt; 0) {
+        course.paid &#x3D; true;
+        course.price &#x3D; 0;
+      } else {
+        const proportionPaid &#x3D; paidModulesCount / totalModules || 0;
+        course.price &#x3D;
+          Math.round((course.price * (1 - proportionPaid)) / 1000) * 1000;
+      }
+    }
+
+    return course;
+  }
+}
+
+export class CoursesServiceAdmin extends CoursesService {
+  async create(files: Express.Multer.File[], body: CreateCourseDto) {
+    try {
+      const photoUrls &#x3D; [];
+
+      // Use map to create an array of promises for each file upload operation
+      const uploadPromises &#x3D; files.map(async (file) &#x3D;&gt; {
+        const filePath &#x3D; await saveFile(file);
+        // Push the file path into the photoUrls array
+        return photoUrls.push(filePath);
+      });
+      // Wait for all file upload promises to resolve
+      await Promise.all(uploadPromises);
+
+      const course &#x3D; await this.prisma.courses.create({
+        data: {
+          photoUrls: photoUrls,
+          ...body,
+        },
+      });
+      return course;
+    } catch (error) {
+      throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+  async update(files: Express.Multer.File[], body: UpdateCourseDto) {
+    try {
+      const photoUrls &#x3D; [];
+
+      // Use map to create an array of promises for each file upload operation
+      const uploadPromises &#x3D; files.map(async (file) &#x3D;&gt; {
+        const filePath &#x3D; await saveFile(file);
+        // Push the file path into the photoUrls array
+        photoUrls.push(filePath);
+      });
+
+      // Wait for all file upload promises to resolve
+      await Promise.all(uploadPromises);
+
+      if (photoUrls.length &#x3D;&#x3D;&#x3D; 0) {
+        const course &#x3D; await this.prisma.courses.update({
+          where: { id: body.id },
+          data: {
+            title: body.title,
+            description: body.description,
+            author: body.author,
+            time: body.time,
+            price: body.price,
+          },
+        });
+        return course;
+      }
+      const updateCourse &#x3D; await this.prisma.courses.update({
+        where: { id: body.id },
+        data: {
+          ...body,
+          photoUrls: photoUrls,
+        },
+      });
+      return updateCourse;
+    } catch (error) {
+      console.log(error);
+      throw new HttpException(
+        &#x27;Failed to update course&#x27;,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
+  async remove(id: number) {
+    try {
+      const modules &#x3D; await this.prisma.modules.findMany({
+        where: { courseId: id },
+      });
+      for (let i &#x3D; 0; i &lt; modules.length; i++) {
+        const lessons &#x3D; await this.prisma.lessons.findMany({
+          where: { moduleId: modules[i].id },
+        });
+        for (let j &#x3D; 0; j &lt; lessons.length; j++) {
+          const questions &#x3D; await this.prisma.questions.findMany({
+            where: { lessonId: lessons[j].id },
+          });
+          for (let k &#x3D; 0; k &lt; questions.length; k++) {
+            await this.prisma.answers.deleteMany({
+              where: { questionId: questions[k].id },
+            });
+          }
+          await this.prisma.questions.deleteMany({
+            where: { lessonId: lessons[j].id },
+          });
+        }
+        await this.prisma.lessons.deleteMany({
+          where: { moduleId: modules[i].id },
+        });
+      }
+      await this.prisma.modules.deleteMany({
+        where: { courseId: id },
+      });
+      const deletedCourse &#x3D; await this.prisma.courses.delete({
+        where: { id: id },
+      });
+      return deletedCourse;
+    } catch (error) {
+      throw new HttpException(
+        &#x27;Failed to delete course&#x27;,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+}
+</code></pre>
+    </div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'injectable';
+            var COMPODOC_CURRENT_PAGE_URL = 'CoursesService.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+       <script src="../js/libs/zepto.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

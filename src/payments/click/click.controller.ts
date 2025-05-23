@@ -52,16 +52,6 @@ export class ClickController {
       properties: {
         sms_code: { type: 'string' },
         card_number: { type: 'string' },
-        products: {
-          type: 'array',
-          items: {
-            type: 'object',
-            properties: {
-              productType: { type: 'string' },
-              productId: { type: 'number' },
-            },
-          },
-        },
       },
     },
   })
@@ -71,7 +61,6 @@ export class ClickController {
     body: {
       sms_code: string;
       card_number: string;
-      products: { productType: ProductType; productId: number }[];
     },
     @Request() req: any,
   ) {
@@ -100,7 +89,6 @@ export class ClickController {
     } else {
       {
         const payments = await this.clickService.buyProducts(
-          body.products,
           +req.userId,
           amount,
         );

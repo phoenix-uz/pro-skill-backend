@@ -1,0 +1,1974 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>pro-skill documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">pro-skill documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content injectable">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Injectables</li>
+  <li class="breadcrumb-item" >ClickService</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" 
+                class="nav-link"
+                class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" 
+                class="nav-link"
+                
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/payments/click/click.service.ts</code>
+        </p>
+
+
+
+
+
+            <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#buyProducts" >buyProducts</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#calculateCoursePrice" >calculateCoursePrice</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#calculateLessonPrice" >calculateLessonPrice</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#calculateModulePrice" >calculateModulePrice</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#calculatePrice" >calculatePrice</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#cancelPayment" >cancelPayment</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#checkInvoiceStatus" >checkInvoiceStatus</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#checkPaymentStatus" >checkPaymentStatus</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#checkPaymentStatusByMerchantTransId" >checkPaymentStatusByMerchantTransId</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#confirmCardToken" >confirmCardToken</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#createCardToken" >createCardToken</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#createInvoice" >createInvoice</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#deleteCardToken" >deleteCardToken</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#payWithCardToken" >payWithCardToken</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+            <section data-compodoc="block-constructor">
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(prisma: <a href="../injectables/PrismaService.html" target="_self">PrismaService</a>)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="7" class="link-to-prism">src/payments/click/click.service.ts:7</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>prisma</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/PrismaService.html" target="_self" >PrismaService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+            <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="buyProducts"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>buyProducts</b></span>
+                        <a href="#buyProducts"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>buyProducts(products: literal type[], userId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, amount: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="468"
+                                    class="link-to-prism">src/payments/click/click.service.ts:468</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>products</td>
+                                            <td>
+                                                        <code>literal type[]</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>userId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>amount</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="calculateCoursePrice"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>calculateCoursePrice</b></span>
+                        <a href="#calculateCoursePrice"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>calculateCoursePrice(id: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, userId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="282"
+                                    class="link-to-prism">src/payments/click/click.service.ts:282</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>id</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>userId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>unknown</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="calculateLessonPrice"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>calculateLessonPrice</b></span>
+                        <a href="#calculateLessonPrice"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>calculateLessonPrice(lessonId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="220"
+                                    class="link-to-prism">src/payments/click/click.service.ts:220</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>lessonId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;number&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="calculateModulePrice"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>calculateModulePrice</b></span>
+                        <a href="#calculateModulePrice"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>calculateModulePrice(moduleId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, userId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="230"
+                                    class="link-to-prism">src/payments/click/click.service.ts:230</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>moduleId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>userId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;number&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="calculatePrice"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>calculatePrice</b></span>
+                        <a href="#calculatePrice"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>calculatePrice(products: literal type[], userId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="427"
+                                    class="link-to-prism">src/payments/click/click.service.ts:427</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>products</td>
+                                            <td>
+                                                        <code>literal type[]</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>userId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>unknown</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="cancelPayment"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>cancelPayment</b></span>
+                        <a href="#cancelPayment"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>cancelPayment(payment_id)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="205"
+                                    class="link-to-prism">src/payments/click/click.service.ts:205</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>payment_id</td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>unknown</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="checkInvoiceStatus"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>checkInvoiceStatus</b></span>
+                        <a href="#checkInvoiceStatus"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>checkInvoiceStatus(invoice_id)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="157"
+                                    class="link-to-prism">src/payments/click/click.service.ts:157</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>invoice_id</td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>unknown</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="checkPaymentStatus"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>checkPaymentStatus</b></span>
+                        <a href="#checkPaymentStatus"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>checkPaymentStatus(payment_id)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="171"
+                                    class="link-to-prism">src/payments/click/click.service.ts:171</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>payment_id</td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>unknown</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="checkPaymentStatusByMerchantTransId"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>checkPaymentStatusByMerchantTransId</b></span>
+                        <a href="#checkPaymentStatusByMerchantTransId"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>checkPaymentStatusByMerchantTransId(merchant_trans_id: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, payment_date: Date | string | number)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="185"
+                                    class="link-to-prism">src/payments/click/click.service.ts:185</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>merchant_trans_id</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>payment_date</td>
+                                            <td>
+                                                        <code>Date | string | number</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>unknown</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="confirmCardToken"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>confirmCardToken</b></span>
+                        <a href="#confirmCardToken"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>confirmCardToken(card_number: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, sms_code: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="53"
+                                    class="link-to-prism">src/payments/click/click.service.ts:53</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>card_number</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>sms_code</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>unknown</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="createCardToken"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>createCardToken</b></span>
+                        <a href="#createCardToken"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>createCardToken(card_number: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, expire_date: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, userId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="10"
+                                    class="link-to-prism">src/payments/click/click.service.ts:10</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>card_number</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>expire_date</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>userId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>unknown</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="createInvoice"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>createInvoice</b></span>
+                        <a href="#createInvoice"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>createInvoice(amount: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, phone_number: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, merchant_trans_id: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="132"
+                                    class="link-to-prism">src/payments/click/click.service.ts:132</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>amount</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>phone_number</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>merchant_trans_id</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>unknown</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="deleteCardToken"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>deleteCardToken</b></span>
+                        <a href="#deleteCardToken"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>deleteCardToken(card_token: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="114"
+                                    class="link-to-prism">src/payments/click/click.service.ts:114</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>card_token</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>unknown</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="payWithCardToken"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>payWithCardToken</b></span>
+                        <a href="#payWithCardToken"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>payWithCardToken(card_number: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, amount: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, userId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="78"
+                                    class="link-to-prism">src/payments/click/click.service.ts:78</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>card_number</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>amount</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>userId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>unknown</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { HttpException, HttpStatus, Injectable } from &#x27;@nestjs/common&#x27;;
+import { getClickHeader } from &#x27;./click.functions&#x27;;
+import { PrismaService } from &#x27;src/prisma.service&#x27;;
+import { PaymentType, ProductType } from &#x27;@prisma/client&#x27;;
+
+@Injectable()
+export class ClickService {
+  constructor(private readonly prisma: PrismaService) {}
+
+  async createCardToken(
+    card_number: string,
+    expire_date: string,
+    userId: number,
+  ) {
+    const response &#x3D; await fetch(
+      &#x60;${process.env.CLICK_MERCHANT_URL}card_token/request&#x60;,
+      {
+        method: &#x27;POST&#x27;,
+        headers: getClickHeader(),
+        body: JSON.stringify({
+          service_id: process.env.CLICK_SERVICE_ID,
+          card_number: card_number,
+          expire_date: expire_date,
+          temporary: 1,
+        }),
+      },
+    ).catch((error) &#x3D;&gt; {
+      console.log(error);
+      throw new HttpException(error, HttpStatus.BAD_REQUEST);
+    });
+    const data &#x3D; await response.json();
+    console.log(data);
+    // Save card token to the database or update if it exists
+    await this.prisma.clickCards.upsert({
+      where: {
+        cardNumber: card_number,
+      },
+      update: {
+        cardToken: data.card_token,
+        userId: userId,
+      },
+      create: {
+        cardNumber: card_number,
+        cardToken: data.card_token,
+        expireDate: expire_date,
+        phoneNumber: data.phone_number,
+        userId: userId,
+      },
+    });
+    return data;
+  }
+
+  async confirmCardToken(card_number: string, sms_code: number) {
+    const card_token &#x3D; await this.prisma.clickCards.findUnique({
+      where: {
+        cardNumber: card_number,
+      },
+    });
+    const response &#x3D; await fetch(
+      &#x60;${process.env.CLICK_MERCHANT_URL}card_token/verify&#x60;,
+      {
+        method: &#x27;POST&#x27;,
+        headers: getClickHeader(),
+        body: JSON.stringify({
+          service_id: process.env.CLICK_SERVICE_ID,
+          card_token: card_token.cardToken,
+          sms_code: sms_code,
+        }),
+      },
+    ).catch((error) &#x3D;&gt; {
+      throw new HttpException(error, HttpStatus.BAD_REQUEST);
+    });
+
+    const data &#x3D; await response.json();
+    return data;
+  }
+
+  async payWithCardToken(
+    card_number: string,
+    amount: number,
+    userId: number,
+    // merchant_trans_id: string,
+  ) {
+    const card_token &#x3D; await this.prisma.clickCards.findUnique({
+      where: {
+        cardNumber: card_number,
+      },
+    });
+
+    const user &#x3D; await this.prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+    });
+    const response &#x3D; await fetch(
+      &#x60;${process.env.CLICK_MERCHANT_URL}card_token/payment&#x60;,
+      {
+        method: &#x27;POST&#x27;,
+        headers: getClickHeader(),
+        body: JSON.stringify({
+          service_id: process.env.CLICK_SERVICE_ID,
+          card_token: card_token.cardToken,
+          amount: amount,
+          transaction_parameter: user.fullName,
+        }),
+      },
+    ).catch((error) &#x3D;&gt; {
+      throw new HttpException(error, HttpStatus.BAD_REQUEST);
+    });
+    const data &#x3D; await response.json();
+    return data;
+  }
+
+  async deleteCardToken(card_token: string) {
+    const response &#x3D; await fetch(
+      &#x60;${process.env.CLICK_MERCHANT_URL}card_token/${process.env.CLICK_SERVICE_ID}/${card_token}&#x60;,
+      {
+        method: &#x27;DELETE&#x27;,
+        headers: getClickHeader(),
+      },
+    ).catch((error) &#x3D;&gt; {
+      return error;
+    });
+
+    const data &#x3D; await response.json();
+    return data;
+  }
+
+  // Method to calculate price based on product type and ID
+
+  // extra functions
+  async createInvoice(
+    amount: number,
+    phone_number: string,
+    merchant_trans_id: string,
+  ) {
+    const response &#x3D; await fetch(
+      &#x60;${process.env.CLICK_MERCHANT_URL}invoice/create&#x60;,
+      {
+        method: &#x27;POST&#x27;,
+        headers: getClickHeader(),
+        body: JSON.stringify({
+          service_id: process.env.CLICK_SERVICE_ID,
+          amount: amount,
+          phone_number: phone_number,
+          merchant_trans_id: merchant_trans_id,
+        }),
+      },
+    ).catch((error) &#x3D;&gt; {
+      return error;
+    });
+
+    const data &#x3D; await response.json();
+    return data;
+  }
+
+  async checkInvoiceStatus(invoice_id: bigint) {
+    const response &#x3D; await fetch(
+      &#x60;${process.env.CLICK_MERCHANT_URL}invoice/status/${process.env.CLICK_SERVICE_ID}/${invoice_id}&#x60;,
+      {
+        method: &#x27;GET&#x27;,
+        headers: getClickHeader(),
+      },
+    ).catch((error) &#x3D;&gt; {
+      return error;
+    });
+    const data &#x3D; await response.json();
+    return data;
+  }
+
+  async checkPaymentStatus(payment_id: bigint) {
+    const response &#x3D; await fetch(
+      &#x60; ${process.env.CLICK_MERCHANT_URL}payment/status/${process.env.CLICK_SERVICE_ID}/${payment_id}&#x60;,
+      {
+        method: &#x27;GET&#x27;,
+        headers: getClickHeader(),
+      },
+    ).catch((error) &#x3D;&gt; {
+      throw new HttpException(error, HttpStatus.BAD_REQUEST);
+    });
+    const data &#x3D; await response.json();
+    return data;
+  }
+
+  async checkPaymentStatusByMerchantTransId(
+    merchant_trans_id: string,
+    payment_date: Date | string | number,
+  ) {
+    // Format the date to YYYY-MM-DD
+    const date &#x3D; new Date(payment_date);
+    const formatted_date &#x3D; date.toISOString().slice(0, 10);
+    const response &#x3D; await fetch(
+      &#x60;${process.env.CLICK_MERCHANT_URL}payment/status_by_mti/${process.env.CLICK_SERVICE_ID}/${merchant_trans_id}/${formatted_date}&#x60;,
+      {
+        method: &#x27;GET&#x27;,
+        headers: getClickHeader(),
+      },
+    ).catch((error) &#x3D;&gt; {
+      return error;
+    });
+    const data &#x3D; await response.json();
+    return data;
+  }
+
+  async cancelPayment(payment_id: bigint) {
+    const response &#x3D; await fetch(
+      &#x60;${process.env.CLICK_MERCHANT_URL}payment/reversal/${process.env.CLICK_SERVICE_ID}/${payment_id}&#x60;,
+      {
+        method: &#x27;DELETE&#x27;,
+        headers: getClickHeader(),
+      },
+    ).catch((error) &#x3D;&gt; {
+      return error;
+    });
+    const data &#x3D; await response.json();
+    return data;
+  }
+
+  // Методы для расчета цен
+  async calculateLessonPrice(lessonId: number): Promise&lt;number&gt; {
+    const lesson &#x3D; await this.prisma.lessons.findUnique({
+      where: { id: lessonId },
+    });
+    if (!lesson)
+      throw new HttpException(&#x27;Урок не найден&#x27;, HttpStatus.NOT_FOUND);
+    // Пример логики расчета цены
+    return lesson.price; // Или расчет на основе содержания
+  }
+
+  async calculateModulePrice(
+    moduleId: number,
+    userId: number,
+  ): Promise&lt;number&gt; {
+    // Fetch the module details
+    const module &#x3D; await this.prisma.modules.findUnique({
+      where: { id: moduleId },
+      select: {
+        id: true,
+        price: true,
+        lessons: {
+          select: { id: true },
+        },
+        Paid: {
+          where: { userId: userId },
+          select: { id: true },
+        },
+      },
+    });
+
+    if (!module) {
+      throw new HttpException(&#x27;Модуль не найден&#x27;, HttpStatus.NOT_FOUND);
+    }
+
+    // Determine if the module is paid by the user
+    const isPaid &#x3D; module.Paid.length &gt; 0;
+
+    // Fetch the paid lessons for this user in this module
+    const paidLessons &#x3D; await this.prisma.lessons.findMany({
+      where: {
+        moduleId: moduleId,
+        Paid: { some: { userId: userId } },
+      },
+      select: { id: true },
+    });
+
+    // Calculate the price based on the proportion of purchased lessons
+    if (!isPaid) {
+      const totalLessons &#x3D; module.lessons.length;
+      const paidLessonsCount &#x3D; paidLessons.length;
+
+      if (paidLessonsCount &#x3D;&#x3D;&#x3D; totalLessons &amp;&amp; totalLessons &gt; 0) {
+        return 0; // Module is fully paid for, so the price is 0
+      } else {
+        const proportionPaid &#x3D; paidLessonsCount / totalLessons || 0;
+        return Math.round((module.price * (1 - proportionPaid)) / 1000) * 1000;
+      }
+    } else {
+      return 0; // Module is already paid for, so the price is 0
+    }
+  }
+
+  async calculateCoursePrice(id: number, userId: number) {
+    // Fetch the course by its ID
+    const course: any &#x3D; await this.prisma.courses.findUnique({
+      where: { id: id },
+      select: {
+        id: true,
+        title: true,
+        description: true,
+        photoUrls: true,
+        time: true,
+        price: true,
+        author: true,
+        Paid: {
+          where: { userId: userId },
+          select: { id: true },
+        },
+        modules: {
+          select: {
+            id: true,
+            title: true,
+            time: true,
+            price: true,
+            lessons: {
+              select: {
+                id: true,
+                title: true,
+                time: true,
+                price: true,
+                Paid: {
+                  where: { userId: userId },
+                  select: { id: true },
+                },
+              },
+            },
+          },
+        },
+      },
+    });
+
+    if (!course) {
+      throw new HttpException(&#x27;Course not found&#x27;, HttpStatus.NOT_FOUND);
+    }
+
+    // Check if the course is paid
+    course.paid &#x3D; course.Paid.length &gt; 0;
+    delete course.Paid;
+
+    // If the course is paid, set all modules and lessons to paid
+    if (course.paid) {
+      course.price &#x3D; 0;
+      course.modules &#x3D; course.modules.map((module) &#x3D;&gt; {
+        module.paid &#x3D; true;
+        module.price &#x3D; 0;
+        module.lessons &#x3D; module.lessons.map((lesson) &#x3D;&gt; {
+          lesson.paid &#x3D; true;
+          lesson.price &#x3D; 0;
+          delete lesson.Paid;
+          return lesson;
+        });
+        delete module.Paid;
+        return module;
+      });
+    } else {
+      // Fetch all paid modules for the course
+      const paidModules &#x3D; await this.prisma.modules.findMany({
+        where: {
+          courseId: id,
+          Paid: { some: { userId: userId } },
+        },
+        select: { id: true },
+      });
+
+      // Update the modules based on their paid status
+      course.modules &#x3D; await Promise.all(
+        course.modules.map(async (module) &#x3D;&gt; {
+          const isModulePaid &#x3D; paidModules.some((m) &#x3D;&gt; m.id &#x3D;&#x3D;&#x3D; module.id);
+
+          if (isModulePaid) {
+            module.paid &#x3D; true;
+            module.price &#x3D; 0;
+            module.lessons &#x3D; module.lessons.map((lesson) &#x3D;&gt; {
+              lesson.paid &#x3D; true;
+              lesson.price &#x3D; 0;
+              delete lesson.Paid;
+              return lesson;
+            });
+          } else {
+            // Fetch paid lessons for the module
+            const paidLessons &#x3D; await this.prisma.lessons.findMany({
+              where: {
+                moduleId: module.id,
+                Paid: { some: { userId: userId } },
+              },
+              select: { id: true },
+            });
+
+            module.lessons &#x3D; module.lessons.map((lesson) &#x3D;&gt; {
+              const isLessonPaid &#x3D; paidLessons.some((l) &#x3D;&gt; l.id &#x3D;&#x3D;&#x3D; lesson.id);
+
+              if (isLessonPaid) {
+                lesson.paid &#x3D; true;
+                lesson.price &#x3D; 0;
+              } else {
+                lesson.paid &#x3D; false;
+              }
+
+              delete lesson.Paid;
+              return lesson;
+            });
+
+            // Adjust module price based on the proportion of paid lessons
+            const totalLessons &#x3D; module.lessons.length;
+            const paidLessonsCount &#x3D; paidLessons.length;
+
+            if (paidLessonsCount &#x3D;&#x3D;&#x3D; totalLessons &amp;&amp; totalLessons &gt; 0) {
+              module.paid &#x3D; true;
+              module.price &#x3D; 0;
+            } else {
+              const proportionPaid &#x3D; paidLessonsCount / totalLessons || 0;
+              module.price &#x3D;
+                Math.round((module.price * (1 - proportionPaid)) / 1000) * 1000;
+            }
+          }
+
+          return module;
+        }),
+      );
+
+      // Adjust course price based on the proportion of paid modules
+      const totalModules &#x3D; course.modules.length;
+      const paidModulesCount &#x3D; paidModules.length;
+
+      if (paidModulesCount &#x3D;&#x3D;&#x3D; totalModules &amp;&amp; totalModules &gt; 0) {
+        course.paid &#x3D; true;
+        course.price &#x3D; 0;
+      } else {
+        const proportionPaid &#x3D; paidModulesCount / totalModules || 0;
+        course.price &#x3D;
+          Math.round((course.price * (1 - proportionPaid)) / 1000) * 1000;
+      }
+    }
+
+    return course.price;
+  }
+
+  async calculatePrice(
+    products: { productType: ProductType; productId: number }[],
+    userId: number,
+  ) {
+    let amount &#x3D; 0;
+    for (const product of products) {
+      console.log(product);
+      switch (product.productType) {
+        case ProductType.lesson:
+          const lessonPrice &#x3D; await this.calculateLessonPrice(
+            product.productId,
+          );
+          amount +&#x3D; lessonPrice;
+          console.log(&#x27;lessonPrice&#x27;, lessonPrice);
+          break;
+        case ProductType.module:
+          const modulePrice &#x3D; await this.calculateModulePrice(
+            product.productId,
+            userId,
+          );
+          amount +&#x3D; modulePrice;
+          console.log(&#x27;modulePrice&#x27;, modulePrice);
+          break;
+        case ProductType.course:
+          const coursePrice &#x3D; await this.calculateCoursePrice(
+            product.productId,
+            userId,
+          );
+          amount +&#x3D; coursePrice;
+          console.log(&#x27;coursePrice&#x27;, coursePrice);
+          break;
+        default:
+          throw new HttpException(
+            &#x27;Неверный тип продукта&#x27;,
+            HttpStatus.BAD_REQUEST,
+          );
+      }
+    }
+    return amount;
+  }
+
+  async buyProducts(
+    products: { productType: ProductType; productId: number }[],
+    userId: number,
+    amount: number,
+  ) {
+    // Calculate the price for each product asynchronously
+    const paidData &#x3D; await Promise.all(
+      products.map(async (product) &#x3D;&gt; {
+        const productAmount &#x3D; await this.calculatePrice([product], userId);
+
+        return {
+          userId: userId,
+          amount: productAmount,
+          productType: product.productType,
+          lessonId:
+            product.productType &#x3D;&#x3D;&#x3D; ProductType.lesson
+              ? product.productId
+              : undefined,
+          moduleId:
+            product.productType &#x3D;&#x3D;&#x3D; ProductType.module
+              ? product.productId
+              : undefined,
+          courseId:
+            product.productType &#x3D;&#x3D;&#x3D; ProductType.course
+              ? product.productId
+              : undefined,
+        };
+      }),
+    );
+
+    // Create the payment record and associated Paid records
+    await this.prisma.payments.create({
+      data: {
+        amount: amount,
+        userId: userId,
+        paymentType: PaymentType.payme,
+        Paid: {
+          create: paidData,
+        },
+      },
+    });
+  }
+}
+</code></pre>
+    </div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'injectable';
+            var COMPODOC_CURRENT_PAGE_URL = 'ClickService.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+       <script src="../js/libs/zepto.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>
